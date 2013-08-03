@@ -23,6 +23,7 @@ public class ClientProxy extends CommonProxy
     public void registerEventHandlers()
     {
         MinecraftForge.EVENT_BUS.register(new HungerOverlay());
+        MinecraftForge.EVENT_BUS.register(new ExtraIcons());
     }
     
     @Override

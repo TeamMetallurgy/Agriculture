@@ -18,7 +18,7 @@ public class OvenRecipes
 	
 	static
 	{
-		addRecipe(new ItemStack(Item.sugar), new ItemStack(AgricultureItems.carmel), 100000);
+		addRecipe(new ItemStack(Item.sugar), AgricultureItems.carmel.getItemStack(), 100000);
 	}
 	
 	private OvenRecipes(ItemStack source, ItemStack result, int heat)

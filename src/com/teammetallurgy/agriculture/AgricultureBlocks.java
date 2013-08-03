@@ -12,6 +12,7 @@ import com.teammetallurgy.agriculture.machines.processor.BlockProcessor;
 import com.teammetallurgy.agriculture.machines.processor.TileEntityProcessor;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class AgricultureBlocks
 {
@@ -21,9 +22,9 @@ public class AgricultureBlocks
 	
 	public static void init()
 	{
-		oven = new BlockOven(3000, Material.wood).setCreativeTab(CreativeTabs.tabDecorations);
-		counter = new BlockCounter(3001, Material.wood).setCreativeTab(CreativeTabs.tabDecorations);
-		processor = new BlockProcessor(3002, Material.wood).setCreativeTab(CreativeTabs.tabDecorations);
+		oven = new BlockOven(3000, Material.wood).setUnlocalizedName("agriculture:oven").setCreativeTab(Agriculture.tab);
+		counter = new BlockCounter(3001, Material.wood).setUnlocalizedName("agriculture:counter").setCreativeTab(Agriculture.tab);
+		processor = new BlockProcessor(3002, Material.wood).setUnlocalizedName("agriculture:processor").setCreativeTab(Agriculture.tab);
 		
 		GameRegistry.registerBlock(oven, "AgricultureOvenBlock");
 		GameRegistry.registerBlock(counter, "AgricultureCounterBlock");
@@ -31,5 +32,14 @@ public class AgricultureBlocks
 		GameRegistry.registerTileEntity(TileEntityOven.class, "AgricultureOvenTileEntity");
 		GameRegistry.registerTileEntity(TileEntityCounter.class, "AgricultureCounterTileEntity");
 		GameRegistry.registerTileEntity(TileEntityProcessor.class, "AgricultureProcessorTileEntity");
+		
+		addNames();
+	}
+	
+	public static void addNames()
+	{
+		LanguageRegistry.addName(oven, "Oven");
+		LanguageRegistry.addName(counter, "Counter");
+		LanguageRegistry.addName(processor, "Processor");
 	}
 }

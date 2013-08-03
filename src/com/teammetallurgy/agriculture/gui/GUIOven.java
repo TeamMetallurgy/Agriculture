@@ -16,6 +16,7 @@ public class GUIOven extends GuiContainer
 
 	private ResourceLocation texture = new ResourceLocation("agriculture", "textures/gui/Oven.png");
 	private float sliderPosition = 0;
+	private boolean isDragging = false;
 	private ContainerOven oven;
 	
 
@@ -23,6 +24,8 @@ public class GUIOven extends GuiContainer
 	{
 		super(containerOven);
 		this.oven = containerOven;
+		
+		sliderPosition = 67 - (67 * (oven.getOven().getMaxTemp() / 1000f));
 	}
 
 	@Override
@@ -43,9 +46,11 @@ public class GUIOven extends GuiContainer
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, this.xSize, this.ySize);
 		
 		TileEntityOven oven = this.oven.getOven();
-		int temperature = (int) ((oven.getTemp() / (double)oven.getMaxTemp()) * 71);
+
+		double d = oven.getTemp() / 1000d;
+		int temperature = (int) (d * 71f);
 		
-		//Temperature guage
+		//Temperature gauge
 		drawTexturedModalRect(guiLeft + 30, guiTop + 8 + 70 - temperature, 195, 13, 18, temperature);
 		
 		//ScrollBar
@@ -83,6 +88,16 @@ public class GUIOven extends GuiContainer
 		if (Mouse.isButtonDown(0) && mouseX >= 25 && mouseX <= 40 && mouseY >= 5 && mouseY <= 76)
 		{
 			handleDragging(mouseY - 5);
+			isDragging = true;
+		} else if (isDragging) {
+			isDragging = false;
+			
+			float newMax = 1000 * ((67 - sliderPosition) / 67f);
+			if(oven.getOven().getMaxTemp() != newMax)
+			{
+				oven.getOven().setMaxTemp((int) newMax);
+				oven.getOven().sendPacket();
+			}
 		}
 	}
 

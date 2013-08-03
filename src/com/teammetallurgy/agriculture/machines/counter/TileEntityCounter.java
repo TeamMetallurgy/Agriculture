@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import com.teammetallurgy.agriculture.machines.BaseMachineTileEntity;
+import com.teammetallurgy.agriculture.recipes.CounterRecipes;
 
 public class TileEntityCounter extends BaseMachineTileEntity
 {
@@ -16,6 +17,11 @@ public class TileEntityCounter extends BaseMachineTileEntity
 	public IInventory getCabinet()
 	{
 		return cabinet;
+	}
+
+	@Override
+	public void onInventoryChanged()
+	{
 	}
 
 	@Override

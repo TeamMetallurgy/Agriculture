@@ -35,7 +35,7 @@ public class BlockProcessor extends BaseMachineBlock
 		
 		if(!world.isRemote)
 		{
-			if(side == 1) {
+			if(side == 1 || yOffset > 0.76) {
 				player.openGui(Agriculture.instance, GUIIds.PROCESSOR, world, x, y, z);
 				return true;
 			}

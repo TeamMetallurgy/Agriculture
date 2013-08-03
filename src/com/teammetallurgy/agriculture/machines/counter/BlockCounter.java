@@ -34,8 +34,7 @@ public class BlockCounter extends BaseMachineBlock
 
 			if (side == 1 || yFace > 0.76f) // (<_<) /// :P Deal with it keith :P
 			{
-				// Change to countertop gui
-				//player.openGui(Agriculture.instance, GUIIds.OVEN, world, x, y, z);
+				player.openGui(Agriculture.instance, GUIIds.COUNTER, world, x, y, z);
 				return true;
 			}
 			if (side == blockMetadata)

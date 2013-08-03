@@ -24,6 +24,8 @@ public class Agriculture
     
     @SidedProxy(serverSide = "com.teammetallurgy.agriculture.CommonProxy", clientSide = "com.teammetallurgy.agriculture.ClientProxy")
     public static CommonProxy proxy;
+    
+    public static AgricultureTab tab;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -34,8 +36,11 @@ public class Agriculture
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
+    	tab = new AgricultureTab("Agriculture");
     	AgricultureBlocks.init();
     	AgricultureItems.init();
+    	tab.setItemID(AgricultureBlocks.oven.blockID);
+    	
     	
         NetworkRegistry.instance().registerGuiHandler(instance, proxy);
         proxy.registerEventHandlers();

@@ -1,19 +1,23 @@
 package com.teammetallurgy.agriculture;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+
 import com.teammetallurgy.agriculture.gui.ContainerCabinet;
+import com.teammetallurgy.agriculture.gui.ContainerCounter;
 import com.teammetallurgy.agriculture.gui.ContainerOven;
 import com.teammetallurgy.agriculture.gui.ContainerProcessor;
 import com.teammetallurgy.agriculture.gui.GUICabinet;
+import com.teammetallurgy.agriculture.gui.GUICounter;
 import com.teammetallurgy.agriculture.gui.GUIOven;
 import com.teammetallurgy.agriculture.gui.GUIProcessor;
 import com.teammetallurgy.agriculture.libs.GUIIds;
+import com.teammetallurgy.agriculture.machines.BaseMachineTileEntity;
 import com.teammetallurgy.agriculture.machines.counter.TileEntityCounter;
 import com.teammetallurgy.agriculture.machines.oven.TileEntityOven;
 import com.teammetallurgy.agriculture.machines.processor.TileEntityProcessor;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class CommonProxy implements IGuiHandler
@@ -41,6 +45,12 @@ public class CommonProxy implements IGuiHandler
     		if(te3 != null && te3 instanceof TileEntityProcessor) {
     			return new ContainerProcessor(player.inventory, (TileEntityProcessor) te3); 
     		}
+    	case GUIIds.COUNTER:
+    		TileEntity te4 = world.getBlockTileEntity(x, y, z);
+    		
+    		if(te4 != null && te4 instanceof BaseMachineTileEntity) {
+    			return new ContainerCounter(player.inventory, ((BaseMachineTileEntity) te4).getInventoryCounter()); 
+    		}
     	default:
     		return null;
     	}
@@ -67,6 +77,12 @@ public class CommonProxy implements IGuiHandler
     		
     		if(te3 != null && te3 instanceof TileEntityProcessor) {
     			return new GUIProcessor(new ContainerProcessor(player.inventory, (TileEntityProcessor) te3)); 
+    		}
+    	case GUIIds.COUNTER:
+    		TileEntity te4 = world.getBlockTileEntity(x, y, z);
+    		
+    		if(te4 != null && te4 instanceof BaseMachineTileEntity) {
+    			return new GUICounter(new ContainerCounter(player.inventory, ((BaseMachineTileEntity) te4).getInventoryCounter())); 
     		}
     	default:
     		return null;
