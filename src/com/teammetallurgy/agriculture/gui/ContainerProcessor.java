@@ -15,9 +15,10 @@ public class ContainerProcessor extends Container
 	public ContainerProcessor(InventoryPlayer invPlayer, TileEntityProcessor processor)
 	{
 		this.processor = processor;
-		
+
 		this.addSlotToContainer(new Slot(processor.getInventory(), 0, 57, 32));
 		this.addSlotToContainer(new Slot(processor.getInventory(), 1, 103, 32));
+		this.addSlotToContainer(new Slot(processor.getInventory(), 2, 21, 32));
 
 		int i;
 		for (i = 0; i < 3; ++i)
@@ -39,7 +40,7 @@ public class ContainerProcessor extends Container
 	{
 		return true;
 	}
-	
+
 	public TileEntityProcessor getProcessor()
 	{
 		return processor;
@@ -56,13 +57,13 @@ public class ContainerProcessor extends Container
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 
-			if (par2 < 2)
+			if (par2 < 3)
 			{
-				if (!this.mergeItemStack(itemstack1, 2, this.inventorySlots.size(), true))
+				if (!this.mergeItemStack(itemstack1, 3, this.inventorySlots.size(), true))
 				{
 					return null;
 				}
-			} else if (!this.mergeItemStack(itemstack1, 0, 2, false))
+			} else if (!this.mergeItemStack(itemstack1, 0, 3, false))
 			{
 				return null;
 			}

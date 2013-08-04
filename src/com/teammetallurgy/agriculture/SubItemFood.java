@@ -1,5 +1,7 @@
 package com.teammetallurgy.agriculture;
 
+import com.teammetallurgy.agriculture.hunger.HungerSystem;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -30,6 +32,7 @@ public class SubItemFood extends SubItem
 		--par1ItemStack.stackSize;
 		par3EntityPlayer.getFoodStats().addStats(this.getHealAmount(), this.getSaturationModifier());
 		par2World.playSoundAtEntity(par3EntityPlayer, "random.burp", 0.5F, par2World.rand.nextFloat() * 0.1F + 0.9F);
+		HungerSystem.addPoints(par3EntityPlayer, healAmount*300);
 		return par1ItemStack;
 	}
 
@@ -59,6 +62,10 @@ public class SubItemFood extends SubItem
 		if (par3EntityPlayer.canEat(this.alwaysEdible))
 		{
 			par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
+		}
+		else
+		{
+			par3EntityPlayer.getFoodStats().addStats(-this.getHealAmount(), -this.getSaturationModifier());
 		}
 
 		return par1ItemStack;

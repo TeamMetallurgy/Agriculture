@@ -4,6 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import com.teammetallurgy.agriculture.Agriculture;
 import com.teammetallurgy.agriculture.hunger.HungerSystem;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -38,6 +39,7 @@ public class PacketSyncHunger extends Packet
     @Override
     public void processPacket(NetHandler nethandler)
     {
+    	System.out.println("recive packet");
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
         {
             Minecraft client = FMLClientHandler.instance().getClient();

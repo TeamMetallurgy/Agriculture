@@ -7,17 +7,20 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import com.teammetallurgy.agriculture.AgricultureItems;
+import com.teammetallurgy.agriculture.machines.oven.InventoryOven;
 import com.teammetallurgy.agriculture.machines.oven.TileEntityOven;
 
 public class ContainerOven extends Container
 {
-	private TileEntityOven oven;
+	private InventoryOven oven;
+	private TileEntityOven teOven;
 
-	public ContainerOven(InventoryPlayer invePlayer, TileEntityOven oven)
+	public ContainerOven(InventoryPlayer invePlayer, TileEntityOven teOven)
 	{
-		this.oven = oven;
+		this.oven = teOven.getInventoryOven();
 		oven.openChest();
 
+		this.teOven = teOven;
 		int i;
 
 		// Fuel Slot
@@ -50,6 +53,7 @@ public class ContainerOven extends Container
 		}
 	}
 
+	@Override
 	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2)
 	{
 		ItemStack itemstack = null;
@@ -59,61 +63,38 @@ public class ContainerOven extends Container
 		{
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
-			
+
 			int itemDamage = itemstack.getItemDamage();
 
-			if (par2 >= 0 && par2 <= 19)
+			if (par2 <= 19)
 			{
 				if (!mergeItemStack(itemstack1, 20, this.inventorySlots.size(), true))
 				{
 					return null;
 				}
-
-				slot.onSlotChange(itemstack1, itemstack);
-			} else
+			} 
+			else
 			{
 				if (itemstack.itemID - 256 == AgricultureItems.ovenRack.itemID && itemDamage == AgricultureItems.ovenRack.getDamage())
 				{
-					for (int i = 17; i <= 19; i++)
+					if (!this.mergeItemStack2(itemstack1, 17, 20, false))
 					{
-						Slot slot1 = (Slot) this.inventorySlots.get(i);
-						if (!slot1.getHasStack())
-						{
-							slot1.putStack(AgricultureItems.ovenRack.getItemStack());
-							itemstack1.stackSize--;
-							slot.onSlotChange(itemstack1, itemstack);
-							return null;
-						}
+						return null;
 					}
 
-					slot.onSlotChange(itemstack1, itemstack);
-				} else if (oven.getItemBurnTime(itemstack) > 0)
+				} else if (TileEntityOven.getItemBurnTime(itemstack) > 0)
 				{
 					if (!mergeItemStack(itemstack1, 0, 1, false))
 					{
 						return null;
 					}
-
-					slot.onSlotChange(itemstack1, itemstack);
 				} else
 				{
-					for (int i = 1; i <= 16; i++)
+					if (!this.mergeItemStack2(itemstack1, 1, 17, false))
 					{
-						SlotOven slot1 = (SlotOven) this.inventorySlots.get(i);
-						if (!slot1.getHasStack() && slot1.isItemValid(itemstack1))
-						{
-							ItemStack singleStack = itemstack.copy();
-							singleStack.stackSize = 1;
-							slot1.putStack(singleStack);
-							itemstack1.stackSize--;
-							slot.onSlotChange(itemstack1, itemstack);
-							return null;
-						}
+						return null;
 					}
-
-					slot.onSlotChange(itemstack1, itemstack);
 				}
-
 			}
 
 			if (itemstack1.stackSize == 0)
@@ -132,8 +113,14 @@ public class ContainerOven extends Container
 			slot.onPickupFromSlot(par1EntityPlayer, itemstack1);
 		}
 
-		return itemstack;
+		return null;
 
+	}
+	
+	@Override
+	public boolean canDragIntoSlot(Slot par1Slot)
+	{
+		return true;
 	}
 
 	public void onContainerClosed(EntityPlayer entityplayer)
@@ -144,7 +131,7 @@ public class ContainerOven extends Container
 
 	public TileEntityOven getOven()
 	{
-		return oven;
+		return teOven;
 	}
 
 	@Override
@@ -217,11 +204,13 @@ public class ContainerOven extends Container
 				slot = (Slot) this.inventorySlots.get(k);
 				itemstack1 = slot.getStack();
 
-				if (itemstack1 == null)
+				if (itemstack1 == null && slot.isItemValid(par1ItemStack))
 				{
-					slot.putStack(par1ItemStack.copy());
+					ItemStack itemStack = par1ItemStack.copy();
+					itemStack.stackSize = 1;
+					slot.putStack(itemStack);
 					slot.onSlotChanged();
-					par1ItemStack.stackSize = 0;
+					par1ItemStack.stackSize--;
 					flag1 = true;
 					break;
 				}

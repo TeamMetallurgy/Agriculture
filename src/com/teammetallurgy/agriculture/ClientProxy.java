@@ -1,9 +1,11 @@
 package com.teammetallurgy.agriculture;
 
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraftforge.common.MinecraftForge;
 
 import com.teammetallurgy.agriculture.hunger.HungerOverlay;
+import com.teammetallurgy.agriculture.machines.brewer.BrewerRenderHelper;
+import com.teammetallurgy.agriculture.machines.brewer.TileEntityBrewer;
+import com.teammetallurgy.agriculture.machines.brewer.TileEntityBrewerRenderer;
 import com.teammetallurgy.agriculture.machines.counter.CounterRenderHelper;
 import com.teammetallurgy.agriculture.machines.counter.TileEntityCounter;
 import com.teammetallurgy.agriculture.machines.counter.TileEntityCounterRenderer;
@@ -35,5 +37,7 @@ public class ClientProxy extends CommonProxy
     	RenderingRegistry.registerBlockHandler(new CounterRenderHelper());
     	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityProcessor.class, new TileEntityProcessorRenderer());
     	RenderingRegistry.registerBlockHandler(new ProcessorRenderHelper());
+    	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBrewer.class, new TileEntityBrewerRenderer());
+    	RenderingRegistry.registerBlockHandler(new BrewerRenderHelper());
     }
 }

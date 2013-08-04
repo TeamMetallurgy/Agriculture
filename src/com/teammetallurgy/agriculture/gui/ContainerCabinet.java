@@ -16,6 +16,7 @@ public class ContainerCabinet extends Container
 	public ContainerCabinet(InventoryPlayer invPlayer, TileEntityCounter cabinet)
 	{
 		this.cabinet = cabinet;
+		cabinet.getCabinet().openChest();
 
 		int i;
 
@@ -48,6 +49,13 @@ public class ContainerCabinet extends Container
 			this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 142));
 		}
 
+	}
+	
+	@Override
+	public void onContainerClosed(EntityPlayer entityplayer)
+	{
+		super.onContainerClosed(entityplayer);
+		cabinet.getCabinet().closeChest();
 	}
 
 	@Override

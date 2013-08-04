@@ -34,9 +34,10 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-public class TileEntityOven extends BaseMachineTileEntity implements IInventory
+public class TileEntityOven extends BaseMachineTileEntity
 {
-	private ItemStack[] ovenItemStacks = new ItemStack[20];
+	private InventoryOven inventoryOven = new InventoryOven("", false, 20, this);
+
 	private static int fuelSlot = 0;
 	private static int numOvenSlots = 16;
 	private static int ovenInventorySlotStart = 1;
@@ -52,9 +53,9 @@ public class TileEntityOven extends BaseMachineTileEntity implements IInventory
 
 	private boolean isCooking = false;
 
-	int sync = 80;
+	int sync = 0;
 
-	private int numUsingPlayers;
+	int numUsingPlayers;
 	public float doorAngle;
 	public float prevDoorAngle;
 
@@ -65,10 +66,10 @@ public class TileEntityOven extends BaseMachineTileEntity implements IInventory
 
 	public void updateEntity()
 	{
-		if (--sync <= 0)
+
+		if (sync-- == 0)
 		{
 			sendPacket();
-			sync = 80;
 		}
 
 		if (fuelRemaining > 0)
@@ -83,27 +84,34 @@ public class TileEntityOven extends BaseMachineTileEntity implements IInventory
 				temp--;
 			}
 
-			for (int i = 0; i < numOvenSlots; i++)
+			if (!worldObj.isRemote)
 			{
-				ItemStack stack = ovenItemStacks[ovenInventorySlotStart + i];
-				if (stack != null)
+				for (int i = 0; i < numOvenSlots; i++)
 				{
-					timeInOvenSlot[i]++;
-					if (stack.getItem() instanceof ICookable)
-						((ICookable) stack.getItem()).heatUpdate(stack, temp, timeInOvenSlot[i]);
+					ItemStack stack = inventoryOven.getStackInSlot(ovenInventorySlotStart + i);
+					if (stack != null)
+					{
+						timeInOvenSlot[i]++;
+						if (stack.getItem() instanceof ICookable)
+							((ICookable) stack.getItem()).heatUpdate(stack, temp, timeInOvenSlot[i]);
 
-					ItemStack result = OvenRecipes.getResult(stack, timeInOvenSlot[i] * temp); // replace
-																								// with
-																								// actually
-																								// heat
-																								// records
-					if (result != null)
-						ovenItemStacks[ovenInventorySlotStart + i] = result;
-				} else
-				{
-					if (i < timeInOvenSlot.length)
-						timeInOvenSlot[i] = 0;
+						ItemStack result = OvenRecipes.getResult(stack, timeInOvenSlot[i] * temp); // replace
+																									// with
+																									// actually
+																									// heat
+																									// records
+						if (result != null)
+						{
+							inventoryOven.setInventorySlotContents(ovenInventorySlotStart + i, result.copy());
+							sendPacket();
+						}
+					} else
+					{
+						if (i < timeInOvenSlot.length)
+							timeInOvenSlot[i] = 0;
+					}
 				}
+
 			}
 		} else
 		{
@@ -155,9 +163,14 @@ public class TileEntityOven extends BaseMachineTileEntity implements IInventory
 		return isCooking;
 	}
 
+	public InventoryOven getInventoryOven()
+	{
+		return inventoryOven;
+	}
+
 	private void burnFuel()
 	{
-		ItemStack fuelStack = ovenItemStacks[fuelSlot];
+		ItemStack fuelStack = inventoryOven.getStackInSlot(fuelSlot);
 
 		int fuelAmount = getItemBurnTime(fuelStack);
 		if (fuelAmount > 0)
@@ -171,7 +184,7 @@ public class TileEntityOven extends BaseMachineTileEntity implements IInventory
 
 			if (fuelStack.stackSize == 0)
 			{
-				ovenItemStacks[fuelSlot] = fuelStack.getItem().getContainerItemStack(fuelStack);
+				inventoryOven.setInventorySlotContents(fuelSlot, fuelStack.getItem().getContainerItemStack(fuelStack));
 			}
 		}
 
@@ -265,13 +278,13 @@ public class TileEntityOven extends BaseMachineTileEntity implements IInventory
 		tag.setIntArray("timeInOvenSlot", timeInOvenSlot);
 
 		NBTTagList itemListTag = new NBTTagList();
-		for (int i = 0; i < this.getSizeInventory(); ++i)
+		for (int i = 0; i < this.inventoryOven.getSizeInventory(); ++i)
 		{
-			if (this.getStackInSlot(i) != null)
+			if (this.inventoryOven.getStackInSlot(i) != null)
 			{
 				NBTTagCompound itemTag = new NBTTagCompound();
 				itemTag.setByte("Slot", (byte) i);
-				this.getStackInSlot(i).writeToNBT(itemTag);
+				this.inventoryOven.getStackInSlot(i).writeToNBT(itemTag);
 				itemListTag.appendTag(itemTag);
 			}
 		}
@@ -301,136 +314,8 @@ public class TileEntityOven extends BaseMachineTileEntity implements IInventory
 		{
 			NBTTagCompound base = (NBTTagCompound) tagList.tagAt(i);
 			int slot = Integer.valueOf(base.getByte("Slot"));
-			setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(base));
+			this.inventoryOven.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(base));
 		}
-	}
-
-	@Override
-	public int getSizeInventory()
-	{
-		return ovenItemStacks.length;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int i)
-	{
-		return ovenItemStacks[i];
-	}
-
-	@Override
-	public ItemStack decrStackSize(int i, int j)
-	{
-		if (this.ovenItemStacks[i] != null)
-		{
-			ItemStack itemstack;
-
-			if (this.ovenItemStacks[i].stackSize <= j)
-			{
-				itemstack = this.ovenItemStacks[i];
-				this.ovenItemStacks[i] = null;
-				this.onInventoryChanged();
-				return itemstack;
-			} else
-			{
-				itemstack = this.ovenItemStacks[i].splitStack(j);
-
-				if (this.ovenItemStacks[i].stackSize == 0)
-				{
-					this.ovenItemStacks[i] = null;
-				}
-
-				this.onInventoryChanged();
-				return itemstack;
-			}
-		} else
-		{
-			return null;
-		}
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int i)
-	{
-		if (this.ovenItemStacks[i] != null)
-		{
-			ItemStack itemstack = this.ovenItemStacks[i];
-			this.ovenItemStacks[i] = null;
-			return itemstack;
-		} else
-		{
-			return null;
-		}
-	}
-
-	@Override
-	public void setInventorySlotContents(int i, ItemStack itemstack)
-	{
-		this.ovenItemStacks[i] = itemstack;
-
-		if (itemstack != null && itemstack.stackSize > this.getInventoryStackLimit())
-		{
-			itemstack.stackSize = this.getInventoryStackLimit();
-		}
-
-		this.onInventoryChanged();
-
-	}
-
-	@Override
-	public String getInvName()
-	{
-		return "";
-	}
-
-	@Override
-	public boolean isInvNameLocalized()
-	{
-		return getInvName().isEmpty();
-	}
-
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return 64;
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer entityplayer)
-	{
-		return true;
-	}
-
-	@Override
-	public void openChest()
-	{
-		if (this.numUsingPlayers < 0)
-		{
-			this.numUsingPlayers = 0;
-		}
-
-		++this.numUsingPlayers;
-		this.worldObj.addBlockEvent(this.xCoord, this.yCoord, this.zCoord, this.getBlockType().blockID, 1, this.numUsingPlayers);
-	}
-
-	@Override
-	public void closeChest()
-	{
-		if (this.getBlockType() != null && this.getBlockType() instanceof BlockOven)
-		{
-			--this.numUsingPlayers;
-			this.worldObj.addBlockEvent(this.xCoord, this.yCoord, this.zCoord, this.getBlockType().blockID, 1, this.numUsingPlayers);
-		}
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack)
-	{
-		if (i >= 17 && i <= 19)
-		{
-			return itemstack.itemID == AgricultureItems.ovenRack.itemID;
-		}
-
-		return true;
 	}
 
 	public boolean receiveClientEvent(int id, int value)

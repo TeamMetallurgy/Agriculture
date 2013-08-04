@@ -67,4 +67,9 @@ public class ModelCounter extends ModelBase
 		model.rotateAngleZ = z;
 	}
 
+	public void setDoorAngle(float angle)
+	{
+		ovendoor1.rotateAngleY = 1.5F * -angle;
+		ovendoor2.rotateAngleY = 1.5F * angle;
+	}
 }

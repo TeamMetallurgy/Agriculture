@@ -45,10 +45,15 @@ public class CounterRecipe implements ICounterRecipe
 			{
 
 				int itemID = stackInSlot.getItem().itemID;
-				if (itemID != baseItem.itemID)
+				int damage = stackInSlot.getItemDamage();
+				if (itemID != baseItem.itemID || damage != baseItem.getItemDamage())
 				{
 					continue;
 				}
+			}
+			else
+			{
+				continue;
 			}
 
 			for (int i = 0; i < 4; ++i)

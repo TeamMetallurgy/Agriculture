@@ -33,8 +33,8 @@ public class HungerOverlay
             client.renderEngine.func_110577_a(texture);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             
-//            int bars = (int) (9 * HungerSystem.getPercentage(client.thePlayer));
-            int bars = 4;
+            int bars = (int) (9 * HungerSystem.getPercentage(client.thePlayer));
+            //int bars = 4;
             
             for (int x = bars; x > 0 ; x--)
             {

@@ -1,3 +1,4 @@
+
 package com.teammetallurgy.agriculture.machines.counter;
 
 import org.lwjgl.opengl.GL11;
@@ -15,7 +16,7 @@ public class TileEntityCounterRenderer extends TileEntitySpecialRenderer
 	
 	private static int[] rotations = {0, 0, 180, 0, 90, -90};
 	
-	public void renderTileEntityAt(TileEntityCounter tileentity, double x, double y, double z, float unknown)
+	public void renderTileEntityAt(TileEntityCounter tileentity, double x, double y, double z, float partialTickTime)
 	{
 		int direction = 0;
 		float yOffset = 0;
@@ -36,6 +37,9 @@ public class TileEntityCounterRenderer extends TileEntitySpecialRenderer
 		GL11.glScalef(1F, -1F, -1F);
 		
 		GL11.glRotatef((float)rotation, 0F, 1F, 0F);
+		
+        float angle = tileentity.prevLeftDoorAngle + (tileentity.leftDoorAngle - tileentity.prevLeftDoorAngle) * partialTickTime;
+		model.setDoorAngle(angle);
 		
 		model.renderAll();
 		

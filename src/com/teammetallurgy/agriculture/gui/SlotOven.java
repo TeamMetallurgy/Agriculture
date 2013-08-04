@@ -27,7 +27,7 @@ public class SlotOven extends Slot
     
     public boolean isItemValid(ItemStack par1ItemStack)
     {
-    	boolean isRack = par1ItemStack.getItem().itemID - 256 == AgricultureItems.ovenRack.itemID;	
+    	boolean isRack = par1ItemStack.isItemEqual(AgricultureItems.ovenRack.getItemStack());	
         return isAvaliable() && !isRack;
     }
 

@@ -7,6 +7,7 @@ import java.util.Map;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
@@ -86,8 +87,39 @@ public class SuperItem extends Item
 			item.registerIcons(iconRegister);
 		}
 	}
-	
-	
+
+	public int getMaxItemUseDuration(ItemStack par1ItemStack)
+	{
+    	int damage = par1ItemStack.getItemDamage();
+    	if(subItems.containsKey(damage))
+    	{
+    		return subItems.get(damage).getMaxItemUseDuration(par1ItemStack);
+    	}
+    	
+    	return 0;
+	}
+
+	public EnumAction getItemUseAction(ItemStack par1ItemStack)
+	{
+    	int damage = par1ItemStack.getItemDamage();
+    	if(subItems.containsKey(damage))
+    	{
+    		return subItems.get(damage).getItemUseAction(par1ItemStack);
+    	}
+    	
+    	return EnumAction.none;
+	}
+
+	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
+	{
+    	int damage = par1ItemStack.getItemDamage();
+    	if(subItems.containsKey(damage))
+    	{
+    		return subItems.get(damage).onItemRightClick(par1ItemStack, par2World, par3EntityPlayer);
+    	}
+    	
+    	return par1ItemStack;
+	}
 
     public ItemStack onEaten(ItemStack itemstack, World world, EntityPlayer player)
     {

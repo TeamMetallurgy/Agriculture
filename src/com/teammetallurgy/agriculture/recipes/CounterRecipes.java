@@ -44,8 +44,38 @@ public class CounterRecipes
 		addRecipe(AgricultureItems.appleJelly, AgricultureItems.ceramicBowl, AgricultureItems.appleMush, Item.sugar);
 		addRecipe(AgricultureItems.mashedPotatos, AgricultureItems.ceramicBowl, Item.bakedPotato, AgricultureItems.butter);
 		addRecipe(AgricultureItems.carrotCakeBatter, AgricultureItems.ceramicBowl, AgricultureItems.batter, Item.carrot);
-		addRecipe(AgricultureItems.rawFrenchToast, AgricultureItems.ceramicBowl, Item.bread, Item.egg, AgricultureItems.cinnamonAndSugar);
-		addRecipe(AgricultureItems.batter, AgricultureItems.ceramicBowl, AgricultureItems.butter, Item.egg, AgricultureItems.flour, Item.sugar);
+		addRecipe(AgricultureItems.rawFrenchToast, AgricultureItems.ceramicPlate, Item.bread, Item.egg, AgricultureItems.cinnamonAndSugar);
+		addRecipe(AgricultureItems.batter, AgricultureItems.ceramicBowl, Item.egg, AgricultureItems.butter, AgricultureItems.flour);
+		addRecipe(AgricultureItems.macaroniAndCheese, AgricultureItems.ceramicBowl, AgricultureItems.pasta, AgricultureItems.cheese);
+		addRecipe(AgricultureItems.strawberryJelly, AgricultureItems.ceramicBowl, AgricultureItems.strawberryMush, Item.sugar);
+		addRecipe(AgricultureItems.rawApplePie, AgricultureItems.ceramicPlate, AgricultureItems.dough, AgricultureItems.appleMush, AgricultureItems.cinnamonAndSugar);
+		addRecipe(AgricultureItems.rawStrawberryPie, AgricultureItems.ceramicPlate, AgricultureItems.dough, AgricultureItems.strawberryMush, AgricultureItems.cinnamonAndSugar);
+		addRecipe(AgricultureItems.strawberryShortcake, AgricultureItems.shortcake, AgricultureItems.strawberryJelly, AgricultureItems.strawberry, AgricultureItems.whippedCream);
+		addRecipe(AgricultureItems.hamburger, AgricultureItems.ceramicPlate, AgricultureItems.sliceOfBread, AgricultureItems.hamburgerPatty, AgricultureItems.sliceOfBread);
+		addRecipe(AgricultureItems.pbjSandwichApple, AgricultureItems.ceramicPlate, AgricultureItems.sliceOfBread, AgricultureItems.peanutButter, AgricultureItems.appleJelly, AgricultureItems.sliceOfBread);
+		addRecipe(AgricultureItems.pbjSandwichStrawberry, AgricultureItems.ceramicPlate, AgricultureItems.sliceOfBread, AgricultureItems.peanutButter, AgricultureItems.strawberryJelly, AgricultureItems.sliceOfBread);
+		addRecipe(AgricultureItems.cheeseSandwich, AgricultureItems.ceramicPlate, AgricultureItems.sliceOfBread, AgricultureItems.sliceOfCheese, AgricultureItems.sliceOfBread);
+		addRecipe(AgricultureItems.butteredToast, AgricultureItems.toast, AgricultureItems.butter);
+		addRecipe(AgricultureItems.baconCheeseFries, AgricultureItems.cheeseFries, AgricultureItems.bacon);
+		addRecipe(AgricultureItems.baconCheeseburger, AgricultureItems.cheeseburger, AgricultureItems.bacon);
+		addRecipe(AgricultureItems.chocolate, AgricultureItems.milk, new ItemStack(Item.dyePowder.itemID, 1, 3), Item.sugar);
+		addRecipe(AgricultureItems.cheese, AgricultureItems.milk, AgricultureItems.vinegar);
+		addRecipe(AgricultureItems.whippedCream, AgricultureItems.milk, Item.sugar);
+		addRecipe(AgricultureItems.dough, AgricultureItems.water, AgricultureItems.flour);
+		addRecipe(AgricultureItems.appleGelatin, AgricultureItems.ceramicPlate, AgricultureItems.water, AgricultureItems.gelatin, AgricultureItems.appleMush);
+		addRecipe(AgricultureItems.strawberryGelatin, AgricultureItems.ceramicPlate, AgricultureItems.water, AgricultureItems.gelatin, AgricultureItems.strawberryMush);
+		addRecipe(AgricultureItems.marshmellows, AgricultureItems.water, AgricultureItems.gelatin, Item.sugar);
+		addRecipe(AgricultureItems.pastaDough, AgricultureItems.dough, Item.egg, AgricultureItems.salt);
+		addRecipe(AgricultureItems.cheeseFries, AgricultureItems.frenchFries, AgricultureItems.cheese);
+		addRecipe(AgricultureItems.rawChickenNuggets, AgricultureItems.groundChicken, AgricultureItems.breadCrumbs);
+		addRecipe(AgricultureItems.cheeseburger, AgricultureItems.hamburger, AgricultureItems.sliceOfCheese);
+		addRecipe(AgricultureItems.deluxeHotCocoa, AgricultureItems.hotCocoa, AgricultureItems.whippedCream, AgricultureItems.chocolate, AgricultureItems.marshmellows);
+		addRecipe(AgricultureItems.saltedBeef.getItemStack(), new ItemStack(Item.beefRaw), AgricultureItems.salt);
+		addRecipe(AgricultureItems.breadedChicken.getItemStack(), new ItemStack(Item.chickenRaw), AgricultureItems.breadCrumbs);
+		addRecipe(AgricultureItems.saltedPork.getItemStack(), new ItemStack(Item.porkRaw), AgricultureItems.salt);
+		addRecipe(AgricultureItems.caramelApple.getItemStack(), new ItemStack(Item.stick), Item.appleRed, AgricultureItems.caramel);
+		addRecipe(AgricultureItems.chocolateCoveredStrawberries, AgricultureItems.strawberry, AgricultureItems.chocolate);
+		addRecipe(AgricultureItems.cinnamonAndSugar, AgricultureItems.groundCinnamon, Item.sugar);
 	}
 	
 	public void addRecipe(SubItem item, SubItem baseItem, Object...par2ArrayOfObj)
@@ -90,59 +120,17 @@ public class CounterRecipes
 
 	public ItemStack findMatchingRecipe(IInventory processor)
 	{
-		int i = 0;
-		ItemStack itemstack = null;
-		ItemStack itemstack1 = null;
-		int j;
-
-		for (j = 0; j < processor.getSizeInventory(); ++j)
+		for (int j = 0; j < this.recipes.size(); ++j)
 		{
-			ItemStack itemstack2 = processor.getStackInSlot(j);
+			ICounterRecipe irecipe = (ICounterRecipe) this.recipes.get(j);
 
-			if (itemstack2 != null)
+			if (irecipe.matches(processor))
 			{
-				if (i == 0)
-				{
-					itemstack = itemstack2;
-				}
-
-				if (i == 1)
-				{
-					itemstack1 = itemstack2;
-				}
-
-				++i;
+				return irecipe.getCraftingResult(processor);
 			}
 		}
 
-		if (i == 2 && itemstack.itemID == itemstack1.itemID && itemstack.stackSize == 1 && itemstack1.stackSize == 1 && Item.itemsList[itemstack.itemID].isRepairable())
-		{
-			Item item = Item.itemsList[itemstack.itemID];
-			int k = item.getMaxDamage() - itemstack.getItemDamageForDisplay();
-			int l = item.getMaxDamage() - itemstack1.getItemDamageForDisplay();
-			int i1 = k + l + item.getMaxDamage() * 5 / 100;
-			int j1 = item.getMaxDamage() - i1;
-
-			if (j1 < 0)
-			{
-				j1 = 0;
-			}
-
-			return new ItemStack(itemstack.itemID, 1, j1);
-		} else
-		{
-			for (j = 0; j < this.recipes.size(); ++j)
-			{
-				ICounterRecipe irecipe = (ICounterRecipe) this.recipes.get(j);
-
-				if (irecipe.matches(processor))
-				{
-					return irecipe.getCraftingResult(processor);
-				}
-			}
-
-			return null;
-		}
+		return null;
 	}
 
 	/**

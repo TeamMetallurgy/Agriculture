@@ -1,7 +1,9 @@
 package com.teammetallurgy.agriculture;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.FurnaceRecipes;
 
 public class AgricultureItems
 {
@@ -10,9 +12,11 @@ public class AgricultureItems
 	public static SubItem flour;
 	public static SubItem dough;
 	
+	public static SubItem water;
 	public static SubItem hotCocoa;
 	public static SubItem vinegar;
 	public static SubItem beer;
+	public static SubItem milk;
 	public static SubItem rawHamburgerPatty;
 	public static SubItem appleJellyToast;
 	public static SubItem cinnamonToast;
@@ -86,6 +90,11 @@ public class AgricultureItems
 	public static SubItem strawberryMush;
 	//public static SubItem flour;
 	public static SubItem cookingOil;
+	public static SubItem strawberry;
+	public static SubItem salt;
+	public static SubItem groundCinnamon;
+	public static SubItem cinnamon;
+	public static SubItem peanuts;
 
 	public static SubItem clayBowl;
 	public static SubItem clayPlate;
@@ -99,18 +108,19 @@ public class AgricultureItems
 	
 	public static void init()
 	{
-		carmel = new SubItem(foodID, 1).setUnlocalizedName("Carmel").setTextureName("Carmel").setCreativeTab(Agriculture.tab);
-		ovenRack = new SubItem(foodID, 2).setUnlocalizedName("OvenRack").setTextureName("OvenRack").setCreativeTab(Agriculture.tab);
-		flour = new SubItem(foodID, 3).setUnlocalizedName("Flour").setTextureName("Flour").setCreativeTab(Agriculture.tab);
-		dough = new SubItem(foodID, 4).setUnlocalizedName("Dough").setTextureName("Dough").setCreativeTab(Agriculture.tab);
+		ovenRack = new SubItem(dishID, 6).setUnlocalizedName("OvenRack").setTextureName("OvenRack").setCreativeTab(Agriculture.tab);
+		//flour = new SubItem(foodID, 3).setUnlocalizedName("Flour").setTextureName("Flour").setCreativeTab(Agriculture.tab);
+		//dough = new SubItem(foodID, 4).setUnlocalizedName("Dough").setTextureName("Dough").setCreativeTab(Agriculture.tab);
 		
 		clayBowl = new SubItem(dishID, 0).setUnlocalizedName("ClayBowl").setTextureName("ClayBowl").setCreativeTab(Agriculture.tab);
 		clayPlate = new SubItem(dishID, 1).setUnlocalizedName("ClayPlate").setTextureName("ClayPlate").setCreativeTab(Agriculture.tab);
-		clayBowl = new SubItem(dishID, 2).setUnlocalizedName("ClayCup").setTextureName("ClayCup").setCreativeTab(Agriculture.tab);
+		clayCup = new SubItem(dishID, 2).setUnlocalizedName("ClayCup").setTextureName("ClayCup").setCreativeTab(Agriculture.tab);
 		ceramicBowl = new SubItem(dishID, 3).setUnlocalizedName("CeramicBowl").setTextureName("CeramicBowl").setCreativeTab(Agriculture.tab);
 		ceramicPlate = new SubItem(dishID, 4).setUnlocalizedName("CeramicPlate").setTextureName("CeramicPlate").setCreativeTab(Agriculture.tab);
 		ceramicCup = new SubItem(dishID, 5).setUnlocalizedName("CeramicCup").setTextureName("CeramicCup").setCreativeTab(Agriculture.tab);
-		
+
+		water = new SubItemFood(foodID, 3, 1, 0.1f).setUnlocalizedName("Water").setTextureName("Water").setCreativeTab(Agriculture.tab);
+		milk = new SubItemFood(foodID, 4, 1, 0.1f).setUnlocalizedName("Milk").setTextureName("Milk").setCreativeTab(Agriculture.tab);
 		hotCocoa = new SubItemFood(foodID, 5, 1, 0.1f).setUnlocalizedName("HotCocoa").setTextureName("HotCocoa").setCreativeTab(Agriculture.tab);
 		vinegar = new SubItem(foodID, 6).setUnlocalizedName("Vinegar").setTextureName("Vinegar").setCreativeTab(Agriculture.tab);
 		beer = new SubItemFood(foodID, 7, 1, 0.1f).setUnlocalizedName("Beer").setTextureName("Beer").setCreativeTab(Agriculture.tab);
@@ -160,6 +170,7 @@ public class AgricultureItems
 		sliceOfBread = new SubItemFood(foodID, 51, 1, 0.1f).setUnlocalizedName("SliceOfBread").setTextureName("SliceOfBread").setCreativeTab(Agriculture.tab);
 		friedChicken = new SubItemFood(foodID, 52, 1, 0.1f).setUnlocalizedName("FriedChicken").setTextureName("FriedChicken").setCreativeTab(Agriculture.tab);
 		frenchFries = new SubItemFood(foodID, 53, 1, 0.1f).setUnlocalizedName("FrenchFries").setTextureName("FrenchFries").setCreativeTab(Agriculture.tab);
+		chickenNuggets = new SubItemFood(foodID, 53, 1, 0.1f).setUnlocalizedName("ChickenNuggets").setTextureName("ChickenNuggets").setCreativeTab(Agriculture.tab);
 		shortcake = new SubItemFood(foodID, 54, 1, 0.1f).setUnlocalizedName("Shortcake").setTextureName("Shortcake").setCreativeTab(Agriculture.tab);
 		carrotCake = new SubItemFood(foodID, 55, 1, 0.1f).setUnlocalizedName("CarrotCake").setTextureName("CarrotCake").setCreativeTab(Agriculture.tab);
 		grilledCheese = new SubItemFood(foodID, 56, 1, 0.1f).setUnlocalizedName("GrilledCheese").setTextureName("GrilledCheese").setCreativeTab(Agriculture.tab);
@@ -186,16 +197,43 @@ public class AgricultureItems
 		strawberryMush = new SubItem(foodID, 77).setUnlocalizedName("StrawberryMush").setTextureName("Shortcake").setCreativeTab(Agriculture.tab);
 		flour = new SubItem(foodID, 78).setUnlocalizedName("Flour").setTextureName("Flour").setCreativeTab(Agriculture.tab);
 		cookingOil = new SubItem(foodID, 79).setUnlocalizedName("CookingOil").setTextureName("CookingOil").setCreativeTab(Agriculture.tab);
-		
+		strawberry = new SubItem(foodID, 80).setUnlocalizedName("Strawberry").setTextureName("Strawberry").setCreativeTab(Agriculture.tab);
+		salt = new SubItem(foodID, 81).setUnlocalizedName("Salt").setTextureName("Salt").setCreativeTab(Agriculture.tab);
+		carmel = new SubItem(foodID, 82).setUnlocalizedName("Carmel").setTextureName("Carmel").setCreativeTab(Agriculture.tab);
+		cinnamon = new SubItem(foodID, 83).setUnlocalizedName("Cinnamon").setTextureName("Cinnamon").setCreativeTab(Agriculture.tab);
+		groundCinnamon = new SubItem(foodID, 84).setUnlocalizedName("GroundCinnamon").setTextureName("GroundCinnamon").setCreativeTab(Agriculture.tab);
+		peanuts = new SubItem(foodID, 85).setUnlocalizedName("Peanuts").setTextureName("Peanuts").setCreativeTab(Agriculture.tab);
 		//DONE!!!
 		addNames();
+	}
+	
+	public static void addRecipes()
+	{
+		GameRegistry.addShapelessRecipe(sliceOfCheese.getItemStack(4), cheese.getItemStack());
+		GameRegistry.addShapelessRecipe(sliceOfBread.getItemStack(4), loafOfBread.getItemStack());
+		
+		GameRegistry.addRecipe(clayBowl.getItemStack(), "X X", " X ", 'X', Item.clay);
+		GameRegistry.addRecipe(clayPlate.getItemStack(), "XXX", 'X', Item.clay);
+		GameRegistry.addRecipe(clayCup.getItemStack(), "X", "X", 'X', Item.clay);
+		
+		FurnaceRecipes.smelting().addSmelting(clayBowl.getItemStack().itemID, clayBowl.getItemStack().getItemDamage(), ceramicBowl.getItemStack(), 0.1f);
+		FurnaceRecipes.smelting().addSmelting(clayPlate.getItemStack().itemID, clayPlate.getItemStack().getItemDamage(), ceramicPlate.getItemStack(), 0.1f);
+		FurnaceRecipes.smelting().addSmelting(clayCup.getItemStack().itemID, clayCup.getItemStack().getItemDamage(), ceramicCup.getItemStack(), 0.1f);
 	}
 
 	public static void addNames()
 	{
 		LanguageRegistry.addName(carmel.getItemStack(), "Carmel");
 		LanguageRegistry.addName(ovenRack.getItemStack(), "Oven Rack");
-		
+
+		LanguageRegistry.addName(clayBowl.getItemStack(), "Clay Bowl");
+		LanguageRegistry.addName(clayPlate.getItemStack(), "Clay Plate");
+		LanguageRegistry.addName(clayCup.getItemStack(), "Clay Cup");
+		LanguageRegistry.addName(ceramicBowl.getItemStack(), "Ceramic Bowl");
+		LanguageRegistry.addName(ceramicPlate.getItemStack(), "Ceramic Plate");
+		LanguageRegistry.addName(ceramicCup.getItemStack(), "Ceramic Cup");
+
+		LanguageRegistry.addName(milk.getItemStack(), "Milk");
 		LanguageRegistry.addName(hotCocoa.getItemStack(), "Hot Cocoa");
 		LanguageRegistry.addName(vinegar.getItemStack(), "Vinegar");
 		LanguageRegistry.addName(beer.getItemStack(), "Beer");
@@ -219,5 +257,62 @@ public class AgricultureItems
 		LanguageRegistry.addName(pbjSandwichStrawberry.getItemStack(), "PB&J Sandwich (Strawberry)");
 		LanguageRegistry.addName(cheeseSandwich.getItemStack(), "Cheese Sandwich");
 		LanguageRegistry.addName(butteredToast.getItemStack(), "Buttered Toast");
+		LanguageRegistry.addName(baconCheeseFries.getItemStack(), "Bacon Cheese Fries");
+		LanguageRegistry.addName(baconCheeseburger.getItemStack(), "Bacon Cheeseburger");
+		LanguageRegistry.addName(chocolate.getItemStack(), "Chocolate");
+		LanguageRegistry.addName(cheese.getItemStack(), "Cheese");
+		LanguageRegistry.addName(butter.getItemStack(), "Butter");
+		LanguageRegistry.addName(whippedCream.getItemStack(), "Whipped Cream");
+		LanguageRegistry.addName(dough.getItemStack(), "Dough");
+		LanguageRegistry.addName(appleGelatin.getItemStack(), "Apple Gelatin");
+		LanguageRegistry.addName(strawberryGelatin.getItemStack(), "Strawberry Gelatin");
+		LanguageRegistry.addName(marshmellows.getItemStack(), "Marshmellows");
+		LanguageRegistry.addName(pastaDough.getItemStack(), "Pasta Dough");
+		LanguageRegistry.addName(cheeseFries.getItemStack(), "Cheese Fries");
+		LanguageRegistry.addName(rawChickenNuggets.getItemStack(), "Raw Chicken Nuggets");
+		LanguageRegistry.addName(cheeseburger.getItemStack(), "Cheeseburger");
+		LanguageRegistry.addName(deluxeHotCocoa.getItemStack(), "Deluxe Hot Cocoa");
+		LanguageRegistry.addName(saltedBeef.getItemStack(), "Salted Beef");
+		LanguageRegistry.addName(breadedChicken.getItemStack(), "Breaded Chicken");
+		LanguageRegistry.addName(saltedPork.getItemStack(), "Salted Pork");
+		LanguageRegistry.addName(caramelApple.getItemStack(), "Caramel Apple");
+		LanguageRegistry.addName(chocolateCoveredStrawberries.getItemStack(), "Chocolate-Covered Strawberries");
+		LanguageRegistry.addName(cinnamonAndSugar.getItemStack(), "Cinnamon and Sugar");
+		LanguageRegistry.addName(sliceOfCheese.getItemStack(), "Slice of Cheese");
+		LanguageRegistry.addName(sliceOfBread.getItemStack(), "Slice of Bread");
+		LanguageRegistry.addName(friedChicken.getItemStack(), "Fried Chicken");
+		LanguageRegistry.addName(frenchFries.getItemStack(), "French Fries");
+		LanguageRegistry.addName(chickenNuggets.getItemStack(), "Chicken Nuggets");
+		LanguageRegistry.addName(shortcake.getItemStack(), "Shortcake");
+		LanguageRegistry.addName(carrotCake.getItemStack(), "Carrot Cake");
+		LanguageRegistry.addName(grilledCheese.getItemStack(), "Grilled Cheese");
+		LanguageRegistry.addName(loafOfBread.getItemStack(), "Loaf of Bread");
+		LanguageRegistry.addName(pasta.getItemStack(), "Pasta");
+		LanguageRegistry.addName(toastedPbjSandwichApple.getItemStack(), "Toasted PB&J Sandwich (Apple)");
+		LanguageRegistry.addName(toastedPbjSandwichStrawberry.getItemStack(), "Toasted PB&J Sandwich (Strawberry)");
+		LanguageRegistry.addName(roastedPeanuts.getItemStack(), "Roasted Peanuts");
+		LanguageRegistry.addName(applePie.getItemStack(), "Apple Pie");
+		LanguageRegistry.addName(frenchToast.getItemStack(), "French Toast");
+		LanguageRegistry.addName(hamburgerPatty.getItemStack(), "Hamburger Patty");
+		LanguageRegistry.addName(strawberryPie.getItemStack(), "Strawberry Pie");
+		LanguageRegistry.addName(beefJerkey.getItemStack(), "Beef Jerkey");
+		LanguageRegistry.addName(bacon.getItemStack(), "Bacon");
+		LanguageRegistry.addName(toast.getItemStack(), "Toast");
+		LanguageRegistry.addName(caramel.getItemStack(), "Caramel");
+		LanguageRegistry.addName(appleMush.getItemStack(), "Apple Mush");
+		LanguageRegistry.addName(gelatin.getItemStack(), "Gelatin");
+		LanguageRegistry.addName(breadCrumbs.getItemStack(), "Bread Crumbs");
+		LanguageRegistry.addName(groundBeef.getItemStack(), "Ground Beef");
+		LanguageRegistry.addName(groundChicken.getItemStack(), "Ground Chicken");
+		LanguageRegistry.addName(groundPork.getItemStack(), "Ground Pork");
+		LanguageRegistry.addName(crushedPeanuts.getItemStack(), "Crushed Peanuts");
+		LanguageRegistry.addName(strawberryMush.getItemStack(), "Strawberry Mush");
+		LanguageRegistry.addName(flour.getItemStack(), "Flour");
+		LanguageRegistry.addName(peanutButter.getItemStack(), "Peanut Butter");
+		LanguageRegistry.addName(cookingOil.getItemStack(), "Cooking Oil");
+		LanguageRegistry.addName(salt.getItemStack(), "Salt");
+		LanguageRegistry.addName(cinnamon.getItemStack(), "Cinnamon");
+		LanguageRegistry.addName(groundCinnamon.getItemStack(), "Ground Cinnamon");
+		LanguageRegistry.addName(peanuts.getItemStack(), "Peanuts");
 	}
 }

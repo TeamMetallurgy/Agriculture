@@ -1,20 +1,28 @@
 package com.teammetallurgy.agriculture.hunger;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.Map;
 import java.util.WeakHashMap;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+
+import com.teammetallurgy.agriculture.Agriculture;
 import com.teammetallurgy.agriculture.packets.PacketSyncHunger;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 
 public class HungerSystem
 {
-    static WeakHashMap<String, HungerSystem> playerInstances = new WeakHashMap<String, HungerSystem>();
+    static Map<String, HungerSystem> playerInstances = new WeakHashMap<String, HungerSystem>();
 
     static final float MAXPOINTS = 200;
     float hungerPoints = 0;
@@ -60,6 +68,7 @@ public class HungerSystem
         {
             this.hungerPoints = MAXPOINTS;
         }
+//        System.out.println("points " + hungerPoints);
         syncClientWithServer(this.player);
     }
 
@@ -78,7 +87,7 @@ public class HungerSystem
         {
             this.hungerPoints = 0;
         }
-        
+//        System.out.println(hungerPoints);
         syncClientWithServer(this.player);
     }
 
@@ -109,23 +118,24 @@ public class HungerSystem
         return hungerPoints / MAXPOINTS;
     }
 
-    public static void applyBonuses(EntityPlayer player)
+    public static void applyBonuses(EntityPlayerMP player)
     {
-        getInstance(player).applyBonuses();
+    	if(!player.worldObj.isRemote)
+    		getInstance(player).applyInstanceBonuses(player);
     }
 
-    public void applyBonuses()
+    public void applyInstanceBonuses(EntityPlayerMP playerMP)
     {
-        if (getPercentage() >= .20f)
+        if (getPercentage() >= .20f && playerMP instanceof EntityPlayerMP)
         {
-            if (!player.isPotionActive(Potion.digSpeed.id))
+            //if (!player.isPotionActive(Potion.digSpeed.id))
             {
-                player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 200, 1));
+            	playerMP.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 200, 1, true));
             }
 
-            if (!player.isPotionActive(Potion.moveSpeed.id))
+            //if (!player.isPotionActive(Potion.moveSpeed.id))
             {
-                player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 200, 1));
+            	playerMP.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 200, 1, true));
             }
         }
     }
@@ -134,7 +144,29 @@ public class HungerSystem
     {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
         {
-            PacketDispatcher.sendPacketToPlayer(new PacketSyncHunger(hungerPoints), (Player)player);
+            //PacketDispatcher.sendPacketToPlayer(new PacketSyncHunger(hungerPoints), (Player)player);
+        
+	        ByteArrayOutputStream bos = new ByteArrayOutputStream(140);
+			DataOutputStream dos = new DataOutputStream(bos);
+			try
+			{
+				dos.writeShort(256);
+				dos.writeFloat(hungerPoints);
+			} catch (IOException e)
+			{
+				System.out.println(e);
+			}
+	
+			Packet250CustomPayload packet = new Packet250CustomPayload();
+			packet.channel = Agriculture.MODID;
+			packet.data = bos.toByteArray();
+			packet.length = bos.size();
+	
+			if (packet != null)
+			{
+				PacketDispatcher.sendPacketToAllPlayers(packet);
+				//PacketDispatcher.sendPacketToPlayer(packet, (Player) player);
+			}
         }
     }
 }

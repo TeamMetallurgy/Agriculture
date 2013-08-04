@@ -1,5 +1,7 @@
 package com.teammetallurgy.agriculture;
 
+import com.teammetallurgy.agriculture.worldgen.WorldGenSalt;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -10,6 +12,9 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 @Mod(name = Agriculture.MODNAME, modid = Agriculture.MODID, version = Agriculture.VERSION)
 @NetworkMod(channels = { Agriculture.MODID }, packetHandler = PacketHandler.class)
@@ -41,7 +46,11 @@ public class Agriculture
     	AgricultureItems.init();
     	tab.setItemID(AgricultureBlocks.oven.blockID);
     	
+    	AgricultureItems.addRecipes();
     	
+    	GameRegistry.registerWorldGenerator(new WorldGenSalt(4));
+    	
+    	TickRegistry.registerTickHandler(new TickHandler(), Side.SERVER);
         NetworkRegistry.instance().registerGuiHandler(instance, proxy);
         proxy.registerEventHandlers();
         proxy.registerRenderers();

@@ -12,7 +12,16 @@ import com.teammetallurgy.agriculture.recipes.CounterRecipes;
 
 public class TileEntityCounter extends BaseMachineTileEntity
 {
-	private IInventory cabinet = new InventoryBasic("", false, 24);
+	private InventoryCabinet cabinet = new InventoryCabinet("", false, 24, this);
+	int numUsingPlayers;
+
+	// Left door
+	float prevLeftDoorAngle;
+	float leftDoorAngle;
+
+	// Right door
+	double prevRightDoorAngle;
+	float rightDoorAngle;
 
 	public IInventory getCabinet()
 	{
@@ -58,5 +67,43 @@ public class TileEntityCounter extends BaseMachineTileEntity
 		tag.setTag("Items", nbtTagList);
 
 		super.writeToNBT(tag);
+	}
+
+	public boolean receiveClientEvent(int id, int value)
+	{
+		if (id == 1)
+		{
+			this.numUsingPlayers = value;
+			return true;
+		} else
+		{
+			return super.receiveClientEvent(id, value);
+		}
+	}
+
+	@Override
+	public void updateEntity()
+	{
+		prevLeftDoorAngle = leftDoorAngle;
+		if (this.numUsingPlayers == 0 && leftDoorAngle > 0.0F || this.numUsingPlayers > 0 && leftDoorAngle < 1.0F)
+		{
+			if (this.numUsingPlayers > 0)
+			{
+				leftDoorAngle += 0.1;
+			} else
+			{
+				leftDoorAngle -= 0.1;
+			}
+
+			if (leftDoorAngle > 1.0F)
+			{
+				leftDoorAngle = 1.0F;
+			}
+
+			if (leftDoorAngle < 0.0F)
+			{
+				leftDoorAngle = 0.0F;
+			}
+		}
 	}
 }

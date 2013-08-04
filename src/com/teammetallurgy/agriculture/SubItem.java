@@ -2,6 +2,7 @@ package com.teammetallurgy.agriculture;
 
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
@@ -91,5 +92,20 @@ public class SubItem
 	public ItemStack onEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
 	{
 		return par1ItemStack;
+	}
+
+	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
+	{
+		return par1ItemStack;
+	}
+
+	public EnumAction getItemUseAction(ItemStack par1ItemStack)
+	{
+		return EnumAction.none;
+	}
+
+	public int getMaxItemUseDuration(ItemStack par1ItemStack)
+	{
+		return 0;
 	}
 }

@@ -3,10 +3,11 @@ package com.teammetallurgy.agriculture.gui;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.teammetallurgy.agriculture.AgricultureItems;
-
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import com.teammetallurgy.agriculture.AgricultureItems;
+import com.teammetallurgy.agriculture.SubItem;
 
 public class OvenRecipes
 {
@@ -18,7 +19,22 @@ public class OvenRecipes
 	
 	static
 	{
-		addRecipe(new ItemStack(Item.sugar), AgricultureItems.carmel.getItemStack(), 100000);
+		addRecipe(AgricultureItems.carmel.getItemStack(), new ItemStack(Item.sugar), 100000);
+		addRecipe(AgricultureItems.shortcake, AgricultureItems.batter, 100000);
+		addRecipe(AgricultureItems.carrotCake, AgricultureItems.carrotCakeBatter, 100000);
+		addRecipe(AgricultureItems.cheeseSandwich, AgricultureItems.grilledCheese, 100000);
+		addRecipe(AgricultureItems.loafOfBread, AgricultureItems.dough, 100000);
+		addRecipe(AgricultureItems.pasta, AgricultureItems.pastaDough, 100000);
+		addRecipe(AgricultureItems.toastedPbjSandwichApple, AgricultureItems.pbjSandwichApple, 100000);
+		addRecipe(AgricultureItems.toastedPbjSandwichStrawberry, AgricultureItems.pbjSandwichStrawberry, 100000);
+		addRecipe(AgricultureItems.roastedPeanuts, AgricultureItems.peanuts, 100000);
+		addRecipe(AgricultureItems.applePie, AgricultureItems.rawApplePie, 100000);
+		addRecipe(AgricultureItems.frenchToast, AgricultureItems.rawFrenchToast, 100000);
+		addRecipe(AgricultureItems.hamburgerPatty, AgricultureItems.rawHamburgerPatty, 100000);
+		addRecipe(AgricultureItems.strawberryPie, AgricultureItems.rawStrawberryPie, 100000);
+		addRecipe(AgricultureItems.beefJerkey, AgricultureItems.saltedBeef, 100000);
+		addRecipe(AgricultureItems.bacon, AgricultureItems.saltedPork, 100000);
+		addRecipe(AgricultureItems.toast, AgricultureItems.sliceOfBread, 100000);
 	}
 	
 	private OvenRecipes(ItemStack source, ItemStack result, int heat)
@@ -28,7 +44,12 @@ public class OvenRecipes
 		this.requiredHeat = heat;
 	}
 	
-	public static void addRecipe(ItemStack source, ItemStack result, int heat)
+	public static void addRecipe(SubItem result, SubItem source, int heat)
+	{
+		addRecipe(result.getItemStack(), source.getItemStack(), heat);
+	}
+	
+	public static void addRecipe(ItemStack result, ItemStack source, int heat)
 	{
 		OvenRecipes recipe = new OvenRecipes(source, result, heat);
 		
@@ -51,7 +72,9 @@ public class OvenRecipes
 		{
 			if(result.getRequiredHeat() <= heat)
 			{
-				return result.getResult();
+				ItemStack itemStack = result.getResult();
+				itemStack.stackSize = 1;
+				return itemStack;
 			}
 		}
 		

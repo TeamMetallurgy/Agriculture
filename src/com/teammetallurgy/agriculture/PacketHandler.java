@@ -2,6 +2,7 @@ package com.teammetallurgy.agriculture;
 
 import java.io.IOException;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -12,9 +13,11 @@ import net.minecraft.tileentity.TileEntity;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
+import com.teammetallurgy.agriculture.hunger.HungerSystem;
 import com.teammetallurgy.agriculture.machines.oven.TileEntityOven;
 import com.teammetallurgy.agriculture.machines.processor.TileEntityProcessor;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 
@@ -44,7 +47,8 @@ public class PacketHandler implements IPacketHandler
 				oven.setMaxTemp(maxTemp);
 				oven.setFuelRemaining(fuelRemaining);
 			}
-		} else if (packetID == 1)
+		} 
+		else if (packetID == 1)
 		{
 			int x = byteIn.readInt();
 			int y = byteIn.readInt();
@@ -52,6 +56,7 @@ public class PacketHandler implements IPacketHandler
 			byte direction = byteIn.readByte();
 			int processingTime = byteIn.readInt();
 			int currentItemBurnTime = byteIn.readInt();
+			int fuelRemaining = byteIn.readInt();
 			int coolDown = byteIn.readInt();
 
 			boolean item = byteIn.readInt() == 1;
@@ -73,8 +78,16 @@ public class PacketHandler implements IPacketHandler
 				oven.setProcessingTime(processingTime);
 				oven.setCurrentItemBurnTime(currentItemBurnTime);
 				oven.setResult(result);
+				oven.setFuelRemaining(fuelRemaining);
 				oven.setCoolDown(coolDown);
 			}
+		}
+		else if(packetID == 256)
+		{
+			float hunger = byteIn.readFloat();
+			
+            Minecraft client = FMLClientHandler.instance().getClient();
+            new HungerSystem(client.thePlayer, hunger);
 		}
 	}
 }

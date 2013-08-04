@@ -1,13 +1,10 @@
 package com.teammetallurgy.agriculture.gui;
 
-import org.lwjgl.opengl.GL11;
-
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
 
 public class GUICabinet extends GuiContainer
 {
