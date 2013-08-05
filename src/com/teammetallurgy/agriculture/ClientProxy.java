@@ -9,6 +9,12 @@ import com.teammetallurgy.agriculture.machines.brewer.TileEntityBrewerRenderer;
 import com.teammetallurgy.agriculture.machines.counter.CounterRenderHelper;
 import com.teammetallurgy.agriculture.machines.counter.TileEntityCounter;
 import com.teammetallurgy.agriculture.machines.counter.TileEntityCounterRenderer;
+import com.teammetallurgy.agriculture.machines.frier.FrierRenderHelper;
+import com.teammetallurgy.agriculture.machines.frier.TileEntityFrier;
+import com.teammetallurgy.agriculture.machines.frier.TileEntityFrierRenderer;
+import com.teammetallurgy.agriculture.machines.icebox.IceboxRenderHelper;
+import com.teammetallurgy.agriculture.machines.icebox.TileEntityIcebox;
+import com.teammetallurgy.agriculture.machines.icebox.TileEntityIceboxRenderer;
 import com.teammetallurgy.agriculture.machines.oven.OvenRenderHelper;
 import com.teammetallurgy.agriculture.machines.oven.TileEntityOven;
 import com.teammetallurgy.agriculture.machines.oven.TileEntityOvenRenderer;
@@ -39,5 +45,9 @@ public class ClientProxy extends CommonProxy
     	RenderingRegistry.registerBlockHandler(new ProcessorRenderHelper());
     	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBrewer.class, new TileEntityBrewerRenderer());
     	RenderingRegistry.registerBlockHandler(new BrewerRenderHelper());
+    	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityIcebox.class, new TileEntityIceboxRenderer());
+    	RenderingRegistry.registerBlockHandler(new IceboxRenderHelper());
+    	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFrier.class, new TileEntityFrierRenderer());
+    	RenderingRegistry.registerBlockHandler(new FrierRenderHelper());
     }
 }

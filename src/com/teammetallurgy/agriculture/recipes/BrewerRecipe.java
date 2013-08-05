@@ -6,17 +6,21 @@ import net.minecraftforge.fluids.FluidStack;
 public class BrewerRecipe
 {
 
-	private FluidStack result;
+	private Object result;
 	private ItemStack item;
 	private FluidStack base;
 	private int processingTime;
+	private int resultType;
 
-	public BrewerRecipe(ItemStack item, FluidStack base, FluidStack result, int processingTime)
+	public BrewerRecipe(ItemStack item, FluidStack base, Object result, int processingTime)
 	{
 		this.item = item;
 		this.base = base;
 		this.result = result;
 		this.processingTime = processingTime;
+		
+		this. resultType = result instanceof ItemStack ? 1 : 0;
+		
 	}
 
 	public boolean matches(ItemStack first, FluidStack baseFluid)
@@ -42,7 +46,7 @@ public class BrewerRecipe
 		return false;
 	}
 
-	public FluidStack getCraftingResult()
+	public Object getCraftingResult()
 	{
 		return result;
 	}

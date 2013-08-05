@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidRegistry.FluidRegisterEvent;
 
 public class BrewerRecipes
 {
@@ -41,12 +42,17 @@ public class BrewerRecipes
 	{
 		addRecipe(item, base, result, 40);
 	}
-	
+
 	public void addRecipe(ItemStack item, FluidStack base, FluidStack result, int processingTime)
 	{
 		this.recipes.add(new BrewerRecipe(item, base, result, 40));
 	}
 
+	private void addRecipe(ItemStack itemStack, FluidStack base, ItemStack result, int processingTime)
+	{
+		this.recipes.add(new BrewerRecipe(itemStack, base, result, 40));
+
+	}
 
 	public FluidStack findMatchingFluid(ItemStack first, FluidStack base)
 	{
@@ -54,7 +60,28 @@ public class BrewerRecipes
 
 		if (recipe != null)
 		{
-			return recipe.getCraftingResult();
+			Object result = recipe.getCraftingResult();
+
+			if (result instanceof FluidStack)
+				return (FluidStack) result;
+
+			return null;
+		}
+		return null;
+	}
+
+	public ItemStack findMatchingItem(ItemStack first, FluidStack base)
+	{
+		BrewerRecipe recipe = getMatchingRecipe(first, base);
+
+		if (recipe != null)
+		{
+			Object result = recipe.getCraftingResult();
+
+			if (result instanceof ItemStack)
+				return (ItemStack) result;
+
+			return null;
 		}
 		return null;
 	}
@@ -82,12 +109,17 @@ public class BrewerRecipes
 	private BrewerRecipes()
 	{
 		addRecipe(new ItemStack(Item.bucketWater), new FluidStack(FluidRegistry.WATER, 1000));
+		addRecipe(new ItemStack(Item.bucketMilk), new FluidStack(FluidRegistry.getFluid("milk"), 1000));
 		
-		FluidRegistry.registerFluid(new Fluid("beer"));
-		addRecipe(new ItemStack(Item.wheat), new FluidStack(FluidRegistry.WATER, 1000), new FluidStack(FluidRegistry.getFluid("beer"), 1000), 40);
-
-		// addRecipe(new ItemStack(Item.bucketMilk), new
-		// FluidStack(FluidRegistry.getFluid("Milk"), 1000));
+		addRecipe(new ItemStack(Item.wheat), new FluidStack(FluidRegistry.WATER, 1000), new FluidStack(FluidRegistry.getFluid("beer"), 1000));
+		addRecipe(AgricultureItems.chocolate.getItemStack(), new FluidStack(FluidRegistry.getFluid("milk"), 1000), new FluidStack(FluidRegistry.getFluid("hotcocoa"), 1000));
+		addRecipe(new ItemStack(Item.reed), new FluidStack(FluidRegistry.WATER, 1000), new FluidStack(FluidRegistry.getFluid("vinegar"), 1000));
+		addRecipe(new ItemStack(Item.potato), new FluidStack(FluidRegistry.WATER, 1000), new FluidStack(FluidRegistry.getFluid("vodka"), 1000));
+		addRecipe(new ItemStack(Item.appleRed), new FluidStack(FluidRegistry.WATER, 1000), new FluidStack(FluidRegistry.getFluid("cider"), 1000));
+				
+		addRecipe(AgricultureItems.ceramicCup.getItemStack(), new FluidStack(FluidRegistry.getFluid("beer"), 1000), AgricultureItems.beer.getItemStack(), 40);
+		addRecipe(AgricultureItems.ceramicCup.getItemStack(), new FluidStack(FluidRegistry.getFluid("vinegar"), 1000), AgricultureItems.vinegar.getItemStack(), 40);
+		addRecipe(AgricultureItems.ceramicCup.getItemStack(), new FluidStack(FluidRegistry.getFluid("hotcocoa"), 1000), AgricultureItems.hotCocoa.getItemStack(), 40);
 	}
 
 	public int getProcessTime(ItemStack stackInSlot)

@@ -17,10 +17,12 @@ public class ContainerBrewer extends Container
 	public ContainerBrewer(InventoryPlayer invPlayer, TileEntityBrewer brewer)
 	{
 		this.cabinet = brewer;
+		cabinet.getBrewer().openChest();
 
 		int i;
 		this.addSlotToContainer(new Slot(brewer.getBrewer(), 0, 80, 13));
 		this.addSlotToContainer(new Slot(brewer.getBrewer(), 1, 80, 58));
+		this.addSlotToContainer(new Slot(brewer.getBrewer(), 2, 26, 36));
 
 		for (i = 0; i < 3; ++i)
 		{
@@ -41,6 +43,7 @@ public class ContainerBrewer extends Container
 	public void onContainerClosed(EntityPlayer entityplayer)
 	{
 		super.onContainerClosed(entityplayer);
+		cabinet.getBrewer().closeChest();
 	}
 
 	@Override
@@ -54,13 +57,13 @@ public class ContainerBrewer extends Container
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 
-			if (par2 < 2)
+			if (par2 < 3)
 			{
-				if (!this.mergeItemStack(itemstack1, 3, this.inventorySlots.size(), true))
+				if (!this.mergeItemStack(itemstack1, 4, this.inventorySlots.size(), true))
 				{
 					return null;
 				}
-			} else if (!this.mergeItemStack(itemstack1, 0, 3, false))
+			} else if (!this.mergeItemStack(itemstack1, 0, 4, false))
 			{
 				return null;
 			}

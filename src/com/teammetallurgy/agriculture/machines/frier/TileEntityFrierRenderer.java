@@ -1,23 +1,22 @@
 
-package com.teammetallurgy.agriculture.machines.brewer;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
+package com.teammetallurgy.agriculture.machines.frier;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-public class TileEntityBrewerRenderer extends TileEntitySpecialRenderer
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
+
+public class TileEntityFrierRenderer extends TileEntitySpecialRenderer
 {
-	private ModelBrewer model = new ModelBrewer();
-	private ResourceLocation texture = new ResourceLocation("agriculture", "textures/blocks/Brewer.png");
+	private ModelFrier model = new ModelFrier();
+	private ResourceLocation texture = new ResourceLocation("agriculture", "textures/blocks/Frier.png");
 	
 	private static int[] rotations = {0, 0, 180, 0, 90, -90};
 	
-	public void renderTileEntityAt(TileEntityBrewer tileentity, double x, double y, double z, float partialTickTime)
+	public void renderTileEntityAt(TileEntityFrier tileentity, double x, double y, double z, float partialTickTime)
 	{
 		int direction = 0;
 		float yOffset = 0;
@@ -39,18 +38,7 @@ public class TileEntityBrewerRenderer extends TileEntitySpecialRenderer
 		
 		GL11.glRotatef((float)rotation, 0F, 1F, 0F);
 		
-		model.getLiquidIcon(tileentity.getRightTank().getFluid());
-		
-		model.setLiquidLevel(tileentity.getLiquidScaled());
-        float angle = tileentity.prevLeftDoorAngle + (tileentity.leftDoorAngle - tileentity.prevLeftDoorAngle) * partialTickTime;
-		model.setDoorAngle(angle);
-		
-		model.setFlowing(tileentity.getAmountRightInput());
-		
 		model.renderAll();
-		
-		Minecraft.getMinecraft().func_110434_K().func_110577_a(TextureMap.field_110575_b);
-		model.renderLiquids();
 		
 		GL11.glPopMatrix();
 	}
@@ -58,7 +46,7 @@ public class TileEntityBrewerRenderer extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float unknown)
 	{
-		this.renderTileEntityAt((TileEntityBrewer)tileentity, x, y, z, unknown);
+		this.renderTileEntityAt((TileEntityFrier)tileentity, x, y, z, unknown);
 	}
 	
 	

@@ -4,6 +4,8 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.Icon;
+import net.minecraftforge.fluids.FluidStack;
 
 import com.teammetallurgy.agriculture.ModelSimpleBox;
 
@@ -15,8 +17,11 @@ public class ModelBrewer extends ModelBase
 	ModelRenderer top;
 	ModelRenderer nozzle;
 	ModelRenderer tophatch;
-	
+
 	ModelSimpleBox liquid;
+
+	ModelSimpleBox filling;
+	private Icon liquidIcon;
 
 	public ModelBrewer()
 	{
@@ -48,31 +53,48 @@ public class ModelBrewer extends ModelBase
 		tophatch.mirror = true;
 		setRotation(tophatch, 0F, 0F, 0F);
 	}
-	
+
 	public void setLiquidLevel(float level)
 	{
-		if(level > 0)
+		if (level > 0)
 		{
 			int height = (int) (level * 12);
-			liquid = new ModelSimpleBox(128, 64, 68, 29, -7, 23 - height, -6, 14, height, 13, 0);
-		}
-		else
+			liquid = new ModelSimpleBox(16, 16, 0, 0, -7, 23 - height, -6, 14, height, 13, 0, liquidIcon);
+		} else
 		{
 			liquid = null;
 		}
 	}
 
+	public void setFlowing(int i)
+	{
+		if (i > 0)
+		{
+			float scaled = i / 1000f;
+
+			int width = (int) (3 * scaled);
+			int height = 10;
+
+			int x1 = (int) -(width / 2f);
+			int y1 = 12;
+			int z1 = (int) -(width / 2f);
+
+			if (filling == null)
+				filling = new ModelSimpleBox(16, 16, 0, 0, x1, y1, z1, width, height, width, 0, liquidIcon);
+		} else
+		{
+			filling = null;
+		}
+	}
+
 	public void renderAll()
 	{
-		base.render(1/16f);
-		top.render(1/16f);
-		nozzle.render(1/16f);
-		tophatch.render(1/16f);
-		
-		if(liquid != null)
-			liquid.render(Tessellator.instance, 1/16f);
+		base.render(1 / 16f);
+		top.render(1 / 16f);
+		nozzle.render(1 / 16f);
+		tophatch.render(1 / 16f);
 	}
-	
+
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
 	{
 		super.render(entity, f, f1, f2, f3, f4, f5);
@@ -87,5 +109,29 @@ public class ModelBrewer extends ModelBase
 		model.rotateAngleX = x;
 		model.rotateAngleY = y;
 		model.rotateAngleZ = z;
+	}
+
+	public void setDoorAngle(float angle)
+	{
+		this.tophatch.rotateAngleX = 1.5F * -angle;
+	}
+
+	public void renderLiquids()
+	{
+		if (liquid != null)
+			liquid.render(Tessellator.instance, 1 / 16f);
+
+		if (filling != null)
+			filling.render(Tessellator.instance, 1 / 16f);
+	}
+
+	public void getLiquidIcon(FluidStack fluid)
+	{
+		if (fluid != null)
+		{
+			Icon stillIcon = fluid.getFluid().getStillIcon();
+			if (stillIcon != null)
+				this.liquidIcon = stillIcon;
+		}
 	}
 }
