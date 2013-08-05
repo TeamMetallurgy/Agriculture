@@ -103,6 +103,7 @@ public class TileEntityOven extends BaseMachineTileEntity
 						if (result != null)
 						{
 							inventoryOven.setInventorySlotContents(ovenInventorySlotStart + i, result.copy());
+							timeInOvenSlot[i] = 0;
 							sendPacket();
 						}
 					} else

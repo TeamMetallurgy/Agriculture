@@ -1,21 +1,20 @@
 package com.teammetallurgy.agriculture.gui;
 
-import com.teammetallurgy.agriculture.machines.IFuelSlot;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+
+import com.teammetallurgy.agriculture.machines.IFuelSlot;
 
 public class ContainerFuel extends Container
 {
 	private IInventory inventory;
 	private IFuelSlot te;
 
-	public ContainerFuel(InventoryPlayer invPlayer, IInventory inventory, IFuelSlot te2)
+	public ContainerFuel(InventoryPlayer invPlayer, IInventory inventory, int slot, IFuelSlot te2)
 	{
 		this.inventory = inventory;
 
@@ -23,7 +22,7 @@ public class ContainerFuel extends Container
 
 		int i;
 
-		this.addSlotToContainer(new Slot(inventory, 0, 80, 39));
+		this.addSlotToContainer(new Slot(inventory, slot, 80, 39));
 
 		for (i = 0; i < 3; ++i)
 		{

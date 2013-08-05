@@ -41,26 +41,23 @@ public class CounterRecipes
 		addRecipe(AgricultureItems.cinnamonToast, AgricultureItems.butteredToast, AgricultureItems.cinnamonAndSugar);
 		addRecipe(AgricultureItems.strawberryJellyToast, AgricultureItems.butteredToast, AgricultureItems.strawberryJelly);
 		addRecipe(AgricultureItems.caramelAppleWithNuts, AgricultureItems.caramelApple, AgricultureItems.crushedPeanuts);
-		addRecipe(AgricultureItems.appleJelly, AgricultureItems.ceramicBowl, AgricultureItems.appleMush, Item.sugar);
 		addRecipe(AgricultureItems.mashedPotatos, AgricultureItems.ceramicBowl, Item.bakedPotato, AgricultureItems.butter);
 		addRecipe(AgricultureItems.carrotCakeBatter, AgricultureItems.ceramicBowl, AgricultureItems.batter, Item.carrot);
 		addRecipe(AgricultureItems.rawFrenchToast, AgricultureItems.ceramicPlate, Item.bread, Item.egg, AgricultureItems.cinnamonAndSugar);
 		addRecipe(AgricultureItems.batter, AgricultureItems.ceramicBowl, Item.egg, AgricultureItems.butter, AgricultureItems.flour);
 		addRecipe(AgricultureItems.macaroniAndCheese, AgricultureItems.ceramicBowl, AgricultureItems.pasta, AgricultureItems.cheese);
-		addRecipe(AgricultureItems.strawberryJelly, AgricultureItems.ceramicBowl, AgricultureItems.strawberryMush, Item.sugar);
 		addRecipe(AgricultureItems.rawApplePie, AgricultureItems.ceramicPlate, AgricultureItems.dough, AgricultureItems.appleMush, AgricultureItems.cinnamonAndSugar);
 		addRecipe(AgricultureItems.rawStrawberryPie, AgricultureItems.ceramicPlate, AgricultureItems.dough, AgricultureItems.strawberryMush, AgricultureItems.cinnamonAndSugar);
 		addRecipe(AgricultureItems.strawberryShortcake, AgricultureItems.shortcake, AgricultureItems.strawberryJelly, AgricultureItems.strawberry, AgricultureItems.whippedCream);
 		addRecipe(AgricultureItems.hamburger, AgricultureItems.ceramicPlate, AgricultureItems.sliceOfBread, AgricultureItems.hamburgerPatty, AgricultureItems.sliceOfBread);
-		addRecipe(AgricultureItems.pbjSandwichApple, AgricultureItems.ceramicPlate, AgricultureItems.sliceOfBread, AgricultureItems.peanutButter, AgricultureItems.appleJelly, AgricultureItems.sliceOfBread);
-		addRecipe(AgricultureItems.pbjSandwichStrawberry, AgricultureItems.ceramicPlate, AgricultureItems.sliceOfBread, AgricultureItems.peanutButter, AgricultureItems.strawberryJelly, AgricultureItems.sliceOfBread);
+		addRecipe(AgricultureItems.pbjSandwichApple, AgricultureItems.pbSandwich, AgricultureItems.appleJelly);
+		addRecipe(AgricultureItems.pbjSandwichStrawberry, AgricultureItems.pbSandwich, AgricultureItems.strawberryJelly);
 		addRecipe(AgricultureItems.cheeseSandwich, AgricultureItems.ceramicPlate, AgricultureItems.sliceOfBread, AgricultureItems.sliceOfCheese, AgricultureItems.sliceOfBread);
 		addRecipe(AgricultureItems.butteredToast, AgricultureItems.toast, AgricultureItems.butter);
 		addRecipe(AgricultureItems.baconCheeseFries, AgricultureItems.cheeseFries, AgricultureItems.bacon);
 		addRecipe(AgricultureItems.baconCheeseburger, AgricultureItems.cheeseburger, AgricultureItems.bacon);
 		addRecipe(AgricultureItems.chocolate, AgricultureItems.milk, new ItemStack(Item.dyePowder.itemID, 1, 3), Item.sugar);
 		addRecipe(AgricultureItems.cheese, AgricultureItems.milk, AgricultureItems.vinegar);
-		addRecipe(AgricultureItems.whippedCream, AgricultureItems.milk, Item.sugar);
 		addRecipe(AgricultureItems.dough, AgricultureItems.water, AgricultureItems.flour);
 		addRecipe(AgricultureItems.appleGelatin, AgricultureItems.ceramicPlate, AgricultureItems.water, AgricultureItems.gelatin, AgricultureItems.appleMush);
 		addRecipe(AgricultureItems.strawberryGelatin, AgricultureItems.ceramicPlate, AgricultureItems.water, AgricultureItems.gelatin, AgricultureItems.strawberryMush);
@@ -75,7 +72,27 @@ public class CounterRecipes
 		addRecipe(AgricultureItems.saltedPork.getItemStack(), new ItemStack(Item.porkRaw), AgricultureItems.salt);
 		addRecipe(AgricultureItems.caramelApple.getItemStack(), new ItemStack(Item.stick), Item.appleRed, AgricultureItems.caramel);
 		addRecipe(AgricultureItems.chocolateCoveredStrawberries, AgricultureItems.strawberry, AgricultureItems.chocolate);
-		addRecipe(AgricultureItems.cinnamonAndSugar, AgricultureItems.groundCinnamon, Item.sugar);
+	
+		addRecipe(AgricultureItems.appleCinnamonCookie, AgricultureItems.dough, AgricultureItems.appleMush, AgricultureItems.groundCinnamon);
+		addRecipe(AgricultureItems.butterCookieDough, AgricultureItems.dough, AgricultureItems.butter);
+		addRecipe(AgricultureItems.cheesyBaconPotatoes, AgricultureItems.cheesyPotatoes, AgricultureItems.bacon);
+		addRecipe(AgricultureItems.cheesyPotatoes, AgricultureItems.mashedPotatos, AgricultureItems.cheese);
+		addRecipe(AgricultureItems.chocolateChipCookieDough, AgricultureItems.dough, AgricultureItems.chocolate);
+		addRecipe(AgricultureItems.chocolateIceCreamChocolateSauce, AgricultureItems.chocolateIceCream, AgricultureItems.chocolateSauce);
+		addRecipe(AgricultureItems.chocolateIceCreamMix, AgricultureItems.iceCreamMix, AgricultureItems.chocolate);
+		addRecipe(AgricultureItems.dicedPotatoes, AgricultureItems.ceramicPlate, Item.potato);
+		addRecipe(AgricultureItems.doubleBaconCheeseburger, AgricultureItems.baconCheeseburger, AgricultureItems.baconCheeseburger);
+		addRecipe(AgricultureItems.iceCreamMix, AgricultureItems.ceramicBowl, AgricultureItems.milk, Item.sugar);
+		addRecipe(AgricultureItems.pbSandwich, AgricultureItems.ceramicPlate, AgricultureItems.sliceOfBread, AgricultureItems.sliceOfBread, AgricultureItems.peanutButter);
+		addRecipe(AgricultureItems.peanutButterCookieDough, AgricultureItems.dough, AgricultureItems.peanutButter);
+		addRecipe(AgricultureItems.pumpkinCookieDough, AgricultureItems.dough, new ItemStack(Block.pumpkin));
+		addRecipe(AgricultureItems.snickerDoodleDough, AgricultureItems.dough, AgricultureItems.cinnamonAndSugar);
+		addRecipe(AgricultureItems.strawberryIceCreamChocolateSauce, AgricultureItems.strawberryIceCream, AgricultureItems.chocolate);
+		addRecipe(AgricultureItems.strawberryIceCreamMix, AgricultureItems.iceCreamMix, AgricultureItems.strawberry);
+		addRecipe(AgricultureItems.strawberryJellyCookieDough, AgricultureItems.dough, AgricultureItems.strawberryJelly);
+		addRecipe(AgricultureItems.sugarCookieDough, AgricultureItems.dough, Item.sugar);
+		addRecipe(AgricultureItems.vanillaIceCreamChocolateSauce, AgricultureItems.vanillaIceCream, AgricultureItems.chocolateSauce);
+		addRecipe(AgricultureItems.vanillaIceCreamMix, AgricultureItems.iceCreamMix, AgricultureItems.vanilla);
 	}
 	
 	public void addRecipe(SubItem item, SubItem baseItem, Object...par2ArrayOfObj)

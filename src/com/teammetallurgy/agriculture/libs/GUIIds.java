@@ -9,4 +9,6 @@ public class GUIIds
 	public static final int COUNTER = 4;
 	public static final int FUEL = 5;
 	public static final int BREWER = 6;
+	public static final int FRIER = 7;
+	public static final int ICEBOX= 8;
 }

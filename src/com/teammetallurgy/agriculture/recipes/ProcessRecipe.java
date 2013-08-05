@@ -23,27 +23,44 @@ public class ProcessRecipe
 			return false;
 		}
 
-		if (second != null)
+		if (first != null && baseItem != null)
 		{
-			if (first.isItemEqual(second))
+			if (first2 != null && second != null)
 			{
-				if (baseItem == null && first2 == null)
+				if (first.isItemEqual(first2) && baseItem.isItemEqual(second))
+				{
+					return true;
+				} else if (first.isItemEqual(second) && baseItem.isItemEqual(first2))
 				{
 					return true;
 				}
-				if (baseItem != null)
+			}
+		} else if (first == null)
+		{
+			if (first2 == null)
+			{
+				if (baseItem.isItemEqual(second))
 				{
-					if (baseItem.isItemEqual(first2))
-					{
-						return true;
-					}
+					return true;
+				}
+			} else if (second == null)
+			{
+				if (baseItem.isItemEqual(first2))
+				{
+					return true;
 				}
 			}
-		} else
+		} else if (baseItem == null)
 		{
-			if (first.isItemEqual(first2))
+			if (first2 == null)
 			{
-				if (baseItem == null && second == null)
+				if (first.isItemEqual(second))
+				{
+					return true;
+				}
+			} else if (second == null)
+			{
+				if (first.isItemEqual(first2))
 				{
 					return true;
 				}

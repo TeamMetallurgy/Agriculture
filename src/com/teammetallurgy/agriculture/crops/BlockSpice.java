@@ -15,6 +15,7 @@ import net.minecraft.block.BlockFlower;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
@@ -23,13 +24,21 @@ import net.minecraftforge.common.IPlantable;
 
 public class BlockSpice extends BlockFlower
 {
-	private float growthRate = 1.0f;
+	private float growthRate = 0.5f;
 	private Icon[] iconArray;
+	private ItemStack drop;
 
     public BlockSpice(int par1)
 	{
 		super(par1);
+		drop = new ItemStack(0, 0, 0);
 	}
+    
+    public BlockSpice setDrop(ItemStack drop)
+    {
+    	this.drop = drop.copy();
+    	return this;
+    }
     
     @Override
     public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
@@ -49,7 +58,7 @@ public class BlockSpice extends BlockFlower
     	int meta = par1World.getBlockMetadata(x, y, z);
     	if(meta > 0)
     	{
-    		this.dropBlockAsItem_do(par1World, x, y, z, AgricultureItems.cinnamon.getItemStack());
+    		this.dropBlockAsItem_do(par1World, x, y, z, drop.copy());
     		par1World.setBlock(x, y, z, blockID, meta - 1, 2);
     	}
     }    
@@ -57,12 +66,12 @@ public class BlockSpice extends BlockFlower
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
     {
-    	/*
+    	
     	float temp = growthRate;
     	this.growthRate = 100;
     	updateTick(world, x, y, z, new Random());
     	this.growthRate = temp;
-    	*/
+    	
     	
     	return false;
     }

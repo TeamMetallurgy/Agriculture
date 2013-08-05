@@ -5,30 +5,25 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
 
 import com.teammetallurgy.agriculture.Agriculture;
-import com.teammetallurgy.agriculture.machines.BaseMachineTileEntity;
+import com.teammetallurgy.agriculture.machines.FuelMachineTileEntity;
 import com.teammetallurgy.agriculture.recipes.BrewerRecipes;
-import com.teammetallurgy.agriculture.recipes.CounterRecipes;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 
-public class TileEntityBrewer extends BaseMachineTileEntity
+public class TileEntityBrewer extends FuelMachineTileEntity
 {
 	private InventoryBrewer cabinet = new InventoryBrewer("", false, 3, this);
 
@@ -50,8 +45,6 @@ public class TileEntityBrewer extends BaseMachineTileEntity
 	double prevRightDoorAngle;
 	float rightDoorAngle;
 
-	private int fuelRemaining;
-
 	private int amountLeftInput;
 	private int amountRightInput;
 
@@ -59,6 +52,8 @@ public class TileEntityBrewer extends BaseMachineTileEntity
 	private int maxProcessingTime;
 
 	private boolean processing = false;
+
+	private FluidStack fluidStack;
 
 	public IInventory getBrewer()
 	{
@@ -74,42 +69,22 @@ public class TileEntityBrewer extends BaseMachineTileEntity
 	{
 		return rightTank.getFluidAmount() / (float) rightTank.getCapacity();
 	}
-	
+
 	public float getProcessScaled()
 	{
 		float i = processingTime / (float) maxProcessingTime;
-		
-		if(i <= 0)
+
+		if (i <= 0)
 		{
 			return 0;
 		}
-		
+
 		return i;
 	}
-
 
 	public boolean isLiquidContainer(ItemStack stack)
 	{
 		return false;
-	}
-
-	private void burnFuel()
-	{
-		ItemStack fuelStack = cabinet.getStackInSlot(1);
-
-		int fuelAmount = TileEntityFurnace.getItemBurnTime(fuelStack);
-		if (fuelAmount > 0)
-		{
-			fuelRemaining += fuelAmount / 5;
-
-			fuelStack.stackSize--;
-
-			if (fuelStack.stackSize == 0)
-			{
-				cabinet.setInventorySlotContents(1, fuelStack.getItem().getContainerItemStack(fuelStack));
-			}
-			sendPacket();
-		}
 	}
 
 	@Override
@@ -145,13 +120,17 @@ public class TileEntityBrewer extends BaseMachineTileEntity
 		}
 		NBTTagCompound rightTankTag = (NBTTagCompound) tag.getTag("RightTank");
 		NBTTagCompound leftTankTag = (NBTTagCompound) tag.getTag("LeftTank");
+		NBTTagCompound proceedFluid = (NBTTagCompound) tag.getTag("ProcessedFluid");
 
 		this.rightTank = rightTank.readFromNBT(rightTankTag);
 		this.leftTank = leftTank.readFromNBT(leftTankTag);
-		
+
+		if (proceedFluid != null)
+			this.fluidStack = FluidStack.loadFluidStackFromNBT(proceedFluid);
+
 		this.amountLeftInput = tag.getInteger("AmountLeftInput");
 		this.amountRightInput = tag.getInteger("AmountRightInput");
-		
+
 		this.fuelRemaining = tag.getInteger("FuelRemaining");
 
 		this.processingTime = tag.getInteger("ProcessingTime");
@@ -184,14 +163,23 @@ public class TileEntityBrewer extends BaseMachineTileEntity
 		tag.setTag("LeftTank", leftTankTag);
 
 		tag.setTag("Items", nbtTagList);
-		
+
 		tag.setInteger("AmountLeftInput", amountLeftInput);
 		tag.setInteger("AmountRightInput", amountRightInput);
-		
+
 		tag.setInteger("FuelRemaining", fuelRemaining);
 
 		tag.setInteger("ProcessingTime", processingTime);
 		tag.setInteger("MaxProcessingTime", maxProcessingTime);
+
+		NBTTagCompound processedFluid = new NBTTagCompound();
+
+		if (fluidStack != null)
+		{
+			fluidStack.writeToNBT(processedFluid);
+		}
+
+		tag.setTag("ProcessedFluid", processedFluid);
 
 	}
 
@@ -218,11 +206,22 @@ public class TileEntityBrewer extends BaseMachineTileEntity
 	public void updateEntity()
 	{
 
-		if(processingTime-- <= 0) 
+		if (processingTime-- <= 0)
 		{
-			processing = false;
+			process();
+			this.processing = false;
 		}
-		
+
+		if (this.processingTime > 0)
+		{
+			--this.currentItemBurnTime;
+		}
+
+		if (fuelRemaining <= 0)
+		{
+			burnFuel();
+		}
+
 		if (update-- <= 0)
 		{
 			update = 10;
@@ -286,6 +285,11 @@ public class TileEntityBrewer extends BaseMachineTileEntity
 					amountRightInput = 0;
 				}
 			}
+
+			if (amountRightInput == 0)
+			{
+				fluidStack = null;
+			}
 		}
 
 		ItemStack itemStack2 = cabinet.getStackInSlot(2);
@@ -323,6 +327,7 @@ public class TileEntityBrewer extends BaseMachineTileEntity
 					}
 				}
 			}
+
 			if (itemStack != null)
 			{
 				FluidStack fluidStack = BrewerRecipes.getInstance().findMatchingFluid(itemStack, leftTank.getFluid());
@@ -332,58 +337,61 @@ public class TileEntityBrewer extends BaseMachineTileEntity
 					fluidStack = BrewerRecipes.getInstance().findMatchingFluid(itemStack, null);
 				}
 
-				if (fluidStack != null && !processing && amountLeftInput == 0 && amountRightInput == 0)
+				if (fluidStack != null)
 				{
-					if (leftTank.getFluid() != null && !fluidStack.isFluidEqual(leftTank.getFluid()) && rightTank.fill(fluidStack, false) == fluidStack.amount - amountRightInput && processingTime <= 0)
+					if (!processing && amountLeftInput == 0 && amountRightInput == 0 && fuelRemaining > 0)
 					{
-						this.maxProcessingTime = this.processingTime = BrewerRecipes.getInstance().getProcessTime(itemStack);
-						this.processing = true;
-						this.amountRightInput += fluidStack.amount - 100;
-
-						this.amountLeftInput += -amountRightInput;
-
-						FluidStack stack = fluidStack.copy();
-						stack.amount = 100;
-
-						rightTank.fill(stack, true);
-
-						leftTank.drain(100, true);
-
-						--itemStack.stackSize;
-
-						if (itemStack.stackSize <= 0)
+						if (leftTank.getFluid() != null && !fluidStack.isFluidEqual(leftTank.getFluid()) && rightTank.fill(fluidStack, false) == fluidStack.amount - amountRightInput && processingTime <= 0)
 						{
-							cabinet.setInventorySlotContents(0, itemStack.getItem().getContainerItemStack(itemStack));
-						}
-						if (!worldObj.isRemote)
-							sendPacket();
-					}
-				} else
-				{
-					ItemStack itemStackResult = BrewerRecipes.getInstance().findMatchingItem(itemStack, rightTank.getFluid());
-
-					if (itemStackResult != null)
-					{
-
-						if (itemStack.stackSize == 1 && !this.processing)
-						{
-							this.maxProcessingTime = this.processingTime = BrewerRecipes.getInstance().getProcessTime(itemStackResult);
+							this.maxProcessingTime = this.processingTime = BrewerRecipes.getInstance().getProcessTime(itemStack);
 							this.processing = true;
-						}
 
-						if (this.processingTime <= 0 && this.processing)
-						{
-							cabinet.setInventorySlotContents(0, itemStackResult.copy());
-							rightTank.drain(1000, true);
-							this.processing = false;
+							--itemStack.stackSize;
+
+							this.amountRightInput += fluidStack.amount - 100;
+
+							this.amountLeftInput += -amountRightInput;
+
+							FluidStack stack = fluidStack.copy();
+							stack.amount = 100;
+
+							rightTank.fill(stack, true);
+
+							leftTank.drain(100, true);
+
+							if (itemStack.stackSize <= 0)
+							{
+								cabinet.setInventorySlotContents(0, itemStack.getItem().getContainerItemStack(itemStack));
+							}
+							if (!worldObj.isRemote)
+								sendPacket();
 						}
-						if (!worldObj.isRemote)
-							sendPacket();
 					}
+				}
+				ItemStack itemStackResult = BrewerRecipes.getInstance().findMatchingItem(itemStack, rightTank.getFluid());
+
+				if (itemStackResult != null)
+				{
+					--this.fuelRemaining;
+					if (itemStack.stackSize == 1 && !this.processing)
+					{
+						this.maxProcessingTime = this.processingTime = BrewerRecipes.getInstance().getProcessTime(itemStackResult);
+						this.processing = true;
+					}
+
+					if (this.processingTime <= 0 && this.processing)
+					{
+						cabinet.setInventorySlotContents(0, itemStackResult.copy());
+						rightTank.drain(1000, true);
+						this.processing = false;
+					}
+					if (!worldObj.isRemote)
+						sendPacket();
+
 				}
 			}
 		}
-		
+
 		prevLeftDoorAngle = leftDoorAngle;
 		if (this.numUsingPlayers == 0 && leftDoorAngle > 0.0F || this.numUsingPlayers > 0 && leftDoorAngle < 1.0F)
 		{
@@ -405,6 +413,15 @@ public class TileEntityBrewer extends BaseMachineTileEntity
 				leftDoorAngle = 0.0F;
 			}
 		}
+	}
+
+	private void process()
+	{
+		if (fluidStack != null)
+		{
+
+		}
+
 	}
 
 	public void setProcessing(boolean processing)
@@ -455,7 +472,7 @@ public class TileEntityBrewer extends BaseMachineTileEntity
 			dos.writeInt(fuelRemaining);
 			dos.writeInt(amountLeftInput);
 			dos.writeInt(amountRightInput);
-			
+
 			dos.writeInt(leftTank.getFluidAmount());
 			dos.writeInt(rightTank.getFluidAmount());
 
@@ -489,7 +506,7 @@ public class TileEntityBrewer extends BaseMachineTileEntity
 	{
 		return amountRightInput;
 	}
-	
+
 	public FluidTank getLeftTank()
 	{
 		return leftTank;
@@ -498,5 +515,22 @@ public class TileEntityBrewer extends BaseMachineTileEntity
 	public FluidTank getRightTank()
 	{
 		return rightTank;
+	}
+
+	@Override
+	public int getFuelSlot()
+	{
+		return 1;
+	}
+
+	@Override
+	public IInventory getFuelInventory()
+	{
+		return cabinet;
+	}
+
+	public IInventory getInventory()
+	{
+		return cabinet;
 	}
 }

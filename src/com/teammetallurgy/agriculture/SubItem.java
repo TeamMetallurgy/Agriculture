@@ -49,6 +49,7 @@ public class SubItem
 	public SubItem setUnlocalizedName(String unlocalizedName)
 	{
 		this.unlocalizedName = unlocalizedName;
+		this.setTextureName(unlocalizedName);
 		return this;
 	}
 	
@@ -107,5 +108,10 @@ public class SubItem
 	public int getMaxItemUseDuration(ItemStack par1ItemStack)
 	{
 		return 0;
+	}
+
+	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
+	{
+		return false;
 	}
 }

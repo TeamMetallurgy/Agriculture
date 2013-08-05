@@ -1,6 +1,5 @@
 package com.teammetallurgy.agriculture;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.Icon;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -14,7 +13,8 @@ public class ExtraIcons
 	public static Icon liquidMilk;
 	public static Icon liquidBeer;
 	public static Icon liquidHotcocoa;
-	public static Icon liquidVinegar;
+	public static Icon cookingOil;
+	public static Icon vineger;
 	public static Icon liquidVodka;
 	public static Icon liquidCider;
 	
@@ -30,7 +30,7 @@ public class ExtraIcons
 			liquidMilk = evt.map.registerIcon("agriculture:milk");
 			liquidBeer = evt.map.registerIcon("agriculture:beer");
 			liquidHotcocoa = evt.map.registerIcon("agriculture:hotcocoa");
-			liquidVinegar = evt.map.registerIcon("agriculture:vinegar");
+			vineger = evt.map.registerIcon("agriculture:vinegar");
 			liquidVodka = evt.map.registerIcon("agriculture:vodka");
 			liquidCider = evt.map.registerIcon("agriculture:cider");
 		}
@@ -42,8 +42,9 @@ public class ExtraIcons
 		FluidRegistry.getFluid("milk").setStillIcon(liquidMilk);
 		FluidRegistry.getFluid("beer").setStillIcon(liquidBeer);
 		FluidRegistry.getFluid("hotcocoa").setStillIcon(liquidHotcocoa);
-		FluidRegistry.getFluid("vinegar").setStillIcon(liquidVinegar);
+		FluidRegistry.getFluid("cookingoil").setStillIcon(vineger);
 		FluidRegistry.getFluid("vodka").setStillIcon(liquidVodka);
 		FluidRegistry.getFluid("cider").setStillIcon(liquidCider);
+		FluidRegistry.getFluid("vinegar").setStillIcon(vineger);
 	}
 }

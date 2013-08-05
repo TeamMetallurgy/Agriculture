@@ -1,5 +1,6 @@
 package com.teammetallurgy.agriculture.gui;
 
+import com.teammetallurgy.agriculture.machines.IFuelSlot;
 import com.teammetallurgy.agriculture.machines.processor.TileEntityProcessor;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,8 +18,8 @@ public class ContainerProcessor extends Container
 		this.processor = processor;
 
 		this.addSlotToContainer(new Slot(processor.getInventory(), 0, 57, 32));
-		this.addSlotToContainer(new Slot(processor.getInventory(), 1, 103, 32));
-		this.addSlotToContainer(new Slot(processor.getInventory(), 2, 21, 32));
+		this.addSlotToContainer(new Slot(processor.getInventory(), 1, 21, 32));
+		this.addSlotToContainer(new Slot(processor.getInventory(), 2, 103, 32));
 
 		int i;
 		for (i = 0; i < 3; ++i)
@@ -63,7 +64,7 @@ public class ContainerProcessor extends Container
 				{
 					return null;
 				}
-			} else if (!this.mergeItemStack(itemstack1, 0, 3, false))
+			} else if (!this.mergeItemStack(itemstack1, 0, 2, false))
 			{
 				return null;
 			}

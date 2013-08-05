@@ -1,12 +1,10 @@
 package com.teammetallurgy.agriculture.machines;
 
-import com.teammetallurgy.agriculture.recipes.CounterRecipes;
-
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
@@ -14,43 +12,49 @@ import net.minecraft.tileentity.TileEntity;
 public class BaseMachineTileEntity extends TileEntity
 {
 	private InventoryCounter inventoryCounter = new InventoryCounter("", false, 20);
-	
+
 	protected byte direction;
 
-	public byte getDirection() 
+	public byte getDirection()
 	{
 		return direction;
 	}
 
-	public void setDirection(byte direction) 
+	public void setDirection(byte direction)
 	{
 		this.direction = direction;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		readCustomNBT(tag);
+		this.readCustomNBT(tag);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
-		writeCustomNBT(tag);
+		this.writeCustomNBT(tag);
+	}
+
+	@Override
+	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
+	{
+		this.readCustomNBT(pkt.customParam1);
 	}
 
 	@Override
 	public Packet getDescriptionPacket()
 	{
 		final NBTTagCompound tag = new NBTTagCompound();
-		writeCustomNBT(tag);
+		this.writeCustomNBT(tag);
 		return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
 	}
 
-    public void readCustomNBT(NBTTagCompound tag)
-    {
+	public void readCustomNBT(NBTTagCompound tag)
+	{
 		NBTTagList tagList = tag.getTagList("ItemsCounter");
 
 		for (int i = 0; i < tagList.tagCount(); i++)
@@ -59,12 +63,12 @@ public class BaseMachineTileEntity extends TileEntity
 			int slot = Integer.valueOf(base.getByte("Slot"));
 			inventoryCounter.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(base));
 		}
-    	
-    	direction = tag.getByte("direction");
-    }
-	
-    public void writeCustomNBT(NBTTagCompound tag)
-    {
+
+		direction = tag.getByte("direction");
+	}
+
+	public void writeCustomNBT(NBTTagCompound tag)
+	{
 		NBTTagList nbtTagList = new NBTTagList();
 		for (int i = 0; i < this.inventoryCounter.getSizeInventory(); ++i)
 		{
@@ -78,12 +82,13 @@ public class BaseMachineTileEntity extends TileEntity
 		}
 
 		tag.setTag("ItemsCounter", nbtTagList);
-		
-    	tag.setByte("direction", direction);
-    }
-    
-    public IInventory getInventoryCounter()
+
+		tag.setByte("direction", direction);
+	}
+
+	public IInventory getInventoryCounter()
 	{
 		return inventoryCounter;
 	}
+
 }

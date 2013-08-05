@@ -2,7 +2,10 @@ package com.teammetallurgy.agriculture.machines;
 
 import java.util.Random;
 
+import com.teammetallurgy.agriculture.machines.brewer.TileEntityBrewer;
 import com.teammetallurgy.agriculture.machines.counter.TileEntityCounter;
+import com.teammetallurgy.agriculture.machines.frier.TileEntityFrier;
+import com.teammetallurgy.agriculture.machines.icebox.TileEntityIcebox;
 import com.teammetallurgy.agriculture.machines.oven.TileEntityOven;
 import com.teammetallurgy.agriculture.machines.processor.TileEntityProcessor;
 
@@ -156,12 +159,27 @@ public class BaseMachineBlock extends BlockContainer
 			if (tileEntity instanceof TileEntityProcessor)
 			{
 				breakEntityWithDrops(((TileEntityProcessor) tileEntity).getInventory(), tileEntity);
-				breakEntityWithDrops(((TileEntityProcessor) tileEntity).getFuelSlot(), tileEntity);
+				breakEntityWithDrops(((FuelMachineTileEntity) tileEntity).getFuelInventory(), tileEntity);
 			}
 
 			if (tileEntity instanceof TileEntityOven)
 			{
 				breakEntityWithDrops(((TileEntityOven) tileEntity).getInventoryOven(), tileEntity);
+			}
+			
+			if(tileEntity instanceof TileEntityFrier) 
+			{
+				breakEntityWithDrops(((TileEntityFrier) tileEntity).getInventory(), tileEntity);
+			}
+			
+			if(tileEntity instanceof TileEntityBrewer) 
+			{
+				breakEntityWithDrops(((TileEntityBrewer) tileEntity).getInventory(), tileEntity);
+			}
+			
+			if(tileEntity instanceof TileEntityIcebox) 
+			{
+				breakEntityWithDrops(((TileEntityIcebox) tileEntity).getInventory(), tileEntity);
 			}
 
 		}

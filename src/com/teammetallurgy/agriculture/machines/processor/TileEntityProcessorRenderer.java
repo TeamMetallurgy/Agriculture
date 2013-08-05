@@ -8,6 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.teammetallurgy.agriculture.machines.FuelMachineTileEntity;
 import com.teammetallurgy.agriculture.machines.oven.ModelOven;
 import com.teammetallurgy.agriculture.machines.oven.TileEntityOven;
 
@@ -18,7 +19,7 @@ public class TileEntityProcessorRenderer extends TileEntitySpecialRenderer
 	
 	private static int[] rotations = {0, 0, 180, 0, 90, -90};
 	
-	public void renderTileEntityAt(TileEntityProcessor tileentity, double x, double y, double z, float unknown)
+	public void renderTileEntityAt(FuelMachineTileEntity tileentity, double x, double y, double z, float unknown)
 	{
 		int direction = 0;
 		float yOffset = 0;
@@ -48,7 +49,7 @@ public class TileEntityProcessorRenderer extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float unknown)
 	{
-		this.renderTileEntityAt((TileEntityProcessor)tileentity, x, y, z, unknown);
+		this.renderTileEntityAt((FuelMachineTileEntity)tileentity, x, y, z, unknown);
 	}
 	
 	

@@ -13,17 +13,24 @@ import net.minecraft.world.World;
 public class SubItemFood extends SubItem
 {
 	/** The amount this food item heals the player. */
+	private int wellFedAmount;
 	private final int healAmount;
 	private final float saturationModifier;
 	private final boolean isWolfsFavoriteMeat;
 	private boolean alwaysEdible;
 
-	public SubItemFood(int id, int damage, int heal, float saturation)
+	public SubItemFood(int id, int damage, int heal)
 	{
 		super(id, damage);
-		this.healAmount = heal;
-		this.saturationModifier = saturation;
+		this.wellFedAmount = heal;
+		this.healAmount = heal/4;
+		this.saturationModifier = 0.5f;
 		this.isWolfsFavoriteMeat = false;
+	}
+
+	public SubItemFood(int foodid, int i, int j, float f)
+	{
+		this(foodid, i, j);
 	}
 
 	@Override
@@ -32,7 +39,7 @@ public class SubItemFood extends SubItem
 		--par1ItemStack.stackSize;
 		par3EntityPlayer.getFoodStats().addStats(this.getHealAmount(), this.getSaturationModifier());
 		par2World.playSoundAtEntity(par3EntityPlayer, "random.burp", 0.5F, par2World.rand.nextFloat() * 0.1F + 0.9F);
-		HungerSystem.addPoints(par3EntityPlayer, healAmount*300);
+		HungerSystem.addPoints(par3EntityPlayer, healAmount);
 		return par1ItemStack;
 	}
 

@@ -33,12 +33,12 @@ public class BlockIcebox extends BaseMachineBlock
 
 			if (side == 1 || yFace > 0.76f) // (<_<) /// :P Deal with it keith :P
 			{
-				player.openGui(Agriculture.instance, GUIIds.COUNTER, world, x, y, z);
+				player.openGui(Agriculture.instance, GUIIds.ICEBOX, world, x, y, z);
 				return true;
 			}
 			if (side == blockMetadata)
 			{
-				player.openGui(Agriculture.instance, GUIIds.CABINET, world, x, y, z);
+				player.openGui(Agriculture.instance, GUIIds.ICEBOX, world, x, y, z);
 				return true;
 			}
 

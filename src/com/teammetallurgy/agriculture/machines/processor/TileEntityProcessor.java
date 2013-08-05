@@ -4,28 +4,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.tileentity.TileEntityFurnace;
 
 import com.teammetallurgy.agriculture.Agriculture;
-import com.teammetallurgy.agriculture.machines.BaseMachineTileEntity;
-import com.teammetallurgy.agriculture.machines.IFuelSlot;
+import com.teammetallurgy.agriculture.machines.FuelMachineTileEntity;
 import com.teammetallurgy.agriculture.recipes.ProcessorRecipes;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 
-public class TileEntityProcessor extends BaseMachineTileEntity implements IFuelSlot
+public class TileEntityProcessor extends FuelMachineTileEntity
 {
 	private InventoryProcessor inventory = new InventoryProcessor("", false, 3);
 
@@ -33,26 +27,26 @@ public class TileEntityProcessor extends BaseMachineTileEntity implements IFuelS
 
 	private int sync = 0;
 	private int processingTime = 0;
-	private int currentItemBurnTime = -10;
 	private ItemStack result;
 	private int coolDown = 0;
-
-	private int fuelRemaining = 0;
 
 	public IInventory getInventory()
 	{
 		return inventory;
 	}
 
-	public IInventory getFuelSlot()
+	public int getFuelSlot()
 	{
-		return fuelSlot;
+		return 0;
 	}
+	
+	
 
 	@Override
 	public void updateEntity()
 	{
-
+		super.updateEntity();
+		
 		if (this.processingTime > 0)
 		{
 			--this.processingTime;
@@ -62,12 +56,6 @@ public class TileEntityProcessor extends BaseMachineTileEntity implements IFuelS
 
 		if (this.worldObj.isRemote)
 			return;
-
-		if (this.fuelRemaining < 0)
-		{
-			burnFuel();
-		}
-
 		if (this.processingTime == 0)
 		{
 			if (currentItemBurnTime == 0)
@@ -76,7 +64,7 @@ public class TileEntityProcessor extends BaseMachineTileEntity implements IFuelS
 			}
 
 			ItemStack stackInSlot = inventory.getStackInSlot(0);
-			ItemStack stackInSlot2 = inventory.getStackInSlot(2);
+			ItemStack stackInSlot2 = inventory.getStackInSlot(1);
 
 			if (coolDown-- <= 0)
 			{
@@ -93,7 +81,7 @@ public class TileEntityProcessor extends BaseMachineTileEntity implements IFuelS
 						sendPacket();
 						if (stackInSlot2.stackSize == 0)
 						{
-							inventory.setInventorySlotContents(2, null);
+							inventory.setInventorySlotContents(1, null);
 						}
 
 						if (stackInSlot != null)
@@ -119,47 +107,24 @@ public class TileEntityProcessor extends BaseMachineTileEntity implements IFuelS
 		}
 	}
 
-	private void burnFuel()
-	{
-		ItemStack fuelStack = fuelSlot.getStackInSlot(0);
-
-		int fuelAmount = TileEntityFurnace.getItemBurnTime(fuelStack);
-		if (fuelAmount > 0)
-		{
-			fuelRemaining += fuelAmount / 5;
-
-			fuelStack.stackSize--;
-
-			if (fuelStack.stackSize == 0)
-			{
-				fuelSlot.setInventorySlotContents(0, fuelStack.getItem().getContainerItemStack(fuelStack));
-			}
-			sendPacket();
-		}
-	}
 
 	public void process()
 	{
 		if (result != null)
 		{
-			ItemStack stackInSlot = inventory.getStackInSlot(1);
+			ItemStack stackInSlot = inventory.getStackInSlot(2);
 			if (stackInSlot != null && stackInSlot.itemID == result.itemID && stackInSlot.getItemDamage() == result.getItemDamage())
 			{
 				stackInSlot.stackSize += result.stackSize;
 			} else
 			{
-				inventory.setInventorySlotContents(1, result.copy());
+				inventory.setInventorySlotContents(2, result.copy());
 			}
 
 			result = null;
 			this.currentItemBurnTime = -1;
 			sendPacket();
 		}
-	}
-
-	public int getCurrentItemBurnTime()
-	{
-		return currentItemBurnTime;
 	}
 
 	public int getCoolDown()
@@ -177,7 +142,7 @@ public class TileEntityProcessor extends BaseMachineTileEntity implements IFuelS
 		if (result == null)
 			return false;
 
-		ItemStack stackInSlot2 = inventory.getStackInSlot(1);
+		ItemStack stackInSlot2 = inventory.getStackInSlot(2);
 
 		ItemStack result2 = ProcessorRecipes.getInstance().findMatchingRecipe(stackInSlot, stackInSlot22);
 
@@ -204,11 +169,6 @@ public class TileEntityProcessor extends BaseMachineTileEntity implements IFuelS
 		}
 
 		return result2 != null;
-	}
-
-	public void setCurrentItemBurnTime(int currentItemBurnTime)
-	{
-		this.currentItemBurnTime = currentItemBurnTime;
 	}
 
 	public void setProcessingTime(int processingTime)
@@ -276,43 +236,11 @@ public class TileEntityProcessor extends BaseMachineTileEntity implements IFuelS
 		}
 	}
 
-	public int getFuelRemaining()
-	{
-		return fuelRemaining;
-	}
-
-	public void setFuelRemaining(int fuelRemaining)
-	{
-		this.fuelRemaining = fuelRemaining;
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
-		super.readFromNBT(tag);
-		this.readCustomNBT(tag);
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound tag)
-	{
-		super.writeToNBT(tag);
-		this.writeCustomNBT(tag);
-	}
-
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		final NBTTagCompound tag = new NBTTagCompound();
-		this.writeCustomNBT(tag);
-		return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
-	}
-
 	@Override
 	public void readCustomNBT(NBTTagCompound tag)
 	{
+		super.readCustomNBT(tag);
 		this.coolDown = tag.getInteger("CoolDown");
-		this.currentItemBurnTime = tag.getInteger("BurnTime");
 		this.processingTime = tag.getInteger("ProcessingTime");
 
 		NBTTagList tagList = tag.getTagList("Items");
@@ -323,22 +251,13 @@ public class TileEntityProcessor extends BaseMachineTileEntity implements IFuelS
 			int slot = Integer.valueOf(base.getByte("Slot"));
 			inventory.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(base));
 		}
-
-		NBTTagList tagList2 = tag.getTagList("FuelSlot");
-
-		for (int i = 0; i < tagList2.tagCount(); i++)
-		{
-			NBTTagCompound base = (NBTTagCompound) tagList2.tagAt(i);
-			int slot = Integer.valueOf(base.getByte("Slot"));
-			fuelSlot.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(base));
-		}
 	}
 
 	@Override
 	public void writeCustomNBT(NBTTagCompound tag)
 	{
+		super.writeCustomNBT(tag);
 		tag.setInteger("CoolDown", coolDown);
-		tag.setInteger("BurnTime", currentItemBurnTime);
 		tag.setInteger("ProcessingTime", processingTime);
 
 		NBTTagList itemListTag = new NBTTagList();
@@ -354,25 +273,11 @@ public class TileEntityProcessor extends BaseMachineTileEntity implements IFuelS
 		}
 
 		tag.setTag("Items", itemListTag);
-
-		NBTTagList itemListTag2 = new NBTTagList();
-		for (int i = 0; i < this.fuelSlot.getSizeInventory(); ++i)
-		{
-			if (this.fuelSlot.getStackInSlot(i) != null)
-			{
-				NBTTagCompound itemTag = new NBTTagCompound();
-				itemTag.setByte("Slot", (byte) i);
-				this.fuelSlot.getStackInSlot(i).writeToNBT(itemTag);
-				itemListTag2.appendTag(itemTag);
-			}
-		}
-
-		tag.setTag("FuelSlot", itemListTag2);
 	}
 
 	@Override
-	public int getRemainingFuelLevel()
+	public IInventory getFuelInventory()
 	{
-		return getFuelRemaining();
+		return fuelSlot;
 	}
 }

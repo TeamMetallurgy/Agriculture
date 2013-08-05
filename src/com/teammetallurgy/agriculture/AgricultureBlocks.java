@@ -2,11 +2,18 @@ package com.teammetallurgy.agriculture;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.WeightedRandomChestContent;
+import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
+import com.teammetallurgy.agriculture.crops.BlockPeanut;
 import com.teammetallurgy.agriculture.crops.BlockSpice;
+import com.teammetallurgy.agriculture.crops.BlockStrawberry;
 import com.teammetallurgy.agriculture.machines.brewer.BlockBrewer;
 import com.teammetallurgy.agriculture.machines.brewer.TileEntityBrewer;
 import com.teammetallurgy.agriculture.machines.counter.BlockCounter;
@@ -28,11 +35,15 @@ public class AgricultureBlocks
 	public static Block oven;
 	public static Block counter;
 	public static Block processor;
-	public static Block salt;
-	public static Block cinnamon;
 	public static Block brewer;
 	public static Block icebox;
 	public static Block frier;
+	
+	public static Block salt;
+	public static Block cinnamon;
+	public static Block vanilla;
+	public static Block peanut;
+	public static Block strawberry;
 			
 	public static void init()
 	{
@@ -40,7 +51,10 @@ public class AgricultureBlocks
 		counter = new BlockCounter(3001, Material.wood).setUnlocalizedName("agriculture:counter").setCreativeTab(Agriculture.tab);
 		processor = new BlockProcessor(3002, Material.wood).setUnlocalizedName("agriculture:processor").setCreativeTab(Agriculture.tab);
 		salt = new BlockSalt(3003, Material.rock).setUnlocalizedName("agriculture:salt").func_111022_d("agriculture:Salt").setCreativeTab(Agriculture.tab);
-		cinnamon = new BlockSpice(3004).setHardness(1.0f).setUnlocalizedName("agriculture:cinnamon").func_111022_d("agriculture:cinnamon").setCreativeTab(Agriculture.tab);
+		cinnamon = new BlockSpice(3004).setDrop(AgricultureItems.cinnamon.getItemStack()).setHardness(1.0f).setUnlocalizedName("agriculture:cinnamon").func_111022_d("agriculture:cinnamon").setCreativeTab(Agriculture.tab);
+		vanilla = new BlockSpice(3008).setDrop(AgricultureItems.vanilla.getItemStack()).setHardness(1.0f).setUnlocalizedName("agriculture:vanilla").func_111022_d("agriculture:vanilla").setCreativeTab(Agriculture.tab);
+		peanut = new BlockPeanut(3009).setHardness(0.1f).setUnlocalizedName("agriculture:peanut").func_111022_d("agriculture:peanut").setCreativeTab(Agriculture.tab);
+		strawberry = new BlockStrawberry(3010).setHardness(0.1f).setUnlocalizedName("agriculture:strawberry").func_111022_d("agriculture:strawberry").setCreativeTab(Agriculture.tab);
 		
 		brewer = new BlockBrewer(3005, Material.wood).setUnlocalizedName("agriculture:brewer").setCreativeTab(Agriculture.tab);
 		icebox = new BlockIcebox(3006, Material.wood).setUnlocalizedName("agriculture:icebox").setCreativeTab(Agriculture.tab);
@@ -50,6 +64,7 @@ public class AgricultureBlocks
 		FluidRegistry.registerFluid(new Fluid("beer"));
 		FluidRegistry.registerFluid(new Fluid("hotcocoa"));
 		FluidRegistry.registerFluid(new Fluid("vinegar"));
+		FluidRegistry.registerFluid(new Fluid("cookingOil"));
 		FluidRegistry.registerFluid(new Fluid("vodka"));
 		FluidRegistry.registerFluid(new Fluid("cider"));
 		
@@ -58,6 +73,7 @@ public class AgricultureBlocks
 		GameRegistry.registerBlock(processor, "AgricultureProcessorBlock");
 		GameRegistry.registerBlock(salt, "AgricultureSalt");
 		GameRegistry.registerBlock(cinnamon, "AgricultureCinnamon");
+		GameRegistry.registerBlock(vanilla, "AgricultureVanilla");
 		GameRegistry.registerBlock(brewer, "AgricultureBrewerBlock");
 		GameRegistry.registerBlock(icebox, "AgricultureIcebox");
 		GameRegistry.registerBlock(frier, "AgricultureFrier");
@@ -68,6 +84,13 @@ public class AgricultureBlocks
 		GameRegistry.registerTileEntity(TileEntityIcebox.class, "AgricultureIceboxTileEntity");
 		GameRegistry.registerTileEntity(TileEntityFrier.class, "AgricultureFrierTileEntity");
 		
+    	GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(oven), "WWW", "BFB", "BBB", 'W', "plankWood", 'F', Block.furnaceIdle, 'B', Item.brick));
+    	GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(brewer), "BBB", "BGB", "BIB", 'G', Block.glass, 'I', Item.ingotIron, 'B', Item.brick));
+    	GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(counter), "WWW", "BCB", "BBB", 'W', "plankWood", 'C', Block.chest, 'B', Item.brick));
+    	GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(processor), "WIW", "BFB", "BBB", 'W', "plankWood", 'I', Item.ingotIron, 'F', Block.furnaceIdle, 'B', Item.brick));
+    	GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(icebox), "BIB", "BBB", "BIB", 'I', Item.ingotIron, 'B', Item.brick));
+    	GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(frier), "BIB", "BGB", "BIB", 'I', Item.ingotIron, 'G', Block.glass, 'B', Item.brick));
+    	
 		addNames();
 	}
 	
@@ -77,5 +100,8 @@ public class AgricultureBlocks
 		LanguageRegistry.addName(counter, "Counter");
 		LanguageRegistry.addName(processor, "Processor");
 		LanguageRegistry.addName(brewer, "Brewer");
+		LanguageRegistry.addName(cinnamon, "Cinnamon Plant");
+		LanguageRegistry.addName(vanilla, "Vanilla Plant");
+		LanguageRegistry.addName(salt, "Salt Ore");
 	}
 }

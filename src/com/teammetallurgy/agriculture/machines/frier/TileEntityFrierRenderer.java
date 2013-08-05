@@ -38,6 +38,8 @@ public class TileEntityFrierRenderer extends TileEntitySpecialRenderer
 		
 		GL11.glRotatef((float)rotation, 0F, 1F, 0F);
 		
+        float angle = tileentity.prevLeftDoorAngle + (tileentity.leftDoorAngle - tileentity.prevLeftDoorAngle) * partialTickTime;
+		model.setDoorAngle(angle);
 		model.renderAll();
 		
 		GL11.glPopMatrix();

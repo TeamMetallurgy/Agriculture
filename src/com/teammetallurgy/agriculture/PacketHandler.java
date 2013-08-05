@@ -16,6 +16,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import com.teammetallurgy.agriculture.hunger.HungerSystem;
 import com.teammetallurgy.agriculture.machines.brewer.TileEntityBrewer;
+import com.teammetallurgy.agriculture.machines.frier.TileEntityFrier;
 import com.teammetallurgy.agriculture.machines.oven.TileEntityOven;
 import com.teammetallurgy.agriculture.machines.processor.TileEntityProcessor;
 
@@ -126,6 +127,30 @@ public class PacketHandler implements IPacketHandler
 				}
 
 				oven.setProcessing(processing);
+			}
+		} else if (packetID == 3)
+		{
+			int x = byteIn.readInt();
+			int y = byteIn.readInt();
+			int z = byteIn.readInt();
+			byte direction = byteIn.readByte();
+
+			int fuelRemaining = byteIn.readInt();
+			int fluidAmount = byteIn.readInt();
+
+			TileEntity te = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
+
+			if (te instanceof TileEntityFrier)
+			{
+				TileEntityFrier oven = (TileEntityFrier) te;
+				oven.setFuelRemaining(fuelRemaining);
+
+				FluidStack fluid = oven.getTank().getFluid();
+
+				if (fluid != null)
+				{
+					fluid.amount = fluidAmount;
+				}
 			}
 		} else if (packetID == 256)
 		{

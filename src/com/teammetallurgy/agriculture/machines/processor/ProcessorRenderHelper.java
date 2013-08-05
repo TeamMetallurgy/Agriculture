@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.world.IBlockAccess;
 
 import com.teammetallurgy.agriculture.AgricultureBlocks;
+import com.teammetallurgy.agriculture.machines.FuelMachineTileEntity;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
@@ -15,7 +16,7 @@ public class ProcessorRenderHelper implements ISimpleBlockRenderingHandler
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
 	{
-		TileEntityProcessor tileentity = new TileEntityProcessor();
+		FuelMachineTileEntity tileentity = new TileEntityProcessor();
 		TileEntityRenderer.instance.renderTileEntityAt(tileentity, 0D, 0D, 0D, 0F);
 	}
 

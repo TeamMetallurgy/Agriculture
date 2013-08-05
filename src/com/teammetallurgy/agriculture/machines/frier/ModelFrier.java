@@ -84,4 +84,10 @@ public class ModelFrier extends ModelBase
 		model.rotateAngleY = y;
 		model.rotateAngleZ = z;
 	}
+
+	public void setDoorAngle(float angle)
+	{
+		lid.rotateAngleX = 1.5f * -angle;
+		
+	}
 }

@@ -1,6 +1,7 @@
 package com.teammetallurgy.agriculture;
 
 import com.teammetallurgy.agriculture.worldgen.WorldGenSalt;
+import com.teammetallurgy.agriculture.worldgen.WorldGenSpice;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -42,13 +43,17 @@ public class Agriculture
     public void init(FMLInitializationEvent event)
     {
     	tab = new AgricultureTab("Agriculture");
-    	AgricultureBlocks.init();
     	AgricultureItems.init();
+    	AgricultureBlocks.init();
     	tab.setItemID(AgricultureBlocks.oven.blockID);
     	
-    	AgricultureItems.addRecipes();
+    	AgricultureItems.setupItems();
     	
     	GameRegistry.registerWorldGenerator(new WorldGenSalt(4));
+    	GameRegistry.registerWorldGenerator(new WorldGenSpice(AgricultureBlocks.cinnamon.blockID));
+    	GameRegistry.registerWorldGenerator(new WorldGenSpice(AgricultureBlocks.vanilla.blockID));
+    	
+    	
     	
     	TickRegistry.registerTickHandler(new TickHandler(), Side.SERVER);
         NetworkRegistry.instance().registerGuiHandler(instance, proxy);

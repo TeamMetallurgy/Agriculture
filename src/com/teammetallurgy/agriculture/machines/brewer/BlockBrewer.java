@@ -2,13 +2,18 @@ package com.teammetallurgy.agriculture.machines.brewer;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 
 import com.teammetallurgy.agriculture.Agriculture;
+import com.teammetallurgy.agriculture.AgricultureItems;
 import com.teammetallurgy.agriculture.libs.GUIIds;
 import com.teammetallurgy.agriculture.machines.BaseMachineBlock;
+import com.teammetallurgy.agriculture.recipes.BrewerRecipes;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -29,29 +34,25 @@ public class BlockBrewer extends BaseMachineBlock
 		{
 			return false;
 		}
-		
-		// (>_>) //
+
 		if (!world.isRemote)
 		{
 			int blockMetadata = world.getBlockMetadata(x, y, z);
 			final int front = blockMetadata % 2;
 
-			if (side == 1) 
+			if (side == 1)
 			{
 				player.openGui(Agriculture.instance, GUIIds.BREWER, world, x, y, z);
 				return true;
 			}
 
 			if (side == blockMetadata)
-			{				
-				/*
-				player.openGui(Agriculture.instance, GUIIds.CABINET, world, x, y, z);
-				return true;
-				*/
-			}
+			{
 
+			}
 			return true;
 		}
+
 		return true;
 	}
 

@@ -58,6 +58,9 @@ public class ModelBrewer extends ModelBase
 	{
 		if (level > 0)
 		{
+			if(level > 1)
+				level = 1;
+			
 			int height = (int) (level * 12);
 			liquid = new ModelSimpleBox(16, 16, 0, 0, -7, 23 - height, -6, 14, height, 13, 0, liquidIcon);
 		} else
@@ -71,6 +74,8 @@ public class ModelBrewer extends ModelBase
 		if (i > 0)
 		{
 			float scaled = i / 1000f;
+			
+			scaled = scaled > 1 ? 1 : scaled;
 
 			int width = (int) (3 * scaled);
 			int height = 10;
