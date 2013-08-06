@@ -1,9 +1,9 @@
 package com.teammetallurgy.agriculture.machines;
 
-import com.teammetallurgy.agriculture.recipes.CounterRecipes;
-
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
+
+import com.teammetallurgy.agriculture.recipes.CounterRecipes;
 
 public class InventoryCounter extends InventoryBasic
 {
@@ -11,6 +11,23 @@ public class InventoryCounter extends InventoryBasic
 	public InventoryCounter(String par1Str, boolean par2, int par3)
 	{
 		super(par1Str, par2, par3);
+	}
+
+	private void clearInventory(ItemStack findMatchingRecipe)
+	{
+		for (int i = 4; i < 20; i++)
+		{
+			final ItemStack stack = getStackInSlot(i);
+
+			if (stack != null)
+			{
+				final boolean mat = CounterRecipes.getInstance().isMat(findMatchingRecipe, stack, this);
+				if (mat)
+				{
+					setInventorySlotContents(i, null);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -24,33 +41,16 @@ public class InventoryCounter extends InventoryBasic
 	{
 		for (int i = 0; i < 4; i++)
 		{
-			ItemStack stack = getStackInSlot(i);
+			final ItemStack stack = getStackInSlot(i);
 			if (stack != null)
 			{
 
-				ItemStack findMatchingRecipe = CounterRecipes.getInstance().findMatchingRecipe(this);
+				final ItemStack findMatchingRecipe = CounterRecipes.getInstance().findMatchingRecipe(this);
 
 				if (findMatchingRecipe != null && !ItemStack.areItemStacksEqual(stack, findMatchingRecipe))
 				{
-					this.clearInventory(findMatchingRecipe);
+					clearInventory(findMatchingRecipe);
 					setInventorySlotContents(i, findMatchingRecipe);
-				}
-			}
-		}
-	}
-
-	private void clearInventory(ItemStack findMatchingRecipe)
-	{
-		for (int i = 4; i < 20; i++)
-		{
-			ItemStack stack = getStackInSlot(i);
-
-			if (stack != null)
-			{
-				boolean mat = CounterRecipes.getInstance().isMat(findMatchingRecipe, stack, this);
-				if (mat)
-				{
-					setInventorySlotContents(i, null);
 				}
 			}
 		}

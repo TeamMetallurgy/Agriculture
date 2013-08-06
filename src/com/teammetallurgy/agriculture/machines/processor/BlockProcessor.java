@@ -8,9 +8,6 @@ import net.minecraft.world.World;
 import com.teammetallurgy.agriculture.Agriculture;
 import com.teammetallurgy.agriculture.libs.GUIIds;
 import com.teammetallurgy.agriculture.machines.BaseMachineBlock;
-import com.teammetallurgy.agriculture.machines.oven.TileEntityOven;
-
-import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class BlockProcessor extends BaseMachineBlock
 {
@@ -36,7 +33,7 @@ public class BlockProcessor extends BaseMachineBlock
 
 		if (!world.isRemote)
 		{
-			int blockMetadata = world.getBlockMetadata(x, y, z);
+			final int blockMetadata = world.getBlockMetadata(x, y, z);
 			if (side == 1 || yOffset > 0.76)
 			{
 				player.openGui(Agriculture.instance, GUIIds.PROCESSOR, world, x, y, z);

@@ -1,29 +1,20 @@
 package com.teammetallurgy.agriculture.recipes;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import com.teammetallurgy.agriculture.AgricultureItems;
-import com.teammetallurgy.agriculture.SubItem;
 
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.item.crafting.ShapelessRecipes;
-import net.minecraft.world.World;
+
+import com.teammetallurgy.agriculture.AgricultureItems;
+import com.teammetallurgy.agriculture.SubItem;
 
 public class CounterRecipes
 {
 	/** The static instance of this class */
 	private static final CounterRecipes instance = new CounterRecipes();
-
-	/** A list of all the recipes added */
-	private List recipes = new ArrayList();
 
 	/**
 	 * Returns the static instance of this class
@@ -32,6 +23,9 @@ public class CounterRecipes
 	{
 		return instance;
 	}
+
+	/** A list of all the recipes added */
+	private final List recipes = new ArrayList();
 
 	private CounterRecipes()
 	{
@@ -72,7 +66,7 @@ public class CounterRecipes
 		addRecipe(AgricultureItems.saltedPork.getItemStack(), new ItemStack(Item.porkRaw), AgricultureItems.salt);
 		addRecipe(AgricultureItems.caramelApple.getItemStack(), new ItemStack(Item.stick), Item.appleRed, AgricultureItems.caramel);
 		addRecipe(AgricultureItems.chocolateCoveredStrawberries, AgricultureItems.strawberry, AgricultureItems.chocolate);
-	
+
 		addRecipe(AgricultureItems.appleCinnamonCookie, AgricultureItems.dough, AgricultureItems.appleMush, AgricultureItems.groundCinnamon);
 		addRecipe(AgricultureItems.butterCookieDough, AgricultureItems.dough, AgricultureItems.butter);
 		addRecipe(AgricultureItems.cheesyBaconPotatoes, AgricultureItems.cheesyPotatoes, AgricultureItems.bacon);
@@ -94,31 +88,24 @@ public class CounterRecipes
 		addRecipe(AgricultureItems.vanillaIceCreamChocolateSauce, AgricultureItems.vanillaIceCream, AgricultureItems.chocolateSauce);
 		addRecipe(AgricultureItems.vanillaIceCreamMix, AgricultureItems.iceCreamMix, AgricultureItems.vanilla);
 	}
-	
-	public void addRecipe(SubItem item, SubItem baseItem, Object...par2ArrayOfObj)
-	{
-		addRecipe(item.getItemStack(), baseItem.getItemStack(), par2ArrayOfObj);
-	}
 
 	public void addRecipe(ItemStack par1ItemStack, ItemStack baseItem, Object... par2ArrayOfObj)
 	{
-		ArrayList arraylist = new ArrayList();
-		Object[] aobject = par2ArrayOfObj;
-		int i = par2ArrayOfObj.length;
+		final ArrayList arraylist = new ArrayList();
+		final Object[] aobject = par2ArrayOfObj;
+		final int i = par2ArrayOfObj.length;
 
 		for (int j = 0; j < i; ++j)
 		{
-			Object object1 = aobject[j];
+			final Object object1 = aobject[j];
 
 			if (object1 instanceof ItemStack)
 			{
 				arraylist.add(((ItemStack) object1).copy());
-			}
-			else if(object1 instanceof SubItem)
+			} else if (object1 instanceof SubItem)
 			{
 				arraylist.add(((SubItem) object1).getItemStack());
-			}
-			else if (object1 instanceof Item)
+			} else if (object1 instanceof Item)
 			{
 				arraylist.add(new ItemStack((Item) object1));
 			} else
@@ -132,14 +119,19 @@ public class CounterRecipes
 			}
 		}
 
-		this.recipes.add(new CounterRecipe(par1ItemStack, baseItem, arraylist));
+		recipes.add(new CounterRecipe(par1ItemStack, baseItem, arraylist));
+	}
+
+	public void addRecipe(SubItem item, SubItem baseItem, Object... par2ArrayOfObj)
+	{
+		addRecipe(item.getItemStack(), baseItem.getItemStack(), par2ArrayOfObj);
 	}
 
 	public ItemStack findMatchingRecipe(IInventory processor)
 	{
-		for (int j = 0; j < this.recipes.size(); ++j)
+		for (int j = 0; j < recipes.size(); ++j)
 		{
-			ICounterRecipe irecipe = (ICounterRecipe) this.recipes.get(j);
+			final ICounterRecipe irecipe = (ICounterRecipe) recipes.get(j);
 
 			if (irecipe.matches(processor))
 			{
@@ -155,14 +147,14 @@ public class CounterRecipes
 	 */
 	public List getRecipeList()
 	{
-		return this.recipes;
+		return recipes;
 	}
 
 	public boolean isMat(ItemStack findMatchingRecipe, ItemStack stack, IInventory processor)
 	{
-		for (int j = 0; j < this.recipes.size(); ++j)
+		for (int j = 0; j < recipes.size(); ++j)
 		{
-			ICounterRecipe irecipe = (ICounterRecipe) this.recipes.get(j);
+			final ICounterRecipe irecipe = (ICounterRecipe) recipes.get(j);
 
 			if (ItemStack.areItemStacksEqual(irecipe.getRecipeOutput(), findMatchingRecipe))
 			{

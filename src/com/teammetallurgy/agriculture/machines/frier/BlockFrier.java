@@ -3,16 +3,11 @@ package com.teammetallurgy.agriculture.machines.frier;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
 
 import com.teammetallurgy.agriculture.Agriculture;
 import com.teammetallurgy.agriculture.libs.GUIIds;
 import com.teammetallurgy.agriculture.machines.BaseMachineBlock;
-import com.teammetallurgy.agriculture.machines.icebox.TileEntityIcebox;
-
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 
 public class BlockFrier extends BaseMachineBlock
 {
@@ -20,6 +15,12 @@ public class BlockFrier extends BaseMachineBlock
 	public BlockFrier(int par1, Material par2Material)
 	{
 		super(par1, par2Material);
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World world)
+	{
+		return new TileEntityFrier();
 	}
 
 	@Override
@@ -33,9 +34,7 @@ public class BlockFrier extends BaseMachineBlock
 		// (>_>) //
 		if (!world.isRemote)
 		{
-			int blockMetadata = world.getBlockMetadata(x, y, z);
-			final int front = blockMetadata % 2;
-
+			final int blockMetadata = world.getBlockMetadata(x, y, z);
 			if (side == 1)// (<_<) /// :P Deal with it keith :P
 			{
 				player.openGui(Agriculture.instance, GUIIds.FRIER, world, x, y, z);
@@ -50,11 +49,5 @@ public class BlockFrier extends BaseMachineBlock
 			return true;
 		}
 		return true;
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		return new TileEntityFrier();
 	}
 }

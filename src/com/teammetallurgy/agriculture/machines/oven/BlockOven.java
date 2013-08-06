@@ -20,19 +20,25 @@ public class BlockOven extends BaseMachineBlock
 	}
 
 	@Override
+	public TileEntity createNewTileEntity(World world)
+	{
+		return new TileEntityOven();
+	}
+
+	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xFace, float yFace, float zFace)
 	{
-		if(player.isSneaking()) {
+		if (player.isSneaking())
+		{
 			return false;
 		}
-		
+
 		// (>_>) //
 		if (!world.isRemote)
 		{
-			int blockMetadata = world.getBlockMetadata(x, y, z);
-			final int front = blockMetadata % 2;
-
-			if (side == 1 || yFace > 0.76f) // (<_<) /// :P Deal with it keith :P
+			final int blockMetadata = world.getBlockMetadata(x, y, z);
+			if (side == 1 || yFace > 0.76f) // (<_<) /// :P Deal with it keith
+											// :P
 			{
 				player.openGui(Agriculture.instance, GUIIds.COUNTER, world, x, y, z);
 				return true;
@@ -43,15 +49,8 @@ public class BlockOven extends BaseMachineBlock
 				return true;
 			}
 
-
 			return true;
 		}
 		return true;
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		return new TileEntityOven();
 	}
 }

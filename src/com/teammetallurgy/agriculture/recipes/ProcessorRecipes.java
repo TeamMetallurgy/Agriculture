@@ -1,25 +1,18 @@
 package com.teammetallurgy.agriculture.recipes;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 import com.teammetallurgy.agriculture.AgricultureItems;
 import com.teammetallurgy.agriculture.SubItem;
-
-import net.minecraft.block.Block;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 
 public class ProcessorRecipes
 {
 	/** The static instance of this class */
 	private static final ProcessorRecipes instance = new ProcessorRecipes();
-
-	/** A list of all the recipes added */
-	private List recipes = new ArrayList();
 
 	/**
 	 * Returns the static instance of this class
@@ -29,49 +22,13 @@ public class ProcessorRecipes
 		return instance;
 	}
 
-	public void addRecipe(Object item, Object result)
+	public static int getProcessTime(ItemStack stackInSlot)
 	{
-		addRecipe(item, null, result);
-	}
-	
-	public void addRecipe(Object par1ItemStack, Object baseItem, Object result)
-	{
-		this.recipes.add(new ProcessRecipe(getItemStack(par1ItemStack), getItemStack(baseItem), getItemStack(result)));
-	}
-	
-	public ItemStack getItemStack(Object object)
-	{
-		ItemStack stack = null;
-		if(object instanceof ItemStack)
-		{
-			stack = (ItemStack) object;
-		}
-		else if(object instanceof SubItem)
-		{
-			stack = ((SubItem) object).getItemStack();
-		}
-		else if(object instanceof Item)
-		{
-			stack = new ItemStack((Item)object);
-		}
-		return stack;
+		return stackInSlot != null ? 20 : 0;
 	}
 
-	public ItemStack findMatchingRecipe(ItemStack first, ItemStack second)
-	{
-		//System.out.println("recipe " + first.getItem().getUnlocalizedName(first) + " " + second.getItem().getUnlocalizedName(second));
-		for (int j = 0; j < this.recipes.size(); ++j)
-		{
-			ProcessRecipe irecipe = (ProcessRecipe) this.recipes.get(j);
-
-			if (irecipe.matches(first, second))
-			{
-				return irecipe.getCraftingResult();
-			}
-		}
-
-		return null;
-	}
+	/** A list of all the recipes added */
+	private final List recipes = new ArrayList();
 
 	private ProcessorRecipes()
 	{
@@ -94,8 +51,47 @@ public class ProcessorRecipes
 		addRecipe(AgricultureItems.milk, Item.sugar, AgricultureItems.whippedCream);
 	}
 
-	public static int getProcessTime(ItemStack stackInSlot)
+	public void addRecipe(Object item, Object result)
 	{
-		return stackInSlot != null ? 20 : 0;
+		addRecipe(item, null, result);
+	}
+
+	public void addRecipe(Object par1ItemStack, Object baseItem, Object result)
+	{
+		recipes.add(new ProcessRecipe(getItemStack(par1ItemStack), getItemStack(baseItem), getItemStack(result)));
+	}
+
+	public ItemStack findMatchingRecipe(ItemStack first, ItemStack second)
+	{
+		// System.out.println("recipe " +
+		// first.getItem().getUnlocalizedName(first) + " " +
+		// second.getItem().getUnlocalizedName(second));
+		for (int j = 0; j < recipes.size(); ++j)
+		{
+			final ProcessRecipe irecipe = (ProcessRecipe) recipes.get(j);
+
+			if (irecipe.matches(first, second))
+			{
+				return irecipe.getCraftingResult();
+			}
+		}
+
+		return null;
+	}
+
+	public ItemStack getItemStack(Object object)
+	{
+		ItemStack stack = null;
+		if (object instanceof ItemStack)
+		{
+			stack = (ItemStack) object;
+		} else if (object instanceof SubItem)
+		{
+			stack = ((SubItem) object).getItemStack();
+		} else if (object instanceof Item)
+		{
+			stack = new ItemStack((Item) object);
+		}
+		return stack;
 	}
 }

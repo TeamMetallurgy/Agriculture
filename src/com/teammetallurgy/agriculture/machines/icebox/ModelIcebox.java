@@ -26,20 +26,21 @@ public class ModelIcebox extends ModelBase
 		countertop.setRotationPoint(0F, 12F, 7F);
 		countertop.setTextureSize(128, 64);
 		countertop.mirror = true;
-		//setRotation(countertop, -1.570796F, 0F, 0F);
-	}
-	
-	public void renderAll()
-	{
-		ovenbase.render(1/16f);
-		countertop.render(1/16f);
+		// setRotation(countertop, -1.570796F, 0F, 0F);
 	}
 
+	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
 	{
 		super.render(entity, f, f1, f2, f3, f4, f5);
 		ovenbase.render(f5);
 		countertop.render(f5);
+	}
+
+	public void renderAll()
+	{
+		ovenbase.render(1 / 16f);
+		countertop.render(1 / 16f);
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z)

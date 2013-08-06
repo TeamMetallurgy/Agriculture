@@ -5,15 +5,20 @@ import net.minecraft.item.ItemStack;
 public class ProcessRecipe
 {
 
-	private ItemStack first;
-	private ItemStack baseItem;
-	private ItemStack result;
+	private final ItemStack first;
+	private final ItemStack baseItem;
+	private final ItemStack result;
 
 	public ProcessRecipe(ItemStack first, ItemStack baseItem, ItemStack result)
 	{
 		this.first = first;
 		this.baseItem = baseItem;
 		this.result = result;
+	}
+
+	public ItemStack getCraftingResult()
+	{
+		return result;
 	}
 
 	public boolean matches(ItemStack first2, ItemStack second)
@@ -68,10 +73,5 @@ public class ProcessRecipe
 		}
 
 		return false;
-	}
-
-	public ItemStack getCraftingResult()
-	{
-		return result;
 	}
 }

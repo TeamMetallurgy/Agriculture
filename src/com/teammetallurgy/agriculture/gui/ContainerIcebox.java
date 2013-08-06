@@ -6,33 +6,31 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import com.teammetallurgy.agriculture.AgricultureItems;
 import com.teammetallurgy.agriculture.machines.icebox.InventoryIcebox;
 import com.teammetallurgy.agriculture.machines.icebox.TileEntityIcebox;
-import com.teammetallurgy.agriculture.machines.oven.InventoryOven;
 import com.teammetallurgy.agriculture.machines.oven.TileEntityOven;
 
 public class ContainerIcebox extends Container
 {
-	private InventoryIcebox oven;
-	private TileEntityIcebox teOven;
+	private final InventoryIcebox oven;
+	private final TileEntityIcebox teOven;
 
 	public ContainerIcebox(InventoryPlayer invePlayer, TileEntityIcebox teOven)
 	{
-		this.oven = teOven.getInventory();
+		oven = teOven.getInventory();
 		oven.openChest();
 
 		this.teOven = teOven;
 		int i;
 
 		// Fuel Slot
-		this.addSlotToContainer(new Slot(oven, 0, 8, 34));
+		addSlotToContainer(new Slot(oven, 0, 8, 34));
 
 		for (int x = 0; x < 4; x++)
 		{
 			for (int y = 0; y < 3; y++)
 			{
-				this.addSlotToContainer(new Slot(oven, (x + 1) + (y * 4), 53 + x * 18, 15 + y * 18));
+				addSlotToContainer(new Slot(oven, x + 1 + y * 4, 53 + x * 18, 15 + y * 18));
 			}
 		}
 
@@ -40,94 +38,31 @@ public class ContainerIcebox extends Container
 		{
 			for (int j = 0; j < 9; ++j)
 			{
-				this.addSlotToContainer(new Slot(invePlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+				addSlotToContainer(new Slot(invePlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
 			}
 		}
 
 		for (i = 0; i < 9; ++i)
 		{
-			this.addSlotToContainer(new Slot(invePlayer, i, 8 + i * 18, 142));
+			addSlotToContainer(new Slot(invePlayer, i, 8 + i * 18, 142));
 		}
 	}
 
-	@Override
-	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2)
-	{
-		ItemStack itemstack = null;
-		Slot slot = (Slot) this.inventorySlots.get(par2);
-
-		if (slot != null && slot.getHasStack())
-		{
-			ItemStack itemstack1 = slot.getStack();
-			itemstack = itemstack1.copy();
-
-			int itemDamage = itemstack.getItemDamage();
-
-			if (par2 <= 19)
-			{
-				if (!mergeItemStack(itemstack1, 20, this.inventorySlots.size(), true))
-				{
-					return null;
-				}
-			} 
-			else
-			{
-				if (TileEntityOven.getItemBurnTime(itemstack) > 0)
-				{
-					if (!mergeItemStack(itemstack1, 0, 1, false))
-					{
-						return null;
-					}
-				} else
-				{
-					if (!this.mergeItemStack2(itemstack1, 1, 13, false))
-					{
-						return null;
-					}
-				}
-			}
-
-			if (itemstack1.stackSize == 0)
-			{
-				slot.putStack((ItemStack) null);
-			} else
-			{
-				slot.onSlotChanged();
-			}
-
-			if (itemstack1.stackSize == itemstack.stackSize)
-			{
-				return null;
-			}
-
-			slot.onPickupFromSlot(par1EntityPlayer, itemstack1);
-		}
-
-		return null;
-
-	}
-	
 	@Override
 	public boolean canDragIntoSlot(Slot par1Slot)
 	{
 		return true;
 	}
 
-	public void onContainerClosed(EntityPlayer entityplayer)
+	@Override
+	public boolean canInteractWith(EntityPlayer entityplayer)
 	{
-		super.onContainerClosed(entityplayer);
-		oven.closeChest();
+		return true;
 	}
 
 	public TileEntityIcebox getOven()
 	{
 		return teOven;
-	}
-
-	@Override
-	public boolean canInteractWith(EntityPlayer entityplayer)
-	{
-		return true;
 	}
 
 	protected boolean mergeItemStack2(ItemStack par1ItemStack, int par2, int par3, boolean par4)
@@ -147,12 +82,12 @@ public class ContainerIcebox extends Container
 		{
 			if (par1ItemStack.stackSize > 0 && (!par4 && k < par3 || par4 && k >= par2))
 			{
-				slot = (Slot) this.inventorySlots.get(k);
+				slot = (Slot) inventorySlots.get(k);
 				itemstack1 = slot.getStack();
 
 				if (itemstack1 != null && slot.isItemValid(par1ItemStack) && itemstack1.itemID == par1ItemStack.itemID && (!par1ItemStack.getHasSubtypes() || par1ItemStack.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(par1ItemStack, itemstack1))
 				{
-					int l = itemstack1.stackSize + par1ItemStack.stackSize;
+					final int l = itemstack1.stackSize + par1ItemStack.stackSize;
 
 					if (l <= slot.getSlotStackLimit())
 					{
@@ -191,12 +126,12 @@ public class ContainerIcebox extends Container
 
 			while (!par4 && k < par3 || par4 && k >= par2)
 			{
-				slot = (Slot) this.inventorySlots.get(k);
+				slot = (Slot) inventorySlots.get(k);
 				itemstack1 = slot.getStack();
 
 				if (itemstack1 == null && slot.isItemValid(par1ItemStack))
 				{
-					ItemStack itemStack = par1ItemStack.copy();
+					final ItemStack itemStack = par1ItemStack.copy();
 					itemStack.stackSize = 1;
 					slot.putStack(itemStack);
 					slot.onSlotChanged();
@@ -216,6 +151,69 @@ public class ContainerIcebox extends Container
 		}
 
 		return flag1;
+	}
+
+	@Override
+	public void onContainerClosed(EntityPlayer entityplayer)
+	{
+		super.onContainerClosed(entityplayer);
+		oven.closeChest();
+	}
+
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2)
+	{
+		ItemStack itemstack = null;
+		final Slot slot = (Slot) inventorySlots.get(par2);
+
+		if (slot != null && slot.getHasStack())
+		{
+			final ItemStack itemstack1 = slot.getStack();
+			itemstack = itemstack1.copy();
+
+			itemstack.getItemDamage();
+
+			if (par2 <= 19)
+			{
+				if (!mergeItemStack(itemstack1, 20, inventorySlots.size(), true))
+				{
+					return null;
+				}
+			} else
+			{
+				if (TileEntityOven.getItemBurnTime(itemstack) > 0)
+				{
+					if (!mergeItemStack(itemstack1, 0, 1, false))
+					{
+						return null;
+					}
+				} else
+				{
+					if (!mergeItemStack2(itemstack1, 1, 13, false))
+					{
+						return null;
+					}
+				}
+			}
+
+			if (itemstack1.stackSize == 0)
+			{
+				slot.putStack((ItemStack) null);
+			} else
+			{
+				slot.onSlotChanged();
+			}
+
+			if (itemstack1.stackSize == itemstack.stackSize)
+			{
+				return null;
+			}
+
+			slot.onPickupFromSlot(par1EntityPlayer, itemstack1);
+		}
+
+		return null;
+
 	}
 
 }

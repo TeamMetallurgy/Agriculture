@@ -12,11 +12,61 @@ import com.teammetallurgy.agriculture.SubItem;
 public class OvenRecipes
 {
 	private static Map<Integer, OvenRecipes> recipes;
-	
-	private int requiredHeat;
-	private ItemStack source;
-	private ItemStack result;
-	
+
+	public static void addRecipe(Object result, Object source, int heat)
+	{
+		final ItemStack resultStack = getItemStack(result);
+		final ItemStack sourceStack = getItemStack(source);
+		final OvenRecipes recipe = new OvenRecipes(sourceStack, resultStack, heat);
+
+		final int hash = (sourceStack.itemID << 8) + sourceStack.getItemDamage();
+
+		if (recipes == null)
+		{
+			recipes = new HashMap<Integer, OvenRecipes>();
+		}
+
+		recipes.put(hash, recipe);
+	}
+
+	public static ItemStack getItemStack(Object object)
+	{
+		ItemStack stack = null;
+		if (object instanceof ItemStack)
+		{
+			stack = (ItemStack) object;
+		} else if (object instanceof SubItem)
+		{
+			stack = ((SubItem) object).getItemStack();
+		} else if (object instanceof Item)
+		{
+			stack = new ItemStack((Item) object);
+		}
+		return stack;
+	}
+
+	public static ItemStack getResult(ItemStack input, int heat)
+	{
+		final int hash = (input.itemID << 8) + input.getItemDamage();
+		final OvenRecipes result = recipes.get(hash);
+
+		if (result != null)
+		{
+			if (result.getRequiredHeat() <= heat)
+			{
+				final ItemStack itemStack = result.getResult();
+				itemStack.stackSize = 1;
+				return itemStack;
+			}
+		}
+
+		return null;
+	}
+
+	private final int requiredHeat;
+
+	private final ItemStack result;
+
 	static
 	{
 		addRecipe(AgricultureItems.caramel.getItemStack(), new ItemStack(Item.sugar), 100000);
@@ -35,7 +85,7 @@ public class OvenRecipes
 		addRecipe(AgricultureItems.beefJerkey, AgricultureItems.saltedBeef, 100000);
 		addRecipe(AgricultureItems.bacon, AgricultureItems.saltedPork, 100000);
 		addRecipe(AgricultureItems.toast, AgricultureItems.sliceOfBread, 100000);
-		
+
 		addRecipe(AgricultureItems.appleCinnamonCookie, AgricultureItems.appleCinnamonCookieDough, 100000);
 		addRecipe(AgricultureItems.butterCookie, AgricultureItems.butterCookieDough, 100000);
 		addRecipe(AgricultureItems.chocolateChipCookie, AgricultureItems.chocolateChipCookieDough, 100000);
@@ -47,8 +97,8 @@ public class OvenRecipes
 		addRecipe(AgricultureItems.chocolateSauce, AgricultureItems.chocolate, 100000);
 		addRecipe(AgricultureItems.roastedMarshmellows, AgricultureItems.marshmellows, 100000);
 		addRecipe(AgricultureItems.toastedPBSandwich, AgricultureItems.pbSandwich, 100000);
-		
-		int burnTime = 50000;
+
+		final int burnTime = 50000;
 		addRecipe(AgricultureItems.appleCinnamonCookieBurned, AgricultureItems.appleCinnamonCookie, burnTime);
 		addRecipe(AgricultureItems.applePieBurned, AgricultureItems.applePie, burnTime);
 		addRecipe(AgricultureItems.baconBurned, AgricultureItems.bacon, burnTime);
@@ -77,73 +127,20 @@ public class OvenRecipes
 		addRecipe(AgricultureItems.toastedPBJSandwichStrawberryBurned, AgricultureItems.toastedPbjSandwichStrawberry, burnTime);
 		addRecipe(AgricultureItems.toastedPBSandwichBurned, AgricultureItems.toastedPBSandwich, burnTime);
 	}
-	
+
 	private OvenRecipes(ItemStack source, ItemStack result, int heat)
 	{
-		this.source = source;
 		this.result = result;
-		this.requiredHeat = heat;
-	}
-	
-	public static void addRecipe(Object result, Object source, int heat)
-	{
-		ItemStack resultStack = getItemStack(result);
-		ItemStack sourceStack = getItemStack(source);
-		OvenRecipes recipe = new OvenRecipes(sourceStack, resultStack, heat);
-		
-		int hash = (sourceStack.itemID << 8) + sourceStack.getItemDamage();
-		
-		if(recipes == null)
-		{
-			recipes = new HashMap<Integer, OvenRecipes>();
-		}
-		
-		recipes.put(hash, recipe);
-	}
-	
-	public static ItemStack getItemStack(Object object)
-	{
-		ItemStack stack = null;
-		if(object instanceof ItemStack)
-		{
-			stack = (ItemStack) object;
-		}
-		else if(object instanceof SubItem)
-		{
-			stack = ((SubItem) object).getItemStack();
-		}
-		else if(object instanceof Item)
-		{
-			stack = new ItemStack((Item)object);
-		}
-		return stack;
-	}
-	
-	public static ItemStack getResult(ItemStack input, int heat)
-	{
-		int hash = (input.itemID << 8) + input.getItemDamage();
-		OvenRecipes result = recipes.get(hash);
-		
-		if(result != null)
-		{
-			if(result.getRequiredHeat() <= heat)
-			{
-				ItemStack itemStack = result.getResult();
-				itemStack.stackSize = 1;
-				return itemStack;
-			}
-		}
-		
-		return null;
-	}
-
-	private ItemStack getResult()
-	{
-		return result;
+		requiredHeat = heat;
 	}
 
 	private int getRequiredHeat()
 	{
 		return requiredHeat;
+	}
+
+	private ItemStack getResult()
+	{
+		return result;
 	}
 }

@@ -9,22 +9,13 @@ import org.lwjgl.opengl.GL11;
 public class GUIFuelSlot extends GuiContainer
 {
 
-	private ResourceLocation texture = new ResourceLocation("agriculture", "textures/gui/Fuel.png");
-	private ContainerFuel containerFuel;
+	private final ResourceLocation texture = new ResourceLocation("agriculture", "textures/gui/Fuel.png");
+	private final ContainerFuel containerFuel;
 
 	public GUIFuelSlot(ContainerFuel containerFuel)
 	{
 		super(containerFuel);
 		this.containerFuel = containerFuel;
-	}
-
-	@Override
-	public void initGui()
-	{
-		this.xSize = 177;
-		this.ySize = 167;
-
-		super.initGui();
 	}
 
 	@Override
@@ -36,7 +27,7 @@ public class GUIFuelSlot extends GuiContainer
 		GL11.glColor3f(1f, 1f, 1f);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		int fuelRemaining = 80 - this.containerFuel.getTe().getRemainingFuelLevel();
+		int fuelRemaining = 80 - containerFuel.getTe().getRemainingFuelLevel();
 		if (fuelRemaining > 80)
 		{
 			fuelRemaining = 80;
@@ -47,9 +38,18 @@ public class GUIFuelSlot extends GuiContainer
 		}
 		// fuelRemaining = 0;
 
-		float scale = fuelRemaining / 80f;
+		final float scale = fuelRemaining / 80f;
 		drawTexturedModalRect(guiLeft + 80, guiTop + 22 + (int) (scale * 15), 180, (int) (4 + 15 * scale), 15, 15 - (int) (scale * 15));
 		GL11.glEnable(GL11.GL_LIGHTING);
+	}
+
+	@Override
+	public void initGui()
+	{
+		xSize = 177;
+		ySize = 167;
+
+		super.initGui();
 	}
 
 }

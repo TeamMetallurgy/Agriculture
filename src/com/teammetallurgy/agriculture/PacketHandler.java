@@ -1,12 +1,8 @@
 package com.teammetallurgy.agriculture;
 
-import java.io.IOException;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
@@ -21,62 +17,65 @@ import com.teammetallurgy.agriculture.machines.oven.TileEntityOven;
 import com.teammetallurgy.agriculture.machines.processor.TileEntityProcessor;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
+import cpw.mods.fml.relauncher.Side;
 
 public class PacketHandler implements IPacketHandler
 {
+	@Override
 	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player)
 	{
-		ByteArrayDataInput byteIn = ByteStreams.newDataInput(packet.data);
-		short packetID = byteIn.readShort();
+		final ByteArrayDataInput byteIn = ByteStreams.newDataInput(packet.data);
+		final short packetID = byteIn.readShort();
 
 		if (packetID == 0)
 		{
-			int x = byteIn.readInt();
-			int y = byteIn.readInt();
-			int z = byteIn.readInt();
-			byte direction = byteIn.readByte();
-			int fuelRemaining = byteIn.readInt();
-			int temp = byteIn.readInt();
-			int maxTemp = byteIn.readInt();
+			final int x = byteIn.readInt();
+			final int y = byteIn.readInt();
+			final int z = byteIn.readInt();
+			byteIn.readByte();
+			final int fuelRemaining = byteIn.readInt();
+			final int temp = byteIn.readInt();
+			final int maxTemp = byteIn.readInt();
 
-			TileEntity te = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
+			final TileEntity te = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
 
 			if (te instanceof TileEntityOven)
 			{
-				TileEntityOven oven = (TileEntityOven) te;
+				final TileEntityOven oven = (TileEntityOven) te;
 				oven.setTemp(temp);
 				oven.setMaxTemp(maxTemp);
 				oven.setFuelRemaining(fuelRemaining);
 			}
 		} else if (packetID == 1)
 		{
-			int x = byteIn.readInt();
-			int y = byteIn.readInt();
-			int z = byteIn.readInt();
-			byte direction = byteIn.readByte();
-			int processingTime = byteIn.readInt();
-			int currentItemBurnTime = byteIn.readInt();
-			int fuelRemaining = byteIn.readInt();
-			int coolDown = byteIn.readInt();
+			final int x = byteIn.readInt();
+			final int y = byteIn.readInt();
+			final int z = byteIn.readInt();
+			byteIn.readByte();
+			final int processingTime = byteIn.readInt();
+			final int currentItemBurnTime = byteIn.readInt();
+			final int fuelRemaining = byteIn.readInt();
+			final int coolDown = byteIn.readInt();
 
-			boolean item = byteIn.readInt() == 1;
+			final boolean item = byteIn.readInt() == 1;
 
 			ItemStack result = null;
 			if (item)
 			{
-				int itemId = byteIn.readInt();
-				int itemDamage = byteIn.readInt();
-				int stackSize = byteIn.readInt();
+				final int itemId = byteIn.readInt();
+				final int itemDamage = byteIn.readInt();
+				final int stackSize = byteIn.readInt();
 				result = new ItemStack(itemId, stackSize, itemDamage);
 			}
 
-			TileEntity te = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
+			final TileEntity te = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
 
 			if (te instanceof TileEntityProcessor)
 			{
-				TileEntityProcessor oven = (TileEntityProcessor) te;
+				final TileEntityProcessor oven = (TileEntityProcessor) te;
 				oven.setProcessingTime(processingTime);
 				oven.setCurrentItemBurnTime(currentItemBurnTime);
 				oven.setResult(result);
@@ -85,41 +84,41 @@ public class PacketHandler implements IPacketHandler
 			}
 		} else if (packetID == 2)
 		{
-			int x = byteIn.readInt();
-			int y = byteIn.readInt();
-			int z = byteIn.readInt();
-			byte direction = byteIn.readByte();
+			final int x = byteIn.readInt();
+			final int y = byteIn.readInt();
+			final int z = byteIn.readInt();
+			byteIn.readByte();
 
-			int processingTime = byteIn.readInt();
-			int maxProcessingTime = byteIn.readInt();
-			int fuelRemaining = byteIn.readInt();
-			int amountLeftInput = byteIn.readInt();
-			int amountRightInput = byteIn.readInt();
+			final int processingTime = byteIn.readInt();
+			final int maxProcessingTime = byteIn.readInt();
+			final int fuelRemaining = byteIn.readInt();
+			final int amountLeftInput = byteIn.readInt();
+			final int amountRightInput = byteIn.readInt();
 
-			int amountLeft = byteIn.readInt();
-			int amountRight = byteIn.readInt();
+			final int amountLeft = byteIn.readInt();
+			final int amountRight = byteIn.readInt();
 
-			boolean processing = byteIn.readBoolean();
+			final boolean processing = byteIn.readBoolean();
 
-			TileEntity te = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
+			final TileEntity te = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
 
 			if (te instanceof TileEntityBrewer)
 			{
-				TileEntityBrewer oven = (TileEntityBrewer) te;
+				final TileEntityBrewer oven = (TileEntityBrewer) te;
 				oven.setProcessingTime(processingTime);
 				oven.setMaxProcessingTime(maxProcessingTime);
 				oven.setFuelRemaining(fuelRemaining);
 				oven.setAmountLeftInput(amountLeftInput);
 				oven.setAmountRightInput(amountRightInput);
 
-				FluidStack fluid = oven.getRightTank().getFluid();
+				final FluidStack fluid = oven.getRightTank().getFluid();
 
 				if (fluid != null)
 				{
 					fluid.amount = amountRight;
 				}
 
-				FluidStack fluid2 = oven.getLeftTank().getFluid();
+				final FluidStack fluid2 = oven.getLeftTank().getFluid();
 
 				if (fluid2 != null)
 				{
@@ -130,34 +129,32 @@ public class PacketHandler implements IPacketHandler
 			}
 		} else if (packetID == 3)
 		{
-			int x = byteIn.readInt();
-			int y = byteIn.readInt();
-			int z = byteIn.readInt();
-			byte direction = byteIn.readByte();
+			final int x = byteIn.readInt();
+			final int y = byteIn.readInt();
+			final int z = byteIn.readInt();
+			byteIn.readByte();
 
-			int fuelRemaining = byteIn.readInt();
-			int fluidAmount = byteIn.readInt();
+			final int fuelRemaining = byteIn.readInt();
+			final int fluidAmount = byteIn.readInt();
 
-			TileEntity te = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
+			final TileEntity te = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
 
 			if (te instanceof TileEntityFrier)
 			{
-				TileEntityFrier oven = (TileEntityFrier) te;
+				final TileEntityFrier oven = (TileEntityFrier) te;
 				oven.setFuelRemaining(fuelRemaining);
 
-				FluidStack fluid = oven.getTank().getFluid();
+				final FluidStack fluid = oven.getTank().getFluid();
 
 				if (fluid != null)
 				{
 					fluid.amount = fluidAmount;
 				}
 			}
-		} else if (packetID == 256)
+		} else if (packetID == 256 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
 		{
-			float hunger = byteIn.readFloat();
-
-			Minecraft client = FMLClientHandler.instance().getClient();
-			new HungerSystem(client.thePlayer, hunger);
+			final float hunger = byteIn.readFloat();
+			Agriculture.proxy.updateHunger(hunger);
 		}
 	}
 }

@@ -42,15 +42,8 @@ public class ModelCounter extends ModelBase
 		ovendoor2.mirror = true;
 		setRotation(ovendoor2, 0F, 0F, 0F);
 	}
-	
-	public void renderAll()
-	{
-		ovenbase.render(1/16f);
-		ovendoor1.render(1/16f);
-		countertop.render(1/16f);
-		ovendoor2.render(1/16f);
-	}
 
+	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
 	{
 		super.render(entity, f, f1, f2, f3, f4, f5);
@@ -60,16 +53,24 @@ public class ModelCounter extends ModelBase
 		ovendoor2.render(f5);
 	}
 
-	private void setRotation(ModelRenderer model, float x, float y, float z)
+	public void renderAll()
 	{
-		model.rotateAngleX = x;
-		model.rotateAngleY = y;
-		model.rotateAngleZ = z;
+		ovenbase.render(1 / 16f);
+		ovendoor1.render(1 / 16f);
+		countertop.render(1 / 16f);
+		ovendoor2.render(1 / 16f);
 	}
 
 	public void setDoorAngle(float angle)
 	{
 		ovendoor1.rotateAngleY = 1.5F * -angle;
 		ovendoor2.rotateAngleY = 1.5F * angle;
+	}
+
+	private void setRotation(ModelRenderer model, float x, float y, float z)
+	{
+		model.rotateAngleX = x;
+		model.rotateAngleY = y;
+		model.rotateAngleZ = z;
 	}
 }

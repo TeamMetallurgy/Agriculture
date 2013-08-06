@@ -28,18 +28,19 @@ public class ModelProcessor extends ModelBase
 		countertop.mirror = true;
 		setRotation(countertop, 0F, 0F, 0F);
 	}
-	
-	public void renderAll()
-	{
-		ovenbase.render(1/16F);
-		countertop.render(1/16F);
-	}
 
+	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
 	{
 		super.render(entity, f, f1, f2, f3, f4, f5);
 		ovenbase.render(f5);
 		countertop.render(f5);
+	}
+
+	public void renderAll()
+	{
+		ovenbase.render(1 / 16F);
+		countertop.render(1 / 16F);
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z)

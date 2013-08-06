@@ -29,8 +29,8 @@ import cpw.mods.fml.relauncher.Side;
 
 public class TileEntityFrier extends FuelMachineTileEntity
 {
-	private InventoryFrier cabinet = new InventoryFrier("", false, 12, this);
-	private IInventory fuel = new InventoryBasic("", false, 1);
+	private final InventoryFrier cabinet = new InventoryFrier("", false, 12, this);
+	private final IInventory fuel = new InventoryBasic("", false, 1);
 
 	private FluidTank tank = new FluidTank(8000);
 
@@ -44,49 +44,8 @@ public class TileEntityFrier extends FuelMachineTileEntity
 	double prevRightDoorAngle;
 	float rightDoorAngle;
 	private int processingTime;
-	private int[] timeInOvenSlot = new int[11];
+	private final int[] timeInOvenSlot = new int[11];
 	private int sync;
-
-	public IInventory getInventory()
-	{
-		return cabinet;
-	}
-
-	@Override
-	public void onInventoryChanged()
-	{
-	}
-
-	public FluidTank getTank()
-	{
-		return tank;
-	}
-
-	@Override
-	public void readCustomNBT(NBTTagCompound tag)
-	{
-		super.readCustomNBT(tag);
-		NBTTagList tagList = tag.getTagList("Items");
-
-		for (int i = 0; i < tagList.tagCount(); i++)
-		{
-			NBTTagCompound base = (NBTTagCompound) tagList.tagAt(i);
-			int slot = Integer.valueOf(base.getByte("Slot"));
-			cabinet.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(base));
-		}
-
-		NBTTagCompound tankTag = (NBTTagCompound) tag.getTag("Tank");
-		if (tankTag != null)
-		{
-			this.tank = this.tank.readFromNBT(tankTag);
-		}
-	}
-	
-	@Override
-	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
-	{
-		readCustomNBT(pkt.customParam1);
-	}
 
 	@Override
 	public Packet getDescriptionPacket()
@@ -97,41 +56,110 @@ public class TileEntityFrier extends FuelMachineTileEntity
 	}
 
 	@Override
-	public void writeCustomNBT(NBTTagCompound tag)
+	public IInventory getFuelInventory()
 	{
-
-		super.writeCustomNBT(tag);
-		NBTTagList nbtTagList = new NBTTagList();
-		for (int i = 0; i < this.cabinet.getSizeInventory(); ++i)
-		{
-			if (this.cabinet.getStackInSlot(i) != null)
-			{
-				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-				nbttagcompound1.setByte("Slot", (byte) i);
-				this.cabinet.getStackInSlot(i).writeToNBT(nbttagcompound1);
-				nbtTagList.appendTag(nbttagcompound1);
-			}
-		}
-
-		tag.setTag("Items", nbtTagList);
-
-		NBTTagCompound tankTag = new NBTTagCompound();
-
-		tank.writeToNBT(tankTag);
-
-		tag.setTag("Tank", tankTag);
+		return fuel;
 	}
 
+	@Override
+	public int getFuelSlot()
+	{
+		return 0;
+	}
+
+	public IInventory getInventory()
+	{
+		return cabinet;
+	}
+
+	public FluidTank getTank()
+	{
+		return tank;
+	}
+
+	@Override
+	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
+	{
+		readCustomNBT(pkt.customParam1);
+	}
+
+	@Override
+	public void onInventoryChanged()
+	{
+	}
+
+	@Override
+	public void readCustomNBT(NBTTagCompound tag)
+	{
+		super.readCustomNBT(tag);
+		final NBTTagList tagList = tag.getTagList("Items");
+
+		for (int i = 0; i < tagList.tagCount(); i++)
+		{
+			final NBTTagCompound base = (NBTTagCompound) tagList.tagAt(i);
+			final int slot = Integer.valueOf(base.getByte("Slot"));
+			cabinet.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(base));
+		}
+
+		final NBTTagCompound tankTag = (NBTTagCompound) tag.getTag("Tank");
+		if (tankTag != null)
+		{
+			tank = tank.readFromNBT(tankTag);
+		}
+	}
+
+	@Override
 	public boolean receiveClientEvent(int id, int value)
 	{
 		if (id == 1)
 		{
-			this.numUsingPlayers = value;
+			numUsingPlayers = value;
 			return true;
 		} else
 		{
 			return super.receiveClientEvent(id, value);
 		}
+	}
+
+	public void sendPacket()
+	{
+
+		final ByteArrayOutputStream bos = new ByteArrayOutputStream(140);
+		final DataOutputStream dos = new DataOutputStream(bos);
+		try
+		{
+			dos.writeShort(3);
+			dos.writeInt(xCoord);
+			dos.writeInt(yCoord);
+			dos.writeInt(zCoord);
+			dos.writeByte(direction);
+
+			dos.writeInt(fuelRemaining);
+
+			dos.writeInt(tank.getFluidAmount());
+
+		} catch (final IOException e)
+		{
+			System.out.println(e);
+		}
+
+		final Packet250CustomPayload packet = new Packet250CustomPayload();
+		packet.channel = Agriculture.MODID;
+		packet.data = bos.toByteArray();
+		packet.length = bos.size();
+		packet.isChunkDataPacket = true;
+
+		if (packet != null)
+		{
+			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+			{
+				PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 16, worldObj.provider.dimensionId, packet);
+			} else
+			{
+				PacketDispatcher.sendPacketToServer(packet);
+			}
+		}
+
 	}
 
 	@Override
@@ -141,21 +169,21 @@ public class TileEntityFrier extends FuelMachineTileEntity
 		{
 			sendPacket();
 		}
-		if (this.processingTime > 0)
+		if (processingTime > 0)
 		{
-			--this.processingTime;
-			--this.currentItemBurnTime;
-			--this.fuelRemaining;
+			--processingTime;
+			--currentItemBurnTime;
+			--fuelRemaining;
 		}
 
-		if (this.fuelRemaining <= 0)
+		if (fuelRemaining <= 0)
 		{
 			burnFuel();
 		}
-		ItemStack bucketStack = getInventory().getStackInSlot(0);
+		final ItemStack bucketStack = getInventory().getStackInSlot(0);
 		if (bucketStack != null && bucketStack.isItemEqual(AgricultureItems.cookingOil.getItemStack()))
 		{
-			FluidStack fluidStack = new FluidStack(FluidRegistry.getFluid("cookingoil"), 1000);
+			final FluidStack fluidStack = new FluidStack(FluidRegistry.getFluid("cookingoil"), 1000);
 
 			if (fluidStack != null)
 			{
@@ -176,18 +204,20 @@ public class TileEntityFrier extends FuelMachineTileEntity
 		for (int i = 1; i < getInventory().getSizeInventory(); i++)
 		{
 
-			ItemStack stack = getInventory().getStackInSlot(i);
+			final ItemStack stack = getInventory().getStackInSlot(i);
 			if (stack != null && fuelRemaining >= 0)
 			{
 				timeInOvenSlot[i - 1]++;
 				if (stack.getItem() instanceof IDeepFry)
+				{
 					((IDeepFry) stack.getItem()).heatUpdate(stack, timeInOvenSlot[i]);
+				}
 
-				ItemStack result = FrierRecipes.getInstance().findMatchingRecipe(stack, timeInOvenSlot[i - 1]);
-				
+				final ItemStack result = FrierRecipes.getInstance().findMatchingRecipe(stack, timeInOvenSlot[i - 1]);
+
 				fuelRemaining--;
 
-				FluidStack stack2 = tank.drain(1000, false);
+				final FluidStack stack2 = tank.drain(1000, false);
 				if (result != null && stack2 != null && stack2.amount == 1000)
 				{
 					tank.drain(stack2.amount, true);
@@ -200,9 +230,9 @@ public class TileEntityFrier extends FuelMachineTileEntity
 
 		}
 		prevLeftDoorAngle = leftDoorAngle;
-		if (this.numUsingPlayers == 0 && leftDoorAngle > 0.0F || this.numUsingPlayers > 0 && leftDoorAngle < 1.0F)
+		if (numUsingPlayers == 0 && leftDoorAngle > 0.0F || numUsingPlayers > 0 && leftDoorAngle < 1.0F)
 		{
-			if (this.numUsingPlayers > 0)
+			if (numUsingPlayers > 0)
 			{
 				leftDoorAngle += 0.1;
 			} else
@@ -222,58 +252,29 @@ public class TileEntityFrier extends FuelMachineTileEntity
 		}
 	}
 
-	public void sendPacket()
+	@Override
+	public void writeCustomNBT(NBTTagCompound tag)
 	{
 
-		ByteArrayOutputStream bos = new ByteArrayOutputStream(140);
-		DataOutputStream dos = new DataOutputStream(bos);
-		try
+		super.writeCustomNBT(tag);
+		final NBTTagList nbtTagList = new NBTTagList();
+		for (int i = 0; i < cabinet.getSizeInventory(); ++i)
 		{
-			dos.writeShort(3);
-			dos.writeInt(xCoord);
-			dos.writeInt(yCoord);
-			dos.writeInt(zCoord);
-			dos.writeByte(direction);
-
-			dos.writeInt(fuelRemaining);
-
-			dos.writeInt(tank.getFluidAmount());
-
-		} catch (IOException e)
-		{
-			System.out.println(e);
-		}
-
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = Agriculture.MODID;
-		packet.data = bos.toByteArray();
-		packet.length = bos.size();
-		packet.isChunkDataPacket = true;
-
-		if (packet != null)
-		{
-			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+			if (cabinet.getStackInSlot(i) != null)
 			{
-				PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 16, worldObj.provider.dimensionId, packet);
-			} else
-			{
-				PacketDispatcher.sendPacketToServer(packet);
+				final NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+				nbttagcompound1.setByte("Slot", (byte) i);
+				cabinet.getStackInSlot(i).writeToNBT(nbttagcompound1);
+				nbtTagList.appendTag(nbttagcompound1);
 			}
 		}
 
-	}
-	
-	
+		tag.setTag("Items", nbtTagList);
 
-	@Override
-	public int getFuelSlot()
-	{
-		return 0;
-	}
+		final NBTTagCompound tankTag = new NBTTagCompound();
 
-	@Override
-	public IInventory getFuelInventory()
-	{
-		return fuel;
+		tank.writeToNBT(tankTag);
+
+		tag.setTag("Tank", tankTag);
 	}
 }

@@ -9,22 +9,13 @@ import org.lwjgl.opengl.GL11;
 public class GUIProcessor extends GuiContainer
 {
 
-	private ResourceLocation texture = new ResourceLocation("agriculture", "textures/gui/Processor.png");
-	private ContainerProcessor processor;
+	private final ResourceLocation texture = new ResourceLocation("agriculture", "textures/gui/Processor.png");
+	private final ContainerProcessor processor;
 
 	public GUIProcessor(ContainerProcessor processor)
 	{
 		super(processor);
 		this.processor = processor;
-	}
-
-	@Override
-	public void initGui()
-	{
-		this.xSize = 177;
-		this.ySize = 167;
-
-		super.initGui();
 	}
 
 	@Override
@@ -36,11 +27,21 @@ public class GUIProcessor extends GuiContainer
 		GL11.glColor3f(1f, 1f, 1f);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		float scale = processor.getProcessor().getCurrentItemBurnTime() / 20f;
+		final float scale = processor.getProcessor().getCurrentItemBurnTime() / 20f;
 
-		//drawTexturedModalRect(guiLeft + 76, guiTop + 36 + (int) (scale * 15), 178, (int) (88 + 15 * scale), 15, 15 - (int) (scale * 15));
+		// drawTexturedModalRect(guiLeft + 76, guiTop + 36 + (int) (scale * 15),
+		// 178, (int) (88 + 15 * scale), 15, 15 - (int) (scale * 15));
 		drawTexturedModalRect(guiLeft + 77, guiTop + 37, 177, 11, (int) (21 * scale), 4);
 
 		GL11.glEnable(GL11.GL_LIGHTING);
+	}
+
+	@Override
+	public void initGui()
+	{
+		xSize = 177;
+		ySize = 167;
+
+		super.initGui();
 	}
 }

@@ -56,17 +56,8 @@ public class ModelFrier extends ModelBase
 		lid.mirror = true;
 		setRotation(lid, -1.570796F, 0F, 0F);
 	}
-	
-	public void renderAll()
-	{
-		base.render(1/16f);
-		frontwall.render(1/16f);
-		rightwall.render(1/16f);
-		backwall.render(1/16f);
-		leftwall.render(1/16f);
-		lid.render(1/16f);
-	}
 
+	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
 	{
 		super.render(entity, f, f1, f2, f3, f4, f5);
@@ -78,16 +69,26 @@ public class ModelFrier extends ModelBase
 		lid.render(f5);
 	}
 
-	private void setRotation(ModelRenderer model, float x, float y, float z)
+	public void renderAll()
 	{
-		model.rotateAngleX = x;
-		model.rotateAngleY = y;
-		model.rotateAngleZ = z;
+		base.render(1 / 16f);
+		frontwall.render(1 / 16f);
+		rightwall.render(1 / 16f);
+		backwall.render(1 / 16f);
+		leftwall.render(1 / 16f);
+		lid.render(1 / 16f);
 	}
 
 	public void setDoorAngle(float angle)
 	{
 		lid.rotateAngleX = 1.5f * -angle;
-		
+
+	}
+
+	private void setRotation(ModelRenderer model, float x, float y, float z)
+	{
+		model.rotateAngleX = x;
+		model.rotateAngleY = y;
+		model.rotateAngleZ = z;
 	}
 }

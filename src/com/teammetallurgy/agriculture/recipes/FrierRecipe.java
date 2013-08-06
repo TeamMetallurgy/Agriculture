@@ -11,9 +11,14 @@ public class FrierRecipe
 
 	public FrierRecipe(ItemStack item, ItemStack result, int cookTime)
 	{
-		this.base = item;
+		base = item;
 		this.result = result;
 		this.cookTime = cookTime;
+	}
+
+	public ItemStack getCraftingResult()
+	{
+		return result.copy();
 	}
 
 	public boolean matches(ItemStack stack, int time)
@@ -27,11 +32,6 @@ public class FrierRecipe
 		}
 
 		return false;
-	}
-
-	public ItemStack getCraftingResult()
-	{
-		return result.copy();
 	}
 
 }

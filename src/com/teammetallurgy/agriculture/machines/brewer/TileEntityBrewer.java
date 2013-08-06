@@ -25,7 +25,7 @@ import cpw.mods.fml.relauncher.Side;
 
 public class TileEntityBrewer extends FuelMachineTileEntity
 {
-	private InventoryBrewer cabinet = new InventoryBrewer("", false, 3, this);
+	private final InventoryBrewer cabinet = new InventoryBrewer("", false, 3, this);
 
 	private FluidTank leftTank = new FluidTank(8000);
 	private FluidTank rightTank = new FluidTank(8000);
@@ -55,43 +55,14 @@ public class TileEntityBrewer extends FuelMachineTileEntity
 
 	private FluidStack fluidStack;
 
+	public int getAmountRightInput()
+	{
+		return amountRightInput;
+	}
+
 	public IInventory getBrewer()
 	{
 		return cabinet;
-	}
-
-	@Override
-	public void onInventoryChanged()
-	{
-	}
-
-	public float getLiquidScaled()
-	{
-		return rightTank.getFluidAmount() / (float) rightTank.getCapacity();
-	}
-
-	public float getProcessScaled()
-	{
-		float i = processingTime / (float) maxProcessingTime;
-
-		if (i <= 0)
-		{
-			return 0;
-		}
-
-		return i;
-	}
-
-	public boolean isLiquidContainer(ItemStack stack)
-	{
-		return false;
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
-		super.readFromNBT(tag);
-		this.readCustomNBT(tag);
 	}
 
 	@Override
@@ -103,103 +74,203 @@ public class TileEntityBrewer extends FuelMachineTileEntity
 	}
 
 	@Override
+	public IInventory getFuelInventory()
+	{
+		return cabinet;
+	}
+
+	@Override
+	public int getFuelSlot()
+	{
+		return 1;
+	}
+
+	public IInventory getInventory()
+	{
+		return cabinet;
+	}
+
+	public FluidTank getLeftTank()
+	{
+		return leftTank;
+	}
+
+	public float getLiquidScaled()
+	{
+		return rightTank.getFluidAmount() / (float) rightTank.getCapacity();
+	}
+
+	public float getProcessScaled()
+	{
+		final float i = processingTime / (float) maxProcessingTime;
+
+		if (i <= 0)
+		{
+			return 0;
+		}
+
+		return i;
+	}
+
+	public FluidTank getRightTank()
+	{
+		return rightTank;
+	}
+
+	public boolean isLiquidContainer(ItemStack stack)
+	{
+		return false;
+	}
+
+	@Override
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
 	{
 		readCustomNBT(pkt.customParam1);
 	}
 
+	@Override
+	public void onInventoryChanged()
+	{
+	}
+
+	private void process()
+	{
+		if (fluidStack != null)
+		{
+
+		}
+
+	}
+
+	@Override
 	public void readCustomNBT(NBTTagCompound tag)
 	{
-		NBTTagList tagList = tag.getTagList("Items");
+		final NBTTagList tagList = tag.getTagList("Items");
 
 		for (int i = 0; i < tagList.tagCount(); i++)
 		{
-			NBTTagCompound base = (NBTTagCompound) tagList.tagAt(i);
-			int slot = Integer.valueOf(base.getByte("Slot"));
+			final NBTTagCompound base = (NBTTagCompound) tagList.tagAt(i);
+			final int slot = Integer.valueOf(base.getByte("Slot"));
 			cabinet.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(base));
 		}
-		NBTTagCompound rightTankTag = (NBTTagCompound) tag.getTag("RightTank");
-		NBTTagCompound leftTankTag = (NBTTagCompound) tag.getTag("LeftTank");
-		NBTTagCompound proceedFluid = (NBTTagCompound) tag.getTag("ProcessedFluid");
+		final NBTTagCompound rightTankTag = (NBTTagCompound) tag.getTag("RightTank");
+		final NBTTagCompound leftTankTag = (NBTTagCompound) tag.getTag("LeftTank");
+		final NBTTagCompound proceedFluid = (NBTTagCompound) tag.getTag("ProcessedFluid");
 
-		this.rightTank = rightTank.readFromNBT(rightTankTag);
-		this.leftTank = leftTank.readFromNBT(leftTankTag);
+		rightTank = rightTank.readFromNBT(rightTankTag);
+		leftTank = leftTank.readFromNBT(leftTankTag);
 
 		if (proceedFluid != null)
-			this.fluidStack = FluidStack.loadFluidStackFromNBT(proceedFluid);
+		{
+			fluidStack = FluidStack.loadFluidStackFromNBT(proceedFluid);
+		}
 
-		this.amountLeftInput = tag.getInteger("AmountLeftInput");
-		this.amountRightInput = tag.getInteger("AmountRightInput");
+		amountLeftInput = tag.getInteger("AmountLeftInput");
+		amountRightInput = tag.getInteger("AmountRightInput");
 
-		this.fuelRemaining = tag.getInteger("FuelRemaining");
+		fuelRemaining = tag.getInteger("FuelRemaining");
 
-		this.processingTime = tag.getInteger("ProcessingTime");
-		this.maxProcessingTime = tag.getInteger("MaxProcessingTime");
+		processingTime = tag.getInteger("ProcessingTime");
+		maxProcessingTime = tag.getInteger("MaxProcessingTime");
 	}
 
 	@Override
-	public void writeCustomNBT(NBTTagCompound tag)
+	public void readFromNBT(NBTTagCompound tag)
 	{
-
-		NBTTagList nbtTagList = new NBTTagList();
-		for (int i = 0; i < this.cabinet.getSizeInventory(); ++i)
-		{
-			if (this.cabinet.getStackInSlot(i) != null)
-			{
-				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-				nbttagcompound1.setByte("Slot", (byte) i);
-				this.cabinet.getStackInSlot(i).writeToNBT(nbttagcompound1);
-				nbtTagList.appendTag(nbttagcompound1);
-			}
-		}
-
-		NBTTagCompound rightTankTag = new NBTTagCompound();
-		NBTTagCompound leftTankTag = new NBTTagCompound();
-
-		rightTank.writeToNBT(rightTankTag);
-		leftTank.writeToNBT(leftTankTag);
-
-		tag.setTag("RightTank", rightTankTag);
-		tag.setTag("LeftTank", leftTankTag);
-
-		tag.setTag("Items", nbtTagList);
-
-		tag.setInteger("AmountLeftInput", amountLeftInput);
-		tag.setInteger("AmountRightInput", amountRightInput);
-
-		tag.setInteger("FuelRemaining", fuelRemaining);
-
-		tag.setInteger("ProcessingTime", processingTime);
-		tag.setInteger("MaxProcessingTime", maxProcessingTime);
-
-		NBTTagCompound processedFluid = new NBTTagCompound();
-
-		if (fluidStack != null)
-		{
-			fluidStack.writeToNBT(processedFluid);
-		}
-
-		tag.setTag("ProcessedFluid", processedFluid);
-
+		super.readFromNBT(tag);
+		readCustomNBT(tag);
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
-	{
-		super.writeToNBT(tag);
-		writeCustomNBT(tag);
-	}
-
 	public boolean receiveClientEvent(int id, int value)
 	{
 		if (id == 1)
 		{
-			this.numUsingPlayers = value;
+			numUsingPlayers = value;
 			return true;
 		} else
 		{
 			return super.receiveClientEvent(id, value);
 		}
+	}
+
+	public void sendPacket()
+	{
+
+		final ByteArrayOutputStream bos = new ByteArrayOutputStream(140);
+		final DataOutputStream dos = new DataOutputStream(bos);
+		try
+		{
+			dos.writeShort(2);
+			dos.writeInt(xCoord);
+			dos.writeInt(yCoord);
+			dos.writeInt(zCoord);
+			dos.writeByte(direction);
+
+			dos.writeInt(processingTime);
+			dos.writeInt(maxProcessingTime);
+			dos.writeInt(fuelRemaining);
+			dos.writeInt(amountLeftInput);
+			dos.writeInt(amountRightInput);
+
+			dos.writeInt(leftTank.getFluidAmount());
+			dos.writeInt(rightTank.getFluidAmount());
+
+			dos.writeBoolean(processing);
+
+		} catch (final IOException e)
+		{
+			System.out.println(e);
+		}
+
+		final Packet250CustomPayload packet = new Packet250CustomPayload();
+		packet.channel = Agriculture.MODID;
+		packet.data = bos.toByteArray();
+		packet.length = bos.size();
+		packet.isChunkDataPacket = true;
+
+		if (packet != null)
+		{
+			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+			{
+				PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 16, worldObj.provider.dimensionId, packet);
+			} else
+			{
+				PacketDispatcher.sendPacketToServer(packet);
+			}
+		}
+
+	}
+
+	public void setAmountLeftInput(int amountLeftInput)
+	{
+		this.amountLeftInput = amountLeftInput;
+	}
+
+	public void setAmountRightInput(int amountRightInput)
+	{
+		this.amountRightInput = amountRightInput;
+	}
+
+	@Override
+	public void setFuelRemaining(int fuelRemaining)
+	{
+		this.fuelRemaining = fuelRemaining;
+	}
+
+	public void setMaxProcessingTime(int maxProcessingTime)
+	{
+		this.maxProcessingTime = maxProcessingTime;
+	}
+
+	public void setProcessing(boolean processing)
+	{
+		this.processing = processing;
+	}
+
+	public void setProcessingTime(int processingTime)
+	{
+		this.processingTime = processingTime;
 	}
 
 	@Override
@@ -209,12 +280,12 @@ public class TileEntityBrewer extends FuelMachineTileEntity
 		if (processingTime-- <= 0)
 		{
 			process();
-			this.processing = false;
+			processing = false;
 		}
 
-		if (this.processingTime > 0)
+		if (processingTime > 0)
 		{
-			--this.currentItemBurnTime;
+			--currentItemBurnTime;
 		}
 
 		if (fuelRemaining <= 0)
@@ -232,7 +303,7 @@ public class TileEntityBrewer extends FuelMachineTileEntity
 				{
 					amountLeftInput -= 100;
 
-					FluidStack fluidStack = leftTank.getFluid().copy();
+					final FluidStack fluidStack = leftTank.getFluid().copy();
 
 					fluidStack.amount = 100;
 
@@ -262,7 +333,7 @@ public class TileEntityBrewer extends FuelMachineTileEntity
 				{
 					amountRightInput -= 100;
 
-					FluidStack fluidStack = rightTank.getFluid().copy();
+					final FluidStack fluidStack = rightTank.getFluid().copy();
 
 					fluidStack.amount = 100;
 
@@ -292,8 +363,8 @@ public class TileEntityBrewer extends FuelMachineTileEntity
 			}
 		}
 
-		ItemStack itemStack2 = cabinet.getStackInSlot(2);
-		ItemStack itemStack = cabinet.getStackInSlot(0);
+		final ItemStack itemStack2 = cabinet.getStackInSlot(2);
+		final ItemStack itemStack = cabinet.getStackInSlot(0);
 
 		if (processingTime <= 0 && amountLeftInput == 0 && amountRightInput == 0)
 		{
@@ -308,11 +379,11 @@ public class TileEntityBrewer extends FuelMachineTileEntity
 
 				if (fluidStack != null && !processing && amountLeftInput == 0 && amountRightInput == 0)
 				{
-					this.maxProcessingTime = this.processingTime = BrewerRecipes.getInstance().getProcessTime(itemStack2);
+					maxProcessingTime = processingTime = BrewerRecipes.getInstance().getProcessTime(itemStack2);
 					if (leftTank.fill(fluidStack, false) == fluidStack.amount - amountLeftInput)
 					{
-						this.processing = true;
-						this.amountLeftInput += fluidStack.amount - 100;
+						processing = true;
+						amountLeftInput += fluidStack.amount - 100;
 
 						leftTank.fill(new FluidStack(fluidStack, 100), true);
 
@@ -323,7 +394,9 @@ public class TileEntityBrewer extends FuelMachineTileEntity
 							cabinet.setInventorySlotContents(2, itemStack2.getItem().getContainerItemStack(itemStack2));
 						}
 						if (!worldObj.isRemote)
+						{
 							sendPacket();
+						}
 					}
 				}
 			}
@@ -343,16 +416,16 @@ public class TileEntityBrewer extends FuelMachineTileEntity
 					{
 						if (leftTank.getFluid() != null && !fluidStack.isFluidEqual(leftTank.getFluid()) && rightTank.fill(fluidStack, false) == fluidStack.amount - amountRightInput && processingTime <= 0)
 						{
-							this.maxProcessingTime = this.processingTime = BrewerRecipes.getInstance().getProcessTime(itemStack);
-							this.processing = true;
+							maxProcessingTime = processingTime = BrewerRecipes.getInstance().getProcessTime(itemStack);
+							processing = true;
 
 							--itemStack.stackSize;
 
-							this.amountRightInput += fluidStack.amount - 100;
+							amountRightInput += fluidStack.amount - 100;
 
-							this.amountLeftInput += -amountRightInput;
+							amountLeftInput += -amountRightInput;
 
-							FluidStack stack = fluidStack.copy();
+							final FluidStack stack = fluidStack.copy();
 							stack.amount = 100;
 
 							rightTank.fill(stack, true);
@@ -364,38 +437,42 @@ public class TileEntityBrewer extends FuelMachineTileEntity
 								cabinet.setInventorySlotContents(0, itemStack.getItem().getContainerItemStack(itemStack));
 							}
 							if (!worldObj.isRemote)
+							{
 								sendPacket();
+							}
 						}
 					}
 				}
-				ItemStack itemStackResult = BrewerRecipes.getInstance().findMatchingItem(itemStack, rightTank.getFluid());
+				final ItemStack itemStackResult = BrewerRecipes.getInstance().findMatchingItem(itemStack, rightTank.getFluid());
 
 				if (itemStackResult != null)
 				{
-					--this.fuelRemaining;
-					if (itemStack.stackSize == 1 && !this.processing)
+					--fuelRemaining;
+					if (itemStack.stackSize == 1 && !processing)
 					{
-						this.maxProcessingTime = this.processingTime = BrewerRecipes.getInstance().getProcessTime(itemStackResult);
-						this.processing = true;
+						maxProcessingTime = processingTime = BrewerRecipes.getInstance().getProcessTime(itemStackResult);
+						processing = true;
 					}
 
-					if (this.processingTime <= 0 && this.processing)
+					if (processingTime <= 0 && processing)
 					{
 						cabinet.setInventorySlotContents(0, itemStackResult.copy());
 						rightTank.drain(1000, true);
-						this.processing = false;
+						processing = false;
 					}
 					if (!worldObj.isRemote)
+					{
 						sendPacket();
+					}
 
 				}
 			}
 		}
 
 		prevLeftDoorAngle = leftDoorAngle;
-		if (this.numUsingPlayers == 0 && leftDoorAngle > 0.0F || this.numUsingPlayers > 0 && leftDoorAngle < 1.0F)
+		if (numUsingPlayers == 0 && leftDoorAngle > 0.0F || numUsingPlayers > 0 && leftDoorAngle < 1.0F)
 		{
-			if (this.numUsingPlayers > 0)
+			if (numUsingPlayers > 0)
 			{
 				leftDoorAngle += 0.1;
 			} else
@@ -415,122 +492,56 @@ public class TileEntityBrewer extends FuelMachineTileEntity
 		}
 	}
 
-	private void process()
+	@Override
+	public void writeCustomNBT(NBTTagCompound tag)
 	{
-		if (fluidStack != null)
+
+		final NBTTagList nbtTagList = new NBTTagList();
+		for (int i = 0; i < cabinet.getSizeInventory(); ++i)
 		{
-
-		}
-
-	}
-
-	public void setProcessing(boolean processing)
-	{
-		this.processing = processing;
-	}
-
-	public void setProcessingTime(int processingTime)
-	{
-		this.processingTime = processingTime;
-	}
-
-	public void setAmountLeftInput(int amountLeftInput)
-	{
-		this.amountLeftInput = amountLeftInput;
-	}
-
-	public void setAmountRightInput(int amountRightInput)
-	{
-		this.amountRightInput = amountRightInput;
-	}
-
-	public void setMaxProcessingTime(int maxProcessingTime)
-	{
-		this.maxProcessingTime = maxProcessingTime;
-	}
-
-	public void setFuelRemaining(int fuelRemaining)
-	{
-		this.fuelRemaining = fuelRemaining;
-	}
-
-	public void sendPacket()
-	{
-
-		ByteArrayOutputStream bos = new ByteArrayOutputStream(140);
-		DataOutputStream dos = new DataOutputStream(bos);
-		try
-		{
-			dos.writeShort(2);
-			dos.writeInt(xCoord);
-			dos.writeInt(yCoord);
-			dos.writeInt(zCoord);
-			dos.writeByte(direction);
-
-			dos.writeInt(processingTime);
-			dos.writeInt(maxProcessingTime);
-			dos.writeInt(fuelRemaining);
-			dos.writeInt(amountLeftInput);
-			dos.writeInt(amountRightInput);
-
-			dos.writeInt(leftTank.getFluidAmount());
-			dos.writeInt(rightTank.getFluidAmount());
-
-			dos.writeBoolean(processing);
-
-		} catch (IOException e)
-		{
-			System.out.println(e);
-		}
-
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = Agriculture.MODID;
-		packet.data = bos.toByteArray();
-		packet.length = bos.size();
-		packet.isChunkDataPacket = true;
-
-		if (packet != null)
-		{
-			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+			if (cabinet.getStackInSlot(i) != null)
 			{
-				PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 16, worldObj.provider.dimensionId, packet);
-			} else
-			{
-				PacketDispatcher.sendPacketToServer(packet);
+				final NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+				nbttagcompound1.setByte("Slot", (byte) i);
+				cabinet.getStackInSlot(i).writeToNBT(nbttagcompound1);
+				nbtTagList.appendTag(nbttagcompound1);
 			}
 		}
 
-	}
+		final NBTTagCompound rightTankTag = new NBTTagCompound();
+		final NBTTagCompound leftTankTag = new NBTTagCompound();
 
-	public int getAmountRightInput()
-	{
-		return amountRightInput;
-	}
+		rightTank.writeToNBT(rightTankTag);
+		leftTank.writeToNBT(leftTankTag);
 
-	public FluidTank getLeftTank()
-	{
-		return leftTank;
-	}
+		tag.setTag("RightTank", rightTankTag);
+		tag.setTag("LeftTank", leftTankTag);
 
-	public FluidTank getRightTank()
-	{
-		return rightTank;
+		tag.setTag("Items", nbtTagList);
+
+		tag.setInteger("AmountLeftInput", amountLeftInput);
+		tag.setInteger("AmountRightInput", amountRightInput);
+
+		tag.setInteger("FuelRemaining", fuelRemaining);
+
+		tag.setInteger("ProcessingTime", processingTime);
+		tag.setInteger("MaxProcessingTime", maxProcessingTime);
+
+		final NBTTagCompound processedFluid = new NBTTagCompound();
+
+		if (fluidStack != null)
+		{
+			fluidStack.writeToNBT(processedFluid);
+		}
+
+		tag.setTag("ProcessedFluid", processedFluid);
+
 	}
 
 	@Override
-	public int getFuelSlot()
+	public void writeToNBT(NBTTagCompound tag)
 	{
-		return 1;
-	}
-
-	@Override
-	public IInventory getFuelInventory()
-	{
-		return cabinet;
-	}
-
-	public IInventory getInventory()
-	{
-		return cabinet;
+		super.writeToNBT(tag);
+		writeCustomNBT(tag);
 	}
 }

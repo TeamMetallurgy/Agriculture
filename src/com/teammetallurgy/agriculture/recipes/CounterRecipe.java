@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.teammetallurgy.agriculture.SubItem;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 public class CounterRecipe implements ICounterRecipe
 {
@@ -21,37 +18,69 @@ public class CounterRecipe implements ICounterRecipe
 
 	public CounterRecipe(ItemStack outputStack, ItemStack baseItem, List par2List)
 	{
-		this.recipeOutput = outputStack;
-		this.recipeItems = par2List;
+		recipeOutput = outputStack;
+		recipeItems = par2List;
 		this.baseItem = baseItem;
 	}
 
+	/**
+	 * Returns an Item that is the result of this recipe
+	 */
+	@Override
+	public ItemStack getCraftingResult(IInventory procesor)
+	{
+		return recipeOutput.copy();
+	}
+
+	@Override
 	public ItemStack getRecipeOutput()
 	{
-		return this.recipeOutput;
+		return recipeOutput;
+	}
+
+	/**
+	 * Returns the size of the recipe area
+	 */
+	@Override
+	public int getRecipeSize()
+	{
+		return recipeItems.size();
+	}
+
+	@Override
+	public boolean isMat(ItemStack stack)
+	{
+		for (final ItemStack stack2 : recipeItems)
+		{
+			if (ItemStack.areItemStacksEqual(stack, stack2))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
 	 * Used to check if a recipe matches current crafting inventory
 	 */
+	@Override
 	public boolean matches(IInventory processor)
 	{
-		ArrayList arraylist = new ArrayList(this.recipeItems);
+		final ArrayList arraylist = new ArrayList(recipeItems);
 
 		for (int k = 0; k < 4; ++k)
 		{
-			ItemStack stackInSlot = processor.getStackInSlot(k);
+			final ItemStack stackInSlot = processor.getStackInSlot(k);
 			if (stackInSlot != null)
 			{
 
-				int itemID = stackInSlot.getItem().itemID;
-				int damage = stackInSlot.getItemDamage();
+				final int itemID = stackInSlot.getItem().itemID;
+				final int damage = stackInSlot.getItemDamage();
 				if (itemID != baseItem.itemID || damage != baseItem.getItemDamage())
 				{
 					continue;
 				}
-			}
-			else
+			} else
 			{
 				continue;
 			}
@@ -60,16 +89,16 @@ public class CounterRecipe implements ICounterRecipe
 			{
 				for (int j = 0; j < 4; ++j)
 				{
-					ItemStack itemstack = processor.getStackInSlot((i + j * 4) + 4);
+					final ItemStack itemstack = processor.getStackInSlot(i + j * 4 + 4);
 
 					if (itemstack != null)
 					{
 						boolean flag = false;
-						Iterator iterator = arraylist.iterator();
+						final Iterator iterator = arraylist.iterator();
 
 						while (iterator.hasNext())
 						{
-							ItemStack itemstack1 = (ItemStack) iterator.next();
+							final ItemStack itemstack1 = (ItemStack) iterator.next();
 
 							if (itemstack.itemID == itemstack1.itemID && (itemstack1.getItemDamage() == 32767 || itemstack.getItemDamage() == itemstack1.getItemDamage()))
 							{
@@ -78,7 +107,7 @@ public class CounterRecipe implements ICounterRecipe
 								break;
 							}
 						}
-						
+
 						if (!flag)
 						{
 							return false;
@@ -88,35 +117,6 @@ public class CounterRecipe implements ICounterRecipe
 			}
 
 			return arraylist.isEmpty();
-		}
-		return false;
-	}
-
-	/**
-	 * Returns an Item that is the result of this recipe
-	 */
-	public ItemStack getCraftingResult(IInventory procesor)
-	{
-		return this.recipeOutput.copy();
-	}
-
-	/**
-	 * Returns the size of the recipe area
-	 */
-	public int getRecipeSize()
-	{
-		return this.recipeItems.size();
-	}
-
-	@Override
-	public boolean isMat(ItemStack stack)
-	{
-		for(ItemStack stack2: recipeItems) 
-		{
-			if(ItemStack.areItemStacksEqual(stack, stack2))
-			{
-				return true;
-			}
 		}
 		return false;
 	}

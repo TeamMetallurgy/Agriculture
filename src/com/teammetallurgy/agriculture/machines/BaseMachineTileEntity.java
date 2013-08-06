@@ -11,13 +11,53 @@ import net.minecraft.tileentity.TileEntity;
 
 public class BaseMachineTileEntity extends TileEntity
 {
-	private InventoryCounter inventoryCounter = new InventoryCounter("", false, 20);
+	private final InventoryCounter inventoryCounter = new InventoryCounter("", false, 20);
 
 	protected byte direction;
+
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		final NBTTagCompound tag = new NBTTagCompound();
+		writeCustomNBT(tag);
+		return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
+	}
 
 	public byte getDirection()
 	{
 		return direction;
+	}
+
+	public IInventory getInventoryCounter()
+	{
+		return inventoryCounter;
+	}
+
+	@Override
+	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
+	{
+		readCustomNBT(pkt.customParam1);
+	}
+
+	public void readCustomNBT(NBTTagCompound tag)
+	{
+		final NBTTagList tagList = tag.getTagList("ItemsCounter");
+
+		for (int i = 0; i < tagList.tagCount(); i++)
+		{
+			final NBTTagCompound base = (NBTTagCompound) tagList.tagAt(i);
+			final int slot = Integer.valueOf(base.getByte("Slot"));
+			inventoryCounter.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(base));
+		}
+
+		direction = tag.getByte("direction");
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+		readCustomNBT(tag);
 	}
 
 	public void setDirection(byte direction)
@@ -25,58 +65,16 @@ public class BaseMachineTileEntity extends TileEntity
 		this.direction = direction;
 	}
 
-	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
-		super.readFromNBT(tag);
-		this.readCustomNBT(tag);
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound tag)
-	{
-		super.writeToNBT(tag);
-		this.writeCustomNBT(tag);
-	}
-
-	@Override
-	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
-	{
-		this.readCustomNBT(pkt.customParam1);
-	}
-
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		final NBTTagCompound tag = new NBTTagCompound();
-		this.writeCustomNBT(tag);
-		return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
-	}
-
-	public void readCustomNBT(NBTTagCompound tag)
-	{
-		NBTTagList tagList = tag.getTagList("ItemsCounter");
-
-		for (int i = 0; i < tagList.tagCount(); i++)
-		{
-			NBTTagCompound base = (NBTTagCompound) tagList.tagAt(i);
-			int slot = Integer.valueOf(base.getByte("Slot"));
-			inventoryCounter.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(base));
-		}
-
-		direction = tag.getByte("direction");
-	}
-
 	public void writeCustomNBT(NBTTagCompound tag)
 	{
-		NBTTagList nbtTagList = new NBTTagList();
-		for (int i = 0; i < this.inventoryCounter.getSizeInventory(); ++i)
+		final NBTTagList nbtTagList = new NBTTagList();
+		for (int i = 0; i < inventoryCounter.getSizeInventory(); ++i)
 		{
-			if (this.inventoryCounter.getStackInSlot(i) != null)
+			if (inventoryCounter.getStackInSlot(i) != null)
 			{
-				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+				final NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 				nbttagcompound1.setByte("Slot", (byte) i);
-				this.inventoryCounter.getStackInSlot(i).writeToNBT(nbttagcompound1);
+				inventoryCounter.getStackInSlot(i).writeToNBT(nbttagcompound1);
 				nbtTagList.appendTag(nbttagcompound1);
 			}
 		}
@@ -86,9 +84,11 @@ public class BaseMachineTileEntity extends TileEntity
 		tag.setByte("direction", direction);
 	}
 
-	public IInventory getInventoryCounter()
+	@Override
+	public void writeToNBT(NBTTagCompound tag)
 	{
-		return inventoryCounter;
+		super.writeToNBT(tag);
+		writeCustomNBT(tag);
 	}
 
 }

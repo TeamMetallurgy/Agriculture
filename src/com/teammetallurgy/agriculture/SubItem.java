@@ -12,56 +12,36 @@ public class SubItem
 {
 	private SuperItem item;
 	public int itemID;
-	private int damage;
-	
+	private final int damage;
+
 	private Icon itemIcon;
 	private String unlocalizedName;
 	private String textureName;
-	
+
 	public SubItem(int id, int damage)
 	{
-		if(Item.itemsList[id+256] == null)
+		if (Item.itemsList[id + 256] == null)
 		{
 			item = new SuperItem(id);
-		}
-		else
+		} else
 		{
-			if(Item.itemsList[id+256] instanceof SuperItem)
+			if (Item.itemsList[id + 256] instanceof SuperItem)
 			{
-				item = (SuperItem) Item.itemsList[id+256];
-			}
-			else
+				item = (SuperItem) Item.itemsList[id + 256];
+			} else
 			{
-	            System.out.println("CONFLICT @ " + id + " item slot already occupied by " + Item.itemsList[256 + id] + " while adding " + this);
+				System.out.println("CONFLICT @ " + id + " item slot already occupied by " + Item.itemsList[256 + id] + " while adding " + this);
 			}
 		}
-		
-		this.itemID = id;
+
+		itemID = id;
 		this.damage = damage;
 		item.addSubItem(damage, this);
 	}
-	
+
 	public int getDamage()
 	{
 		return damage;
-	}
-	
-	public SubItem setUnlocalizedName(String unlocalizedName)
-	{
-		this.unlocalizedName = unlocalizedName;
-		this.setTextureName(unlocalizedName);
-		return this;
-	}
-	
-	public SubItem setTextureName(String textureName)
-	{
-		this.textureName = textureName;
-		return this;
-	}
-	
-	public String getUnlocalizedName(ItemStack itemstack)
-	{
-		return unlocalizedName;
 	}
 
 	public Icon getIcon()
@@ -69,17 +49,6 @@ public class SubItem
 		return itemIcon;
 	}
 
-	public void registerIcons(IconRegister iconRegister)
-	{
-		itemIcon = iconRegister.registerIcon("agriculture:" + textureName);
-	}
-
-	public SubItem setCreativeTab(AgricultureTab tab)
-	{
-		item.setCreativeTab(tab);
-		return this;
-	}
-	
 	public ItemStack getItemStack()
 	{
 		return getItemStack(1);
@@ -88,16 +57,6 @@ public class SubItem
 	public ItemStack getItemStack(int size)
 	{
 		return new ItemStack(item.itemID, size, damage);
-	}
-
-	public ItemStack onEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
-	{
-		return par1ItemStack;
-	}
-
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
-	{
-		return par1ItemStack;
 	}
 
 	public EnumAction getItemUseAction(ItemStack par1ItemStack)
@@ -110,8 +69,47 @@ public class SubItem
 		return 0;
 	}
 
+	public String getUnlocalizedName(ItemStack itemstack)
+	{
+		return unlocalizedName;
+	}
+
+	public ItemStack onEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
+	{
+		return par1ItemStack;
+	}
+
+	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
+	{
+		return par1ItemStack;
+	}
+
 	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
 	{
 		return false;
+	}
+
+	public void registerIcons(IconRegister iconRegister)
+	{
+		itemIcon = iconRegister.registerIcon("agriculture:" + textureName);
+	}
+
+	public SubItem setCreativeTab(AgricultureTab tab)
+	{
+		item.setCreativeTab(tab);
+		return this;
+	}
+
+	public SubItem setTextureName(String textureName)
+	{
+		this.textureName = textureName;
+		return this;
+	}
+
+	public SubItem setUnlocalizedName(String unlocalizedName)
+	{
+		this.unlocalizedName = unlocalizedName;
+		setTextureName(unlocalizedName);
+		return this;
 	}
 }

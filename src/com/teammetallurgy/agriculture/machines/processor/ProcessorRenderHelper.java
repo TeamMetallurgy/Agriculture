@@ -14,9 +14,15 @@ public class ProcessorRenderHelper implements ISimpleBlockRenderingHandler
 {
 
 	@Override
+	public int getRenderId()
+	{
+		return AgricultureBlocks.processor.getRenderType();
+	}
+
+	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
 	{
-		FuelMachineTileEntity tileentity = new TileEntityProcessor();
+		final FuelMachineTileEntity tileentity = new TileEntityProcessor();
 		TileEntityRenderer.instance.renderTileEntityAt(tileentity, 0D, 0D, 0D, 0F);
 	}
 
@@ -30,12 +36,6 @@ public class ProcessorRenderHelper implements ISimpleBlockRenderingHandler
 	public boolean shouldRender3DInInventory()
 	{
 		return true;
-	}
-
-	@Override
-	public int getRenderId()
-	{
-		return AgricultureBlocks.processor.getRenderType();
 	}
 
 }
