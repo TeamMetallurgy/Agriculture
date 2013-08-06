@@ -1,0 +1,49 @@
+<project>
+	<property name="dist.dir" value="dist" />
+	<loadproperties srcFile="mod.properties" />
+	<property name="reob.dir" value="${mcp.dir}/reobf/minecraft" />
+	<property name="asset.dir" value="resources/" />
+	
+	<property name="mcversion" value="1.6.2"/>
+	<property name="mod.version" value="1.0.0"/>
+	<property name="mod.name" value="Agriculture"/>
+
+	<condition property="is_windows">
+		<os family="windows" />
+	</condition>
+
+	<target name="clean">
+		<delete dir="dist" />
+		<delete dir="${mcp.dir}/src/minecraft/com" />
+	</target>
+
+	<target name="finalize" depends="clean,compile,build" />
+
+	<target name="compile">
+		<copy todir="${mcp.dir}/src/minecraft" verbose="true">
+			<fileset dir="src/"/>
+		</copy>
+		
+		<exec dir="${mcp.dir}" executable="cmd" osfamily="windows">
+			<arg line="/c recompile.bat"/>
+		</exec>
+		
+		<exec dir="${mcp.dir}" executable="sh" osfamily="unix">
+			<arg line="recompile.sh"/>
+		</exec>
+	</target>
+
+	<target name="build">
+		<exec dir="${mcp.dir}" executable="cmd" osfamily="windows">
+			<arg line="/c reobfuscate_srg.bat"/>
+		</exec>
+		
+		<exec dir="${mcp.dir}" executable="sh" osfamily="unix">
+			<arg line="reobfuscate_srg.sh"/>
+		</exec>
+		<jar destfile="${dist.dir}/[${mcversion}] ${mod.name} - ${mod.version}.jar">
+			<fileset dir="${reob.dir}" includes="com/**" />
+			<fileset dir="${asset.dir}" includes="**" />
+		</jar>
+	</target>
+</project>

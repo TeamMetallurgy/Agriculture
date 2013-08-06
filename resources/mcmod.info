@@ -1,0 +1,19 @@
+[
+{
+    "modid": "Agriculture",
+    "name": "Agriculture",
+    "description": "",
+    "version": "1.0.0",
+    "credits": "",
+    "logoFile": "",
+    "mcversion": "1.6.2",
+    "url": "http://goo.gl/tW92J",
+    "updateUrl": "",
+    "authors": [ "Freyja", "RebelKeithy", "Shadowclaimer" ],
+    "parent":"",
+    "screenshots": [],
+    "dependencies": [
+        "mod_MinecraftForge"
+    ]
+}
+]

@@ -173,8 +173,8 @@ public class AgricultureItems
 	public static SubItem ceramicCup;
 	public static SubItem vanilla;
 
-	public static final int dishID = 19999;
-	public static final int foodID = 20000;
+	public static final int dishID = ConfigHandler.getItemId("Dish", 19999);
+	public static final int foodID = ConfigHandler.getItemId("Food", 20000);
 
 	public static void addNames()
 	{

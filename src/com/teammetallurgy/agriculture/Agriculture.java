@@ -1,5 +1,7 @@
 package com.teammetallurgy.agriculture;
 
+import java.util.logging.Logger;
+
 import com.teammetallurgy.agriculture.worldgen.WorldGenSalt;
 import com.teammetallurgy.agriculture.worldgen.WorldGenSpice;
 
@@ -34,6 +36,7 @@ public class Agriculture
 	public static CommonProxy proxy;
 
 	public static AgricultureTab tab;
+    private Logger logger;
 
 	@EventHandler
 	public void commands(FMLServerStartingEvent event)
@@ -71,6 +74,13 @@ public class Agriculture
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-
+        ConfigHandler.init(event.getSuggestedConfigurationFile());
+       
+        logger = event.getModLog();
 	}
+
+    public Logger getLogger()
+    {
+        return logger;
+    }
 }
