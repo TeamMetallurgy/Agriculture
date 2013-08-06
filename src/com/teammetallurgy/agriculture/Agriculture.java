@@ -14,6 +14,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
@@ -44,6 +45,7 @@ public class Agriculture
 	public void init(FMLInitializationEvent event)
 	{
 		tab = new AgricultureTab("Agriculture");
+		LanguageRegistry.instance().addStringLocalization("itemGroup.Agriculture", "en_US", "Agriculture");
 		AgricultureItems.init();
 		AgricultureBlocks.init();
 		tab.setItemID(AgricultureBlocks.oven.blockID);
