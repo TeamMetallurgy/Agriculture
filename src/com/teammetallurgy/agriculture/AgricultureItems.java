@@ -155,7 +155,6 @@ public class AgricultureItems
 	public static SubItem pumpkinCookieBurned;
 	public static SubItem roastedMarshmellowsBurned;
 	public static SubItem roastedPeanutsBurned;
-	public static SubItem shortakeBurned;
 	public static SubItem snickerDoodleBurned;
 	public static SubItem strawberryJellyCookieBurned;
 	public static SubItem strawberryPieBurned;
