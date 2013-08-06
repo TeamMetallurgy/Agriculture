@@ -117,7 +117,7 @@ public class OvenRecipes
 		addRecipe(AgricultureItems.pumpkinCookieBurned, AgricultureItems.pumpkinCookie, burnTime);
 		addRecipe(AgricultureItems.roastedMarshmellowsBurned, AgricultureItems.roastedMarshmellows, burnTime);
 		addRecipe(AgricultureItems.roastedPeanutsBurned, AgricultureItems.roastedMarshmellows, burnTime);
-		addRecipe(AgricultureItems.shortakeBurned, AgricultureItems.shortcake, burnTime);
+		addRecipe(AgricultureItems.shortcakeBurned, AgricultureItems.shortcake, burnTime);
 		addRecipe(AgricultureItems.snickerDoodleBurned, AgricultureItems.snickerDoodle, burnTime);
 		addRecipe(AgricultureItems.strawberryJellyCookieBurned, AgricultureItems.strawberryJellyCookie, burnTime);
 		addRecipe(AgricultureItems.strawberryPieBurned, AgricultureItems.strawberryPie, burnTime);
