@@ -24,7 +24,7 @@ public class ContainerIcebox extends Container
 		int i;
 
 		// Fuel Slot
-		addSlotToContainer(new Slot(oven, 0, 8, 34));
+		addSlotToContainer(new Slot(oven, 0, 11, 33));
 
 		for (int x = 0; x < 4; x++)
 		{
