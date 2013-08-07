@@ -164,4 +164,38 @@ public class CounterRecipes
 		return false;
 
 	}
+
+    public ArrayList<CounterRecipe> getRecipesFor(ItemStack ingredient)
+    {
+        ArrayList<CounterRecipe> list = new ArrayList<CounterRecipe>();
+        
+        for (int j = 0; j < recipes.size(); ++j)
+        {
+            final CounterRecipe irecipe = (CounterRecipe) recipes.get(j);
+
+            if (irecipe.getCraftingResult().isItemEqual(ingredient))
+            {
+                list.add(irecipe);
+            }
+        }
+
+        return list;
+    }
+
+    public ArrayList<CounterRecipe> getRecipesUsing(ItemStack ingredient)
+    {
+        ArrayList<CounterRecipe> list = new ArrayList<CounterRecipe>();
+        
+        for (int j = 0; j < recipes.size(); ++j)
+        {
+            final CounterRecipe irecipe = (CounterRecipe) recipes.get(j);
+
+            if (irecipe.uses(ingredient))
+            {
+                list.add(irecipe);
+            }
+        }
+
+        return list;
+    }
 }
