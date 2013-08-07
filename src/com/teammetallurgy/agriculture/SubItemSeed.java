@@ -17,7 +17,6 @@ public class SubItemSeed extends SubItemFood
 	@Override
 	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
 	{
-		System.out.println("test");
 		if (par7 != 1)
 		{
 			return false;
@@ -25,8 +24,6 @@ public class SubItemSeed extends SubItemFood
 		{
 			final int i1 = par3World.getBlockId(par4, par5, par6);
 			final Block soil = Block.blocksList[i1];
-
-			System.out.println(plant);
 			if (soil != null && plant.canPlaceBlockAt(par3World, par4, par5 + 1, par6) && par3World.isAirBlock(par4, par5 + 1, par6))
 			{
 				par3World.setBlock(par4, par5 + 1, par6, plant.blockID);

@@ -55,10 +55,10 @@ public class BlockSpice extends BlockFlower
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
 	{
 
-		final float temp = growthRate;
-		growthRate = 100;
-		updateTick(world, x, y, z, new Random());
-		growthRate = temp;
+//		final float temp = growthRate;
+//		growthRate = 100;
+//		updateTick(world, x, y, z, new Random());
+//		growthRate = temp;
 
 		return false;
 	}

@@ -64,7 +64,7 @@ public class AgricultureBlocks
         oven = new BlockOven(ConfigHandler.getBlockId("Oven", def++), Material.wood).setUnlocalizedName("agriculture:oven").setCreativeTab(Agriculture.tab);
         counter = new BlockCounter(ConfigHandler.getBlockId("Counter", def++), Material.wood).setUnlocalizedName("agriculture:counter").setCreativeTab(Agriculture.tab);
         processor = new BlockProcessor(ConfigHandler.getBlockId("Processor", def++), Material.wood).setUnlocalizedName("agriculture:processor").setCreativeTab(Agriculture.tab);
-        salt = new BlockSalt(ConfigHandler.getBlockId("Salt", def++), Material.rock).setUnlocalizedName("agriculture:salt").func_111022_d("agriculture:Salt").setCreativeTab(Agriculture.tab);
+        salt = new BlockSalt(ConfigHandler.getBlockId("Salt", def++), Material.rock).setHardness(1.5F).setUnlocalizedName("agriculture:salt").func_111022_d("agriculture:Salt").setCreativeTab(Agriculture.tab);
         cinnamon = new BlockSpice(ConfigHandler.getBlockId("Cinnamon", def++)).setDrop(AgricultureItems.cinnamon.getItemStack()).setHardness(1.0f).setUnlocalizedName("agriculture:cinnamon")
                 .func_111022_d("agriculture:cinnamon").setCreativeTab(Agriculture.tab);
 
