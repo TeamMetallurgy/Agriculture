@@ -554,7 +554,7 @@ public class AgricultureItems
             try
             {
                 ret = new SubItemSeed(id, damage, j);
-            } catch (Exception ex)
+            } catch (NullPointerException ex)
             {
                 id++;
             }
@@ -591,7 +591,7 @@ public class AgricultureItems
             try
             {
                 ret = new SubItemFood(id, damage, j, f);
-            } catch (Exception ex)
+            } catch (Throwable ex)
             {
                 id++;
             }
@@ -628,7 +628,7 @@ public class AgricultureItems
             try
             {
                 ret = new SubItemFood(id, damage, j);
-            } catch (Exception ex)
+            } catch (Throwable ex)
             {
                 id++;
             }
@@ -636,10 +636,12 @@ public class AgricultureItems
 
         if (AgricultureItems.foodID == start && id != start)
         {
+            AgricultureItems.foodID = id;
             ConfigHandler.set("Food", id);
         }
         else if (AgricultureItems.dishID == start  && id != start)
         {
+            AgricultureItems.dishID = id;
             ConfigHandler.set("Dish", id);
         }
 
@@ -665,7 +667,7 @@ public class AgricultureItems
             try
             {
                 ret = new SubItem(id, damage);
-            } catch (Exception ex)
+            } catch (Throwable ex)
             {
                 id++;
             }
