@@ -562,10 +562,12 @@ public class AgricultureItems
 
         if (AgricultureItems.foodID == start && id != start)
         {
+            AgricultureItems.foodID = id;
             ConfigHandler.set("Food", id);
         }
         else if (AgricultureItems.dishID == start  && id != start)
         {
+            AgricultureItems.dishID = id;
             ConfigHandler.set("Dish", id);
         }
 
@@ -597,12 +599,15 @@ public class AgricultureItems
             }
         }
 
+
         if (AgricultureItems.foodID == start && id != start)
         {
+            AgricultureItems.foodID = id;
             ConfigHandler.set("Food", id);
         }
         else if (AgricultureItems.dishID == start  && id != start)
         {
+            AgricultureItems.dishID = id;
             ConfigHandler.set("Dish", id);
         }
 
@@ -633,6 +638,7 @@ public class AgricultureItems
                 id++;
             }
         }
+
 
         if (AgricultureItems.foodID == start && id != start)
         {
@@ -675,10 +681,12 @@ public class AgricultureItems
 
         if (AgricultureItems.foodID == start && id != start)
         {
+            AgricultureItems.foodID = id;
             ConfigHandler.set("Food", id);
         }
         else if (AgricultureItems.dishID == start  && id != start)
         {
+            AgricultureItems.dishID = id;
             ConfigHandler.set("Dish", id);
         }
 
