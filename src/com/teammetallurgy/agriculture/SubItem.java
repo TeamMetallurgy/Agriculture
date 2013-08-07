@@ -32,15 +32,12 @@ public class SubItem
             }
             else
             {
-                System.out.println("CONFLICT @ " + id + " item slot already occupied by " + Item.itemsList[256 + id] + " while adding " + this);
             }
         }
 
         itemID = id;
         this.damage = damage;
-
-        if (item != null)
-            item.addSubItem(damage, this);
+        item.addSubItem(damage, this);
     }
 
     public int getDamage()

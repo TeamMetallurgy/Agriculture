@@ -45,5 +45,7 @@
 			<fileset dir="${reob.dir}" includes="com/**" />
 			<fileset dir="${asset.dir}" includes="**" />
 		</jar>
+		
+		<delete dir="${mcp.dir}/src/minecraft/com" />
 	</target>
 </project>

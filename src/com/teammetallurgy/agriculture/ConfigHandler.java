@@ -74,4 +74,32 @@ public class ConfigHandler
         return def;
     }
 
+    public static void set(String string, int value)
+    {
+
+        try
+        {
+            configuration.load();
+
+            for (String category : configuration.getCategoryNames())
+            {
+                if (configuration.getCategory(category).containsKey(string))
+                {
+                    configuration.getCategory(category).get(string).set(value);
+                }
+            }
+
+        } catch (Exception ex)
+        {
+            Agriculture.instance.getLogger().warning("Could not set new id for " + string + ". Reason" + ex.getMessage());
+        } finally
+        {
+            if (configuration.hasChanged())
+            {
+                configuration.save();
+            }
+        }
+
+    }
+
 }
