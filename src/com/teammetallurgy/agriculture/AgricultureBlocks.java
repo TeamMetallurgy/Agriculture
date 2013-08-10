@@ -78,9 +78,9 @@ public class AgricultureBlocks
         strawberry = new BlockStrawberry(ConfigHandler.getBlockId("Strawberry", def++)).setHardness(0.1f).setUnlocalizedName("agriculture:strawberry").func_111022_d("agriculture:strawberry")
                 .setCreativeTab(Agriculture.tab);
 
-        brewer = new BlockBrewer(ConfigHandler.getBlockId("Brewer", def++), Material.wood).setUnlocalizedName("agriculture:brewer").setCreativeTab(Agriculture.tab);
-        icebox = new BlockIcebox(ConfigHandler.getBlockId("Icebox", def++), Material.wood).setUnlocalizedName("agriculture:icebox").setCreativeTab(Agriculture.tab);
-        frier = new BlockFrier(ConfigHandler.getBlockId("Frier", def++), Material.wood).setUnlocalizedName("agriculture:frier").setCreativeTab(Agriculture.tab);
+//        brewer = new BlockBrewer(ConfigHandler.getBlockId("Brewer", def++), Material.wood).setUnlocalizedName("agriculture:brewer").setCreativeTab(Agriculture.tab);
+//        icebox = new BlockIcebox(ConfigHandler.getBlockId("Icebox", def++), Material.wood).setUnlocalizedName("agriculture:icebox").setCreativeTab(Agriculture.tab);
+//        frier = new BlockFrier(ConfigHandler.getBlockId("Frier", def++), Material.wood).setUnlocalizedName("agriculture:frier").setCreativeTab(Agriculture.tab);
 
         FluidRegistry.registerFluid(new Fluid("milk"));
         FluidRegistry.registerFluid(new Fluid("beer"));

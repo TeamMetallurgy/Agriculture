@@ -48,7 +48,7 @@ public class ConfigHandler
             }
         }
 
-        return def;
+        return ret;
     }
 
     public static int getItemId(String string, int def)
@@ -71,7 +71,7 @@ public class ConfigHandler
             }
         }
 
-        return def;
+        return ret;
     }
 
     public static void set(String string, int value)

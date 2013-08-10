@@ -2,6 +2,7 @@ package com.teammetallurgy.agriculture.nei;
 
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
+import codechicken.nei.forge.GuiContainerManager;
 
 public class NEIConfig implements IConfigureNEI
 {
@@ -14,6 +15,7 @@ public class NEIConfig implements IConfigureNEI
        
        API.registerUsageHandler(new CounterHandler());
        API.registerRecipeHandler(new CounterHandler()); 
+       
     }
 
     @Override

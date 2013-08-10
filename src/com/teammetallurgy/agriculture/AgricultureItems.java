@@ -1,10 +1,8 @@
 package com.teammetallurgy.agriculture;
 
-import codechicken.nei.ItemList;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.WeightedRandomChestContent;
-import net.minecraft.world.MinecraftException;
 import net.minecraftforge.common.ChestGenHooks;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
