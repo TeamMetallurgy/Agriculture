@@ -125,7 +125,7 @@ public class TileEntityBrewer extends FuelMachineTileEntity
 	@Override
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
 	{
-		readCustomNBT(pkt.customParam1);
+		readCustomNBT(pkt.data);
 	}
 
 	@Override

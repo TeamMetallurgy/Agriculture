@@ -55,7 +55,7 @@ public class TileEntityOven extends BaseMachineTileEntity
 					return 300;
 				}
 
-				if (block == Block.field_111034_cE)
+				if (block == Block.coalBlock)
 				{
 					return 16000;
 				}
@@ -175,7 +175,7 @@ public class TileEntityOven extends BaseMachineTileEntity
 	@Override
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
 	{
-		readCustomNBT(pkt.customParam1);
+		readCustomNBT(pkt.data);
 	}
 
 	@Override

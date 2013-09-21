@@ -37,7 +37,7 @@ public class TileEntityBrewerRenderer extends TileEntitySpecialRenderer
 
 		final int rotation = rotations[direction];
 
-		Minecraft.getMinecraft().func_110434_K().func_110577_a(texture);
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
 		GL11.glPushMatrix();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
@@ -57,7 +57,7 @@ public class TileEntityBrewerRenderer extends TileEntitySpecialRenderer
 
 		model.renderAll();
 
-		Minecraft.getMinecraft().func_110434_K().func_110577_a(TextureMap.field_110575_b);
+		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 		model.renderLiquids();
 
 		GL11.glPopMatrix();
