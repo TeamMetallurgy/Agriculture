@@ -21,6 +21,8 @@ import cpw.mods.fml.relauncher.Side;
 @NetworkMod(channels = { Agriculture.MODID }, packetHandler = PacketHandler.class)
 public class Agriculture
 {
+	
+	public static boolean debug;
     public static final String MODID = "Agriculture";
     public static final String MODNAME = "Agriculture";
     public static final String VERSION = "1.0.0";
@@ -32,12 +34,6 @@ public class Agriculture
     public static CommonProxy proxy;
     
     public static AgricultureTab tab;
-
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent event)
-    {
-
-    }
 
     @EventHandler
     public void init(FMLInitializationEvent event)
@@ -53,23 +49,10 @@ public class Agriculture
     	GameRegistry.registerWorldGenerator(new WorldGenSpice(AgricultureBlocks.cinnamon.blockID));
     	GameRegistry.registerWorldGenerator(new WorldGenSpice(AgricultureBlocks.vanilla.blockID));
     	
-    	
-    	
     	TickRegistry.registerTickHandler(new TickHandler(), Side.SERVER);
         NetworkRegistry.instance().registerGuiHandler(instance, proxy);
         proxy.registerEventHandlers();
         proxy.registerRenderers();
     }
 
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent event)
-    {
-
-    }
-
-    @EventHandler
-    public void commands(FMLServerStartingEvent event)
-    {
-
-    }
 }

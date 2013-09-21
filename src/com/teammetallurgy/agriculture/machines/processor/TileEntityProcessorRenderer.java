@@ -31,7 +31,7 @@ public class TileEntityProcessorRenderer extends TileEntitySpecialRenderer
 		int rotation = rotations[direction];
 		
 		
-		Minecraft.getMinecraft().func_110434_K().func_110577_a(texture);
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		
 		GL11.glPushMatrix();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);

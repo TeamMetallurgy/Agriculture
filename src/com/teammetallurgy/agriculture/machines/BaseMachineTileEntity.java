@@ -42,7 +42,7 @@ public class BaseMachineTileEntity extends TileEntity
 	@Override
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
 	{
-		this.readCustomNBT(pkt.customParam1);
+		this.readCustomNBT(pkt.data);
 	}
 
 	@Override

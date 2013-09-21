@@ -2,6 +2,8 @@ package com.teammetallurgy.agriculture;
 
 import java.util.EnumSet;
 
+import org.lwjgl.Sys;
+
 import com.teammetallurgy.agriculture.hunger.HungerSystem;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +21,6 @@ public class TickHandler implements ITickHandler
 		EntityPlayerMP player = (EntityPlayerMP) tickData[0];
 		if(hungerUpdate-- <= 0)
 		{
-		
 			HungerSystem.tick(player);
 			HungerSystem.applyBonuses(player);
 			hungerUpdate = 20;

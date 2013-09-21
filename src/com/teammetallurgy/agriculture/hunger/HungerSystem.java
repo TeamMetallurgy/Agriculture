@@ -68,7 +68,9 @@ public class HungerSystem
         {
             this.hungerPoints = MAXPOINTS;
         }
-//        System.out.println("points " + hungerPoints);
+        System.out.println("hg " + hungerPoints);
+        System.out.println("points " + points);
+        System.out.println(getInstance(player));
         syncClientWithServer(this.player);
     }
 
@@ -115,7 +117,7 @@ public class HungerSystem
 
     public float getPercentage()
     {
-        return hungerPoints / MAXPOINTS;
+        return this.hungerPoints / this.MAXPOINTS;
     }
 
     public static void applyBonuses(EntityPlayerMP player)

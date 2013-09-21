@@ -8,9 +8,11 @@ public class AgricultureTab extends CreativeTabs
 {
 	private int itemID;
 
+	String label;
 	public AgricultureTab(String label)
 	{
 		super(label);
+		this.label = label;
 	}
 	
 	public void setItemID(int itemID)
@@ -25,5 +27,11 @@ public class AgricultureTab extends CreativeTabs
     public int getTabIconItemIndex()
     {
     	return itemID;
+    }
+    
+    @Override
+    public String getTranslatedTabLabel()
+    {
+        return label;
     }
 }

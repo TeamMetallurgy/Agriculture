@@ -121,7 +121,7 @@ public class BlockStrawberry extends BlockFlower
 
         for (int i = 0; i < this.iconArray.length; ++i)
         {
-            this.iconArray[i] = par1IconRegister.registerIcon(this.func_111023_E() + "_stage_" + i);
+            this.iconArray[i] = par1IconRegister.registerIcon(this.getTextureName() + "_stage_" + i);
         }
     }
 }

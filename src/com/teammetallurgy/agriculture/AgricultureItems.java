@@ -475,7 +475,8 @@ public class AgricultureItems
 		LanguageRegistry.addName(cinnamon.getItemStack(), "Cinnamon");
 		LanguageRegistry.addName(groundCinnamon.getItemStack(), "Ground Cinnamon");
 		LanguageRegistry.addName(peanuts.getItemStack(), "Peanuts");
-
+		LanguageRegistry.addName(strawberry.getItemStack(), "Strawberry");
+		
 		LanguageRegistry.addName(appleCinnamonCookieDough.getItemStack(), "Apple Cinnamon Cookie Dough");
 		LanguageRegistry.addName(bowlOfRawPasta.getItemStack(), "Bowl of Raw Pasta");
 		LanguageRegistry.addName(butterCookieDough.getItemStack(), "Butter Cookie Dough");
@@ -519,7 +520,7 @@ public class AgricultureItems
 		LanguageRegistry.addName(beefJerkeyBurned.getItemStack(), "Beef Jerkey (Burned)");
 		LanguageRegistry.addName(butterCookieBurned.getItemStack(), "Butter Cookie (Burned)");
 		LanguageRegistry.addName(caramelBurned.getItemStack(), "Caramel (Burned)");
-		LanguageRegistry.addName(carrotCake.getItemStack(), "Carrot Cake (Burned)");
+		LanguageRegistry.addName(carrotCakeBurned.getItemStack(), "Carrot Cake (Burned)");
 		LanguageRegistry.addName(chocolateChipCookieBurned.getItemStack(), "Chocolate Chip Cookie (Burned)");
 		LanguageRegistry.addName(chocolateSauceBurned.getItemStack(), "Chocolate Sauce (Burned)");
 		LanguageRegistry.addName(frenchToastBurned.getItemStack(), "French Toast (Burned)");

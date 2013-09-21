@@ -2,6 +2,7 @@ package com.teammetallurgy.agriculture.hunger;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -20,17 +21,17 @@ public class HungerOverlay
 
     final int u = 0, v = 0, width = 9, height = 9;
 
-    private ResourceLocation texture = new ResourceLocation("agriculture", "textures/gui/WellFedOverlay.png");
-
+    private ResourceLocation texture = new ResourceLocation("agriculture:textures/gui/WellFedOverlay.png");
+    private static final ResourceLocation icons = new ResourceLocation("textures/gui/icons.png");
+   
     @ForgeSubscribe
-    public void drawOverlay(RenderGameOverlayEvent.Post event)
+    public void drawOverlay(RenderGameOverlayEvent.Pre event)
     {
         if (event.type == ElementType.FOOD)
         {
-            Minecraft client = FMLClientHandler.instance().getClient();
+            Minecraft client = Minecraft.getMinecraft();
             
-            GL11.glDisable(GL11.GL_LIGHTING);
-            client.renderEngine.func_110577_a(texture);
+            client.renderEngine.bindTexture(texture);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             
             int bars = (int) (9 * HungerSystem.getPercentage(client.thePlayer));
@@ -40,7 +41,7 @@ public class HungerOverlay
             {
                 drawTexturedModalRect(event.resolution.getScaledWidth() / 2 + width + (-x * 8) + (9 * width), event.resolution.getScaledHeight() - 39, u, v, width, height);
             }
-            GL11.glEnable(GL11.GL_LIGHTING);
+            client.getTextureManager().bindTexture(icons);
         }
     }
 
