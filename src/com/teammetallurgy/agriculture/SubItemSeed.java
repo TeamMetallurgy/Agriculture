@@ -24,7 +24,6 @@ public class SubItemSeed extends SubItemFood
 	
     public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
     {
-    	System.out.println("test");
         if (par7 != 1)
         {
             return false;

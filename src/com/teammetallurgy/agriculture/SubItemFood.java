@@ -17,7 +17,7 @@ public class SubItemFood extends SubItem
 	private final int healAmount;
 	private final float saturationModifier;
 	private final boolean isWolfsFavoriteMeat;
-	private boolean alwaysEdible;
+	private boolean alwaysEdible = true;
 
 	public SubItemFood(int id, int damage, int heal)
 	{
@@ -72,7 +72,7 @@ public class SubItemFood extends SubItem
 		}
 		else
 		{
-			par3EntityPlayer.getFoodStats().addStats(-this.getHealAmount(), -this.getSaturationModifier());
+			//par3EntityPlayer.getFoodStats().addStats(-this.getHealAmount(), -this.getSaturationModifier());
 		}
 
 		return par1ItemStack;

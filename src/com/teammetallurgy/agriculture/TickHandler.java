@@ -19,7 +19,6 @@ public class TickHandler implements ITickHandler
 		EntityPlayerMP player = (EntityPlayerMP) tickData[0];
 		if(hungerUpdate-- <= 0)
 		{
-		
 			HungerSystem.tick(player);
 			HungerSystem.applyBonuses(player);
 			hungerUpdate = 20;

@@ -30,7 +30,7 @@ public class GUIFuelSlot extends GuiContainer
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
 	{
-		Minecraft.getMinecraft().renderEngine.func_110577_a(texture);
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glColor3f(1f, 1f, 1f);

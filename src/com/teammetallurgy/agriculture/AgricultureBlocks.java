@@ -50,11 +50,11 @@ public class AgricultureBlocks
 		oven = new BlockOven(3000, Material.wood).setUnlocalizedName("agriculture:oven").setCreativeTab(Agriculture.tab);
 		counter = new BlockCounter(3001, Material.wood).setUnlocalizedName("agriculture:counter").setCreativeTab(Agriculture.tab);
 		processor = new BlockProcessor(3002, Material.wood).setUnlocalizedName("agriculture:processor").setCreativeTab(Agriculture.tab);
-		salt = new BlockSalt(3003, Material.rock).setUnlocalizedName("agriculture:salt").func_111022_d("agriculture:Salt").setCreativeTab(Agriculture.tab);
-		cinnamon = new BlockSpice(3004).setDrop(AgricultureItems.cinnamon.getItemStack()).setHardness(1.0f).setUnlocalizedName("agriculture:cinnamon").func_111022_d("agriculture:cinnamon").setCreativeTab(Agriculture.tab);
-		vanilla = new BlockSpice(3008).setDrop(AgricultureItems.vanilla.getItemStack()).setHardness(1.0f).setUnlocalizedName("agriculture:vanilla").func_111022_d("agriculture:vanilla").setCreativeTab(Agriculture.tab);
-		peanut = new BlockPeanut(3009).setHardness(0.1f).setUnlocalizedName("agriculture:peanut").func_111022_d("agriculture:peanut").setCreativeTab(Agriculture.tab);
-		strawberry = new BlockStrawberry(3010).setHardness(0.1f).setUnlocalizedName("agriculture:strawberry").func_111022_d("agriculture:strawberry").setCreativeTab(Agriculture.tab);
+		salt = new BlockSalt(3003, Material.rock).setUnlocalizedName("agriculture:salt").setTextureName("agriculture:Salt").setCreativeTab(Agriculture.tab);
+		cinnamon = new BlockSpice(3004).setDrop(AgricultureItems.cinnamon.getItemStack()).setHardness(1.0f).setUnlocalizedName("agriculture:cinnamon").setTextureName("agriculture:cinnamon").setCreativeTab(Agriculture.tab);
+		vanilla = new BlockSpice(3008).setDrop(AgricultureItems.vanilla.getItemStack()).setHardness(1.0f).setUnlocalizedName("agriculture:vanilla").setTextureName("agriculture:vanilla").setCreativeTab(Agriculture.tab);
+		peanut = new BlockPeanut(3009).setHardness(0.1f).setUnlocalizedName("agriculture:peanut").setTextureName("agriculture:peanut").setCreativeTab(Agriculture.tab);
+		strawberry = new BlockStrawberry(3010).setHardness(0.1f).setUnlocalizedName("agriculture:strawberry").setTextureName("agriculture:strawberry").setCreativeTab(Agriculture.tab);
 		
 		brewer = new BlockBrewer(3005, Material.wood).setUnlocalizedName("agriculture:brewer").setCreativeTab(Agriculture.tab);
 		icebox = new BlockIcebox(3006, Material.wood).setUnlocalizedName("agriculture:icebox").setCreativeTab(Agriculture.tab);
