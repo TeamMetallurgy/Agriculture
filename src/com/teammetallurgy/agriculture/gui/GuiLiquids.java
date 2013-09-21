@@ -39,7 +39,7 @@ public abstract class GuiLiquids extends GuiContainer
 		{
 			liquidIcon = fluid.getStillIcon();
 		}
-		mc.renderEngine.func_110577_a(TextureMap.field_110575_b);
+		mc.renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 
 		if (liquidIcon != null)
 		{
@@ -65,7 +65,7 @@ public abstract class GuiLiquids extends GuiContainer
 				}
 			}
 		}
-		// mc.renderEngine.func_110577_a(texture);
+		// mc.renderEngine.bindTexture(texture);
 		// drawTexturedModalRect(guiLeft + i, guiTop + j, 178, 3, 17, 64);
 	}
 

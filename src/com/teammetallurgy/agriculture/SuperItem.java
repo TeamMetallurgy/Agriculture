@@ -138,7 +138,6 @@ public class SuperItem extends Item
 		final int damage = par1ItemStack.getItemDamage();
 		if (subItems.containsKey(damage))
 		{
-			System.out.println(subItems.get(damage).getClass().getSimpleName());
 			return subItems.get(damage).onItemUse(par1ItemStack, par2EntityPlayer, par3World, par4, par5, par6, par7, par8, par9, par10);
 		}
 
