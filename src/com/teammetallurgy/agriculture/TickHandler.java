@@ -2,8 +2,6 @@ package com.teammetallurgy.agriculture;
 
 import java.util.EnumSet;
 
-import org.lwjgl.Sys;
-
 import com.teammetallurgy.agriculture.hunger.HungerSystem;
 
 import net.minecraft.entity.player.EntityPlayer;
