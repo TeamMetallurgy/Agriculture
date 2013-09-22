@@ -21,16 +21,16 @@ public class HungerOverlay
 	final int u = 0, v = 0, width = 9, height = 9;
 
 	private final ResourceLocation texture = new ResourceLocation("agriculture", "textures/gui/WellFedOverlay.png");
-
+	private static final ResourceLocation icons = new ResourceLocation("textures/gui/icons.png");	
+	
 	@ForgeSubscribe
 	public void drawOverlay(RenderGameOverlayEvent.Post event)
 	{
 		if (event.type == ElementType.FOOD)
 		{
-			final Minecraft client = FMLClientHandler.instance().getClient();
+			final Minecraft client = Minecraft.getMinecraft();
 
-			GL11.glDisable(GL11.GL_LIGHTING);
-			client.renderEngine.func_110577_a(texture);
+			client.renderEngine.bindTexture(texture);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 			final int bars = (int) (9 * HungerSystem.getPercentage(client.thePlayer));
@@ -40,7 +40,7 @@ public class HungerOverlay
 			{
 				drawTexturedModalRect(event.resolution.getScaledWidth() / 2 + width + -x * 8 + 9 * width, event.resolution.getScaledHeight() - 39, u, v, width, height);
 			}
-			GL11.glEnable(GL11.GL_LIGHTING);
+			client.renderEngine.bindTexture(icons);
 		}
 	}
 
