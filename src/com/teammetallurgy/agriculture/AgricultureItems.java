@@ -357,8 +357,6 @@ public class AgricultureItems {
 	}
 
 	public static void init() {
-		// ovenRack = new SubItem(dishID,
-		// 6).setUnlocalizedName("OvenRack").setTextureName("OvenRack").setCreativeTab(Agriculture.tab);
 
 		int damage = 0;
 		clayBowl = createSubItem(dishID, damage++).setUnlocalizedName("ClayBowl").setTextureName("ClayBowl").setCreativeTab(Agriculture.tab);

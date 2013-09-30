@@ -48,15 +48,14 @@ public class AgricultureBlocks {
 		LanguageRegistry.addName(brewer, "Brewer");
 		LanguageRegistry.addName(cinnamon, "Cinnamon Plant");
 		LanguageRegistry.addName(vanilla, "Vanilla Plant");
+		LanguageRegistry.addName(peanut, "Peanut Plant");
+		LanguageRegistry.addName(strawberry, "Strawberry Plant");
 		LanguageRegistry.addName(salt, "Salt Ore");
 		LanguageRegistry.addName(icebox, "Ice Box");
 		LanguageRegistry.addName(frier, "Frier");
 	}
 
 	public static void init() {
-		// oven = new BlockOven(3000,
-		// Material.wood).setUnlocalizedName("agriculture:oven").setCreativeTab(Agriculture.tab);
-
 		int def = 3000;
 		oven = new BlockOven(ConfigHandler.getBlockId("Oven", def++), Material.wood).setUnlocalizedName("agriculture:oven").setCreativeTab(Agriculture.tab);
 		counter = new BlockCounter(ConfigHandler.getBlockId("Counter", def++), Material.wood).setUnlocalizedName("agriculture:counter").setCreativeTab(Agriculture.tab);
@@ -72,13 +71,6 @@ public class AgricultureBlocks {
 		peanut = new BlockPeanut(ConfigHandler.getBlockId("Peanut", def++)).setHardness(0.1f).setUnlocalizedName("agriculture:peanut").setTextureName("agriculture:peanut").setCreativeTab(Agriculture.tab);
 		strawberry = new BlockStrawberry(ConfigHandler.getBlockId("Strawberry", def++)).setHardness(0.1f).setUnlocalizedName("agriculture:strawberry").setTextureName("agriculture:strawberry").setCreativeTab(Agriculture.tab);
 
-		// brewer = new BlockBrewer(ConfigHandler.getBlockId("Brewer", def++),
-		// Material.wood).setUnlocalizedName("agriculture:brewer").setCreativeTab(Agriculture.tab);
-		// icebox = new BlockIcebox(ConfigHandler.getBlockId("Icebox", def++),
-		// Material.wood).setUnlocalizedName("agriculture:icebox").setCreativeTab(Agriculture.tab);
-		// frier = new BlockFrier(ConfigHandler.getBlockId("Frier", def++),
-		// Material.wood).setUnlocalizedName("agriculture:frier").setCreativeTab(Agriculture.tab);
-
 		FluidRegistry.registerFluid(new Fluid("milk"));
 		FluidRegistry.registerFluid(new Fluid("beer"));
 		FluidRegistry.registerFluid(new Fluid("hotcocoa"));
@@ -93,6 +85,8 @@ public class AgricultureBlocks {
 		GameRegistry.registerBlock(salt, "AgricultureSalt");
 		GameRegistry.registerBlock(cinnamon, "AgricultureCinnamon");
 		GameRegistry.registerBlock(vanilla, "AgricultureVanilla");
+		GameRegistry.registerBlock(peanut, "AgriculturePeanut");
+		GameRegistry.registerBlock(strawberry, "AgricultureStrawberry");
 		GameRegistry.registerBlock(brewer, "AgricultureBrewerBlock");
 		GameRegistry.registerBlock(icebox, "AgricultureIcebox");
 		GameRegistry.registerBlock(frier, "AgricultureFrier");
