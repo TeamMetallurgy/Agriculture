@@ -1,6 +1,7 @@
 package com.teammetallurgy.agriculture;
 
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
@@ -525,123 +526,41 @@ public class AgricultureItems {
 	}
 
 	private static SubItem createSubItemSeed(int id, int damage, int j) {
-		int start = id;
-
-		SubItem ret = null;
-		while (ret == null) {
-			if (id > Item.itemsList.length) {
-				break;
-			}
-
-			try {
-				ret = new SubItemSeed(id, damage, j);
-			} catch (NullPointerException ex) {
-				id++;
-			}
-		}
-
-		if (AgricultureItems.foodID == start && id != start) {
-			AgricultureItems.foodID = id;
-			ConfigHandler.set("Food", id);
-		} else if (AgricultureItems.dishID == start && id != start) {
-			AgricultureItems.dishID = id;
-			ConfigHandler.set("Dish", id);
-		}
-
-		if (ret == null) {
-			throw new IllegalArgumentException("Slot " + id + " is already occupied by " + Item.itemsList[256 + id]);
-		}
-		return ret;
+		Item item = Item.itemsList[id + 256];
+		
+		idTaken_do(id, item);
+		
+		return new SubItemSeed(id, damage, j);
 	}
 
 	private static SubItem createSubFood(int id, int damage, int j, float f) {
-		int start = id;
-
-		SubItem ret = null;
-		while (ret == null) {
-			if (id > Item.itemsList.length) {
-				break;
-			}
-
-			try {
-				ret = new SubItemFood(id, damage, j, f);
-			} catch (Throwable ex) {
-				id++;
-			}
-		}
-
-		if (AgricultureItems.foodID == start && id != start) {
-			AgricultureItems.foodID = id;
-			ConfigHandler.set("Food", id);
-		} else if (AgricultureItems.dishID == start && id != start) {
-			AgricultureItems.dishID = id;
-			ConfigHandler.set("Dish", id);
-		}
-
-		if (ret == null) {
-			throw new IllegalArgumentException("Slot " + id + " is already occupied by " + Item.itemsList[256 + id]);
-		}
-		return ret;
+		Item item = Item.itemsList[id + 256];
+		
+		idTaken_do(id, item);
+		
+		return new SubItemFood(id, damage, j, f);
 	}
 
 	private static SubItem createSubFood(int id, int damage, int j) {
-		int start = id;
-
-		SubItem ret = null;
-		while (ret == null) {
-			if (id > Item.itemsList.length) {
-				break;
-			}
-
-			try {
-				ret = new SubItemFood(id, damage, j);
-			} catch (Throwable ex) {
-				id++;
-			}
-		}
-
-		if (AgricultureItems.foodID == start && id != start) {
-			AgricultureItems.foodID = id;
-			ConfigHandler.set("Food", id);
-		} else if (AgricultureItems.dishID == start && id != start) {
-			AgricultureItems.dishID = id;
-			ConfigHandler.set("Dish", id);
-		}
-
-		if (ret == null) {
-			throw new IllegalArgumentException("Slot " + id + " is already occupied by " + Item.itemsList[256 + id]);
-		}
-		return ret;
+		Item item = Item.itemsList[id + 256];
+		
+		idTaken_do(id, item);
+		
+		return new SubItemFood(id, damage, j);		
 	}
 
 	private static SubItem createSubItem(int id, int damage) {
-		int start = id;
+		Item item = Item.itemsList[id + 256];
+		
+		idTaken_do(id, item);
+				
+		return new SubItem(id, damage);
+	}
 
-		SubItem ret = null;
-		while (ret == null) {
-			if (id > Item.itemsList.length) {
-				break;
-			}
-
-			try {
-				ret = new SubItem(id, damage);
-			} catch (Throwable ex) {
-				id++;
-			}
-		}
-
-		if (AgricultureItems.foodID == start && id != start) {
-			AgricultureItems.foodID = id;
-			ConfigHandler.set("Food", id);
-		} else if (AgricultureItems.dishID == start && id != start) {
-			AgricultureItems.dishID = id;
-			ConfigHandler.set("Dish", id);
-		}
-
-		if (ret == null) {
+	private static void idTaken_do(int id, Item item) {
+		if (item != null && !(item instanceof SuperItem)) {
 			throw new IllegalArgumentException("Slot " + id + " is already occupied by " + Item.itemsList[256 + id]);
 		}
-		return ret;
 	}
 
 	public static void setupItems() {
