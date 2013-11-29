@@ -33,9 +33,8 @@ public class HungerOverlay
 			client.renderEngine.bindTexture(texture);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-			final int bars = (int) (9 * HungerSystem.getPercentage(client.thePlayer));
+			final int bars = (int) (9 * HungerSystem.getInstance().getPercentage(client.thePlayer));
 			// int bars = 4;
-
 			for (int x = bars; x > 0; x--)
 			{
 				drawTexturedModalRect(event.resolution.getScaledWidth() / 2 + width + -x * 8 + 9 * width, event.resolution.getScaledHeight() - 39, u, v, width, height);
