@@ -53,17 +53,19 @@ public class AgricultureBlocks {
 		LanguageRegistry.addName(icebox, "Ice Box");
 		LanguageRegistry.addName(frier, "Frier");
 	}
+	
 	public static void registerOreDictionary() {
 		OreDictionary.registerOre("oven", new ItemStack(oven));
 		OreDictionary.registerOre("counter", new ItemStack(counter));
 		OreDictionary.registerOre("processor", new ItemStack(processor));
 		OreDictionary.registerOre("brewer", new ItemStack(brewer));
-		OreDictionary.registerOre("cinnamon", new ItemStack(cinnamon));
-		OreDictionary.registerOre("vanilla", new ItemStack(vanilla));
-		OreDictionary.registerOre("salt", new ItemStack(salt));
+		OreDictionary.registerOre("cropCinnamon", new ItemStack(cinnamon));
+		OreDictionary.registerOre("cropVanilla", new ItemStack(vanilla));
+		OreDictionary.registerOre("oreSalt", new ItemStack(salt));
 		OreDictionary.registerOre("icebox", new ItemStack(icebox));
 		OreDictionary.registerOre("frier", new ItemStack(frier));
 	}
+	
 	public static void init() {
 		// oven = new BlockOven(3000,
 		// Material.wood).setUnlocalizedName("agriculture:oven").setCreativeTab(Agriculture.tab);
