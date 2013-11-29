@@ -10,7 +10,7 @@ import com.teammetallurgy.agriculture.hunger.HungerSystem;
 public class SubItemFood extends SubItem
 {
 	private final int healAmount;
-	private final float saturationModifier;
+	private float saturationModifier;
 	private final boolean isWolfsFavoriteMeat;
 	private boolean alwaysEdible = true;
 
