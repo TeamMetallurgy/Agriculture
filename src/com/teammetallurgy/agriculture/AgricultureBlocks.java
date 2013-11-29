@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.teammetallurgy.agriculture.crops.BlockPeanut;
@@ -52,7 +53,19 @@ public class AgricultureBlocks {
 		LanguageRegistry.addName(icebox, "Ice Box");
 		LanguageRegistry.addName(frier, "Frier");
 	}
-
+	
+	public static void registerOreDictionary() {
+		OreDictionary.registerOre("oven", new ItemStack(oven));
+		OreDictionary.registerOre("counter", new ItemStack(counter));
+		OreDictionary.registerOre("processor", new ItemStack(processor));
+		OreDictionary.registerOre("brewer", new ItemStack(brewer));
+		OreDictionary.registerOre("cropCinnamon", new ItemStack(cinnamon));
+		OreDictionary.registerOre("cropVanilla", new ItemStack(vanilla));
+		OreDictionary.registerOre("oreSalt", new ItemStack(salt));
+		OreDictionary.registerOre("icebox", new ItemStack(icebox));
+		OreDictionary.registerOre("frier", new ItemStack(frier));
+	}
+	
 	public static void init() {
 		// oven = new BlockOven(3000,
 		// Material.wood).setUnlocalizedName("agriculture:oven").setCreativeTab(Agriculture.tab);
@@ -111,5 +124,6 @@ public class AgricultureBlocks {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(frier), "BIB", "BGB", "BIB", 'I', Item.ingotIron, 'G', Block.glass, 'B', Item.brick));
 
 		addNames();
+		registerOreDictionary();
 	}
 }
