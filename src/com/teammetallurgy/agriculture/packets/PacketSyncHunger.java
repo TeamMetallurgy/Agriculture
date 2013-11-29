@@ -37,7 +37,7 @@ public class PacketSyncHunger extends Packet
 		{
 			final Minecraft client = FMLClientHandler.instance().getClient();
 
-			new HungerSystem(client.thePlayer, hungerPoints);
+			HungerSystem.getInstance().addPoints(client.thePlayer, hungerPoints);
 		}
 	}
 

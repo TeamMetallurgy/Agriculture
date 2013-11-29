@@ -73,7 +73,12 @@ public class SubItemFood extends SubItem
 		--par1ItemStack.stackSize;
 		par3EntityPlayer.getFoodStats().addStats(getHealAmount(), getSaturationModifier());
 		par2World.playSoundAtEntity(par3EntityPlayer, "random.burp", 0.5F, par2World.rand.nextFloat() * 0.1F + 0.9F);
-		HungerSystem.addPoints(par3EntityPlayer, healAmount);
+		HungerSystem.getInstance().addPoints(par3EntityPlayer, healAmount);
+		if(HungerSystem.getInstance().getPercentage(par3EntityPlayer) >=100){
+			alwaysEdible = false;
+		}else{
+			alwaysEdible = true;
+		}
 		return par1ItemStack;
 	}
 

@@ -26,7 +26,6 @@ public class GUIFuelSlot extends GuiContainer
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glColor3f(1f, 1f, 1f);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-
 		int fuelRemaining = 80 - containerFuel.getTe().getRemainingFuelLevel();
 		if (fuelRemaining > 80)
 		{

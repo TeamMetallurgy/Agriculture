@@ -1,6 +1,7 @@
 package com.teammetallurgy.agriculture;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 
 import com.teammetallurgy.agriculture.hunger.HungerOverlay;
@@ -56,6 +57,6 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void updateHunger(float hunger)
 	{
-		new HungerSystem(Minecraft.getMinecraft().thePlayer, hunger);
+		HungerSystem.getInstance().addPoints((EntityPlayer)Minecraft.getMinecraft().thePlayer, hunger);
 	}
 }

@@ -10,7 +10,6 @@ import net.minecraftforge.fluids.FluidStack;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
-import com.teammetallurgy.agriculture.hunger.HungerSystem;
 import com.teammetallurgy.agriculture.machines.brewer.TileEntityBrewer;
 import com.teammetallurgy.agriculture.machines.frier.TileEntityFrier;
 import com.teammetallurgy.agriculture.machines.oven.TileEntityOven;

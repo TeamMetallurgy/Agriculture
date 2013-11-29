@@ -38,8 +38,8 @@ public class TickHandler implements ITickHandler
 		if (hungerUpdate-- <= 0)
 		{
 
-			HungerSystem.tick(player);
-			HungerSystem.applyBonuses(player);
+			HungerSystem.getInstance().tick(player);
+			HungerSystem.getInstance().applyInstanceBonuses(player);
 			hungerUpdate = 20;
 		}
 
