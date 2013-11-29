@@ -12,7 +12,7 @@ import com.teammetallurgy.agriculture.gui.GUIProcessor;
 import com.teammetallurgy.agriculture.recipes.ProcessRecipe;
 import com.teammetallurgy.agriculture.recipes.ProcessorRecipes;
 
-public class ProcessorHandler extends TemplateRecipeHandler
+public class BrewerHandler extends TemplateRecipeHandler
 {
     class NEIProcessRecipe extends CachedRecipe
     {
@@ -94,11 +94,5 @@ public class ProcessorHandler extends TemplateRecipeHandler
     public String getGuiTexture()
     {
         return "agriculture:textures/gui/Processor.png";
-    }
-    
-    @Override
-    public void drawExtras(int recipe)
-    {
-        drawProgressBar(72, 26, 177, 11, 25, 4, 35, 0);
     }
 }

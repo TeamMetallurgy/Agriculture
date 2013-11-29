@@ -21,8 +21,8 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 
 import com.teammetallurgy.agriculture.Agriculture;
 import com.teammetallurgy.agriculture.food.ICookable;
-import com.teammetallurgy.agriculture.gui.OvenRecipes;
 import com.teammetallurgy.agriculture.machines.BaseMachineTileEntity;
+import com.teammetallurgy.agriculture.recipes.OvenRecipes;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -304,7 +304,7 @@ public class TileEntityOven extends BaseMachineTileEntity
 							((ICookable) stack.getItem()).heatUpdate(stack, temp, timeInOvenSlot[i]);
 						}
 
-						final ItemStack result = OvenRecipes.getResult(stack, timeInOvenSlot[i] * temp); // replace
+						final ItemStack result = OvenRecipes.getInstance().findMatchingRecipe(stack, timeInOvenSlot[i] * temp); // replace
 						// with
 						// actually
 						// heat

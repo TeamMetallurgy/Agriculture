@@ -24,7 +24,7 @@ public class BrewerRecipes
 	}
 
 	/** A list of all the recipes added */
-	private final List recipes = new ArrayList();
+	private final List<BrewerRecipe> recipes = new ArrayList<BrewerRecipe>();
 
 	private BrewerRecipes()
 	{

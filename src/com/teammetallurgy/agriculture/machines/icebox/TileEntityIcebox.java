@@ -17,6 +17,7 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 
 import com.teammetallurgy.agriculture.Agriculture;
 import com.teammetallurgy.agriculture.machines.BaseMachineTileEntity;
+import com.teammetallurgy.agriculture.recipes.FreezerRecipes;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -241,7 +242,7 @@ public class TileEntityIcebox extends BaseMachineTileEntity
 					{
 						timeInSlot[i]++;
 
-						final ItemStack result = IceboxRecipes.getResult(stack, timeInSlot[i] * temp); // replace
+						final ItemStack result = FreezerRecipes.getInstance().findMatchingRecipe(stack, timeInSlot[i] * temp); // replace
 																										// with
 																										// actually
 																										// heat
