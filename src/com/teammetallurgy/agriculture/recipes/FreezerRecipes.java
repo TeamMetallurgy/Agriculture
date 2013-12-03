@@ -1,12 +1,11 @@
 package com.teammetallurgy.agriculture.recipes;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import net.minecraft.item.ItemStack;
 
 import com.teammetallurgy.agriculture.AgricultureItems;
 import com.teammetallurgy.agriculture.SubItem;
-
-import net.minecraft.item.ItemStack;
 
 public class FreezerRecipes {
     
@@ -14,7 +13,7 @@ public class FreezerRecipes {
 
     private static FreezerRecipes instance = new FreezerRecipes();
     
-    private List<FreezerRecipe> recipes = new ArrayList<FreezerRecipe>();
+    private ArrayList<FreezerRecipe> recipes = new ArrayList<FreezerRecipe>();
 
     public static FreezerRecipes getInstance()
     {
@@ -71,7 +70,7 @@ public class FreezerRecipes {
 
     public ItemStack findMatchingRecipe(ItemStack stack, int currentTemp)
     {
-        FreezerRecipe recipe = this.getMatchingRecipe(stack, currentTemp);
+        TempRecipe recipe = this.getMatchingRecipe(stack, currentTemp);
         
         if(recipe != null)
         {
@@ -81,13 +80,18 @@ public class FreezerRecipes {
         return null;
     }
 
-    private FreezerRecipe getMatchingRecipe(ItemStack stack, int currentTemp)
+    private TempRecipe getMatchingRecipe(ItemStack stack, int currentTemp)
     {
-        for(FreezerRecipe recipe : recipes)
+        for(TempRecipe recipe : recipes)
         {
             if(recipe.matches(stack, currentTemp)) { return recipe; }
         }
         return null;
+    }
+
+    public ArrayList<FreezerRecipe> getRecipes()
+    {
+        return recipes;
     }
 
 }

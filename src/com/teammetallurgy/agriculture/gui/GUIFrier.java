@@ -6,15 +6,21 @@ import net.minecraftforge.fluids.FluidTank;
 
 import org.lwjgl.opengl.GL11;
 
+import com.teammetallurgy.agriculture.gui.GuiLiquids.FluidWidget;
+
 public class GUIFrier extends GuiLiquids
 {
-	private final ResourceLocation texture = new ResourceLocation("agriculture", "textures/gui/Frier.png");
+	public ResourceLocation texture = new ResourceLocation("agriculture", "textures/gui/Frier.png");
 	private final ContainerFrier counter;
+    private FluidWidget fluidWidget;
 
 	public GUIFrier(ContainerFrier containerFrier)
 	{
 		super(containerFrier);
 		counter = containerFrier;
+		
+		fluidWidget = new GuiLiquids.FluidWidget(counter.getTE().getTank(), 44, 10, 178, 3, 19, 65);
+        
 	}
 
 	@Override
@@ -26,11 +32,7 @@ public class GUIFrier extends GuiLiquids
 		GL11.glColor3f(1f, 1f, 1f);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		final FluidTank tank = counter.getTE().getTank();
-
-		final float scaled = tank.getFluidAmount() / (float) tank.getCapacity();
-
-		displayLiquid(guiLeft, guiTop, 43, 10, (int) (scaled * 64), tank.getFluid());
+		fluidWidget.drawLiquid(this, guiLeft, guiTop, texture);
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 

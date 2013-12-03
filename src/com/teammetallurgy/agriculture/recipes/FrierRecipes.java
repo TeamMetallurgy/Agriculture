@@ -20,7 +20,7 @@ public class FrierRecipes {
     }
 
     /** A list of all the recipes added */
-    private final List<FrierRecipe> recipes = new ArrayList<FrierRecipe>();
+    private final ArrayList<FrierRecipe> recipes = new ArrayList<FrierRecipe>();
 
     private FrierRecipes()
     {
@@ -74,5 +74,10 @@ public class FrierRecipes {
         }
 
         return retRecipes;
+    }
+
+    public ArrayList<FrierRecipe> getRecipes()
+    {
+        return recipes;
     }
 }

@@ -22,7 +22,7 @@ public class OvenRecipes {
         return OvenRecipes.instance;
     }
 
-    private final List<OvenRecipe> recipes = new ArrayList<OvenRecipe>();
+    private final ArrayList<OvenRecipe> recipes = new ArrayList<OvenRecipe>();
 
     private OvenRecipes()
     {
@@ -159,5 +159,10 @@ public class OvenRecipes {
         }
 
         return retRecipes;
+    }
+    
+    public ArrayList<OvenRecipe> getRecipes()
+    {
+        return recipes;
     }
 }

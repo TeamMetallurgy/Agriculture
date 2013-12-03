@@ -10,11 +10,16 @@ public class GUIBrewer extends GuiLiquids
 {
 	private final ResourceLocation texture = new ResourceLocation("agriculture", "textures/gui/Brewer.png");
 	ContainerBrewer brewer;
+    private FluidWidget fluidWidgetLeft;
+    private FluidWidget fluidWidgetRight;
 
 	public GUIBrewer(ContainerBrewer containerBrewer)
 	{
 		super(containerBrewer);
 		brewer = containerBrewer;
+		
+		fluidWidgetLeft = new GuiLiquids.FluidWidget(brewer.getTe().getLeftTank(), 50, 10, 179, 3, 19, 65);
+		fluidWidgetRight = new GuiLiquids.FluidWidget(brewer.getTe().getRightTank(), 110, 10, 179, 3, 19, 65);
 	}
 
 	@Override
@@ -50,9 +55,9 @@ public class GUIBrewer extends GuiLiquids
 
 		drawTexturedModalRect(guiLeft + 81, guiTop + 43 + (int) (scale * 15), 179, (int) (82 + 15 * scale), 15, 15 - (int) (scale * 15));
 
-		displayLiquid(guiLeft, guiTop, 49, 10, (int) (scaledLeft * 64), leftTank.getFluid());
-		displayLiquid(guiLeft, guiTop, 109, 10, (int) (scaledRight * 64), rightTank.getFluid());
-
+		fluidWidgetLeft.drawLiquid(this, guiLeft, guiTop, texture);
+		fluidWidgetRight.drawLiquid(this, guiLeft, guiTop, texture);
+		
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 

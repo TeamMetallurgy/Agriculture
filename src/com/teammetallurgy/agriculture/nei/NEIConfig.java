@@ -23,6 +23,9 @@ public class NEIConfig implements IConfigureNEI
        
        API.registerUsageHandler(new IceBoxHandler());
        API.registerRecipeHandler(new IceBoxHandler());
+       
+       API.registerUsageHandler(new FrierHandler());
+       API.registerRecipeHandler(new FrierHandler());
     }
 
     @Override
