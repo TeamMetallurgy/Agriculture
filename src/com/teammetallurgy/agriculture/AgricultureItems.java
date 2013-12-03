@@ -1,7 +1,7 @@
 package com.teammetallurgy.agriculture;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
@@ -504,6 +504,8 @@ public class AgricultureItems {
 		GameRegistry.addRecipe(clayBowl.getItemStack(12), "X X", " X ", 'X', Item.clay);
 		GameRegistry.addRecipe(clayPlate.getItemStack(12), "XXX", 'X', Item.clay);
 		GameRegistry.addRecipe(clayCup.getItemStack(12), "X", "X", 'X', Item.clay);
+		GameRegistry.addRecipe(ovenRack.getItemStack(), "XXX", "XXX", "XXX", 'X', Block.fenceIron);
+		
 
 		GameRegistry.addShapelessRecipe(water.getItemStack(), ceramicCup.getItemStack(), Item.bucketWater);
 		GameRegistry.addShapelessRecipe(milk.getItemStack(), ceramicCup.getItemStack(), Item.bucketMilk);
