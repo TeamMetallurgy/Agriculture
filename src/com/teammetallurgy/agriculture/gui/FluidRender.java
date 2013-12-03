@@ -22,7 +22,7 @@ public class FluidRender {
     private static final ResourceLocation BLOCK_TEXTURE = TextureMap.locationBlocksTexture;
     private static Map<Fluid, int[]> flowingRenderCache = new HashMap<Fluid, int[]>();
     private static Map<Fluid, int[]> stillRenderCache = new HashMap<Fluid, int[]>();
-    public static final int DISPLAY_STAGES = 100;
+    public static final int DISPLAY_STAGES = 73;
     private static final RenderInfo liquidBlock = new RenderInfo();
 
     public static Icon getFluidTexture(FluidStack fluidStack, boolean flowing) {
