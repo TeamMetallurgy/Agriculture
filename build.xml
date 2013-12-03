@@ -94,7 +94,10 @@
 	</target>
 
 	<!-- Download necessary files -->
-	<target name="download-files" depends="download-forge"/>
+	<target name="download-files">
+		<get src="https://dl.dropboxusercontent.com/u/21347544/libs.zip" dest="${download.dir}"/>
+		<antcall target="download-forge"/>
+	</target>
 
 	<!-- Download forge (if it doesn't exist) -->
 	<target name="download-forge" unless="forge-exists">
@@ -102,8 +105,13 @@
 	</target>
 
 	<!-- Setup mcp and forge -->
-	<target name="setup" depends="download-files" if="out-of-date">
-
+	<target name="setup" depends="download-files, setup-forge">
+		<delete dir="libs" failonerror="false"/>
+		<unzip dest="./" src="${download.dir}/libs.zip" />
+	</target>
+		
+	<target name="setup-forge" if="out-of-date">
+		
 		<delete dir="${forge.dir}" failonerror="false"/>
 
 		<unzip dest="${forge.dir}/.." src="${download.dir}/${forge.name}"/>
@@ -127,6 +135,10 @@
 		<!-- Copy sources -->
 		<copy todir="${mcpsrc.dir}/minecraft">
 			<fileset dir="${src.dir}"/>
+		</copy>
+		
+		<copy todir="${mcp.dir}/lib">
+			<fileset dir="libs/"/>
 		</copy>
 	</target>
 
