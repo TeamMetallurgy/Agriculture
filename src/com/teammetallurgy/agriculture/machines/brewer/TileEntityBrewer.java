@@ -12,8 +12,12 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 
 import com.teammetallurgy.agriculture.Agriculture;
 import com.teammetallurgy.agriculture.machines.FuelMachineTileEntity;
@@ -23,7 +27,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 
-public class TileEntityBrewer extends FuelMachineTileEntity
+public class TileEntityBrewer extends FuelMachineTileEntity implements IFluidHandler
 {
 	private final InventoryBrewer cabinet = new InventoryBrewer("", false, 3, this);
 
@@ -54,6 +58,8 @@ public class TileEntityBrewer extends FuelMachineTileEntity
 	private boolean processing = false;
 
 	private FluidStack fluidStack;
+
+    private boolean hasUpdate = false;
 
 	public int getAmountRightInput()
 	{
@@ -295,6 +301,11 @@ public class TileEntityBrewer extends FuelMachineTileEntity
 
 		if (update-- <= 0)
 		{
+		    if(hasUpdate)
+		    {
+		        sendPacket();
+		    }
+		    
 			update = 10;
 
 			if (amountLeftInput > 0)
@@ -544,4 +555,78 @@ public class TileEntityBrewer extends FuelMachineTileEntity
 		super.writeToNBT(tag);
 		writeCustomNBT(tag);
 	}
+
+    @Override
+    public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+    {
+        if(resource == null)
+        {
+            return 0;
+        }
+        
+        resource = resource.copy();
+        int totalUsed = 0;
+        
+        FluidStack fluid = leftTank.getFluid();
+        
+        if(fluid != null && fluid.amount > 0 && !fluid.isFluidEqual(resource))
+        {
+            return 0;
+        }
+        
+        while(resource.amount > 0)
+        {
+            int used = leftTank.fill(resource, doFill);
+            resource.amount -= used;
+            if(used > 0)
+            {
+                hasUpdate = true;
+            }
+            
+            
+            totalUsed += used;
+        }
+        
+        return totalUsed;
+    }
+
+    @Override
+    public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+    {
+        if(resource == null)
+        {
+            return null;
+        }
+        
+        if(!resource.isFluidEqual(rightTank.getFluid()))
+        {
+            return null;
+        }
+        
+        return drain(from, resource.amount, doDrain);
+    }
+
+    @Override
+    public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+    {
+        return rightTank.drain(maxDrain, doDrain);
+    }
+
+    @Override
+    public boolean canFill(ForgeDirection from, Fluid fluid)
+    {
+        return true;
+    }
+
+    @Override
+    public boolean canDrain(ForgeDirection from, Fluid fluid)
+    {
+        return true;
+    }
+
+    @Override
+    public FluidTankInfo[] getTankInfo(ForgeDirection from)
+    {
+        return new FluidTankInfo[] { rightTank.getInfo() };
+    }
 }
