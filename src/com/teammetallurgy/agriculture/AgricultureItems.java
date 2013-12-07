@@ -753,7 +753,7 @@ public class AgricultureItems {
         {
             IRecipe tmpRecipe = recipes.get(i);
             ItemStack recipeResult = tmpRecipe.getRecipeOutput();
-            if (ItemStack.areItemStacksEqual(itemStack, recipeResult))
+            if (recipeResult != null && itemStack.isItemEqual(recipeResult))
             {
                 recipes.remove(i--);
             }
