@@ -6,6 +6,7 @@
 	<property name="build.dir" value="build"/>
 	<property name="src.dir" value="src"/>
 	<property name="resources.dir" value="resources"/>
+	<property name="api.dir" value="apis"/>
 
 	<property name="download.dir" value="download"/>
 
@@ -96,6 +97,7 @@
 	<!-- Download necessary files -->
 	<target name="download-files">
 		<get src="https://dl.dropboxusercontent.com/u/21347544/libs.zip" dest="${download.dir}"/>
+		<get src="http://jenkins.dev.dryware.org/job/skyboy-MineFactoryReloaded/193/artifact/build/dist/MFR-API-2.7.4B1-193.zip" dest="${download.dir}"/>
 		<antcall target="download-forge"/>
 	</target>
 
@@ -108,6 +110,9 @@
 	<target name="setup" depends="download-files, setup-forge">
 		<delete dir="libs" failonerror="false"/>
 		<unzip dest="./" src="${download.dir}/libs.zip" />
+		
+		<delete dir="${api.dir}" failonerror="false"/>
+		<unzip dest="${api.dir}" src="${download.dir}/MFR-API-2.7.4B1-193.zip"/>
 	</target>
 		
 	<target name="setup-forge" if="out-of-date">
@@ -135,6 +140,7 @@
 		<!-- Copy sources -->
 		<copy todir="${mcpsrc.dir}/minecraft">
 			<fileset dir="${src.dir}"/>
+			<fileset dir="${api.dir}"/>
 		</copy>
 		
 		<copy todir="${mcp.dir}/lib">
@@ -188,6 +194,7 @@
 
 		<!-- Reset src dir to post-forge-install state -->
 		<delete dir="${mcpsrc.dir}/minecraft/com/teammetallurgy"/>
+		<delete dir="${mcpsrc.dir}/minecraft/powercrystals"/>
 
 	</target>
 
