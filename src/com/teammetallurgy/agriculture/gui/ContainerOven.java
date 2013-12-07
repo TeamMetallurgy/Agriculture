@@ -186,7 +186,7 @@ public class ContainerOven extends Container
 				}
 			} else
 			{
-				if (itemstack.itemID - 256 == AgricultureItems.ovenRack.itemID && itemDamage == AgricultureItems.ovenRack.getDamage())
+				if (itemstack.itemID  == AgricultureItems.ovenRack.itemID && itemDamage == AgricultureItems.ovenRack.getDamage())
 				{
 					if (!mergeItemStack2(itemstack1, 17, 20, false))
 					{

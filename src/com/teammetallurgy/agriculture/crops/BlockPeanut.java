@@ -37,7 +37,7 @@ public class BlockPeanut extends BlockFlower
     public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
     {
     	int id = par1World.getBlockId(par2, par3-1, par4);
-    	return id == Block.tilledField.blockID || true;
+    	return id == Block.tilledField.blockID;
     }
 
     @Override
@@ -69,13 +69,13 @@ public class BlockPeanut extends BlockFlower
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
     {
-    	
-    	float temp = growthRate;
-    	this.growthRate = 100;
-    	updateTick(world, x, y, z, new Random());
-    	this.growthRate = temp;
-    	
-    	
+//    	
+//    	float temp = growthRate;
+//    	this.growthRate = 100;
+//    	updateTick(world, x, y, z, new Random());
+//    	this.growthRate = temp;
+//    	
+//    	
     	return false;
     }
     

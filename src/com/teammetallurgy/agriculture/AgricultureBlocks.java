@@ -64,6 +64,9 @@ public class AgricultureBlocks {
 		OreDictionary.registerOre("oreSalt", new ItemStack(salt));
 		OreDictionary.registerOre("icebox", new ItemStack(icebox));
 		OreDictionary.registerOre("frier", new ItemStack(frier));
+		OreDictionary.registerOre("cropStrawberry", new ItemStack(strawberry));
+        OreDictionary.registerOre("cropPeanut", new ItemStack(peanut));
+
 	}
 	
 	public static void init() {

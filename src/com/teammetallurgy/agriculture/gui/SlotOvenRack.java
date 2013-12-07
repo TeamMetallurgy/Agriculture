@@ -56,6 +56,6 @@ public class SlotOvenRack extends Slot
 	{
 		final int itemID = AgricultureItems.ovenRack.itemID;
 
-		return par1ItemStack.getItem().itemID - 256 == itemID;
+		return par1ItemStack.getItem().itemID == itemID;
 	}
 }

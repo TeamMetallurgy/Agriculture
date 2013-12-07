@@ -35,7 +35,7 @@ public class SubItem
             }
         }
 
-        itemID = id;
+        itemID = id + 256;
         this.damage = damage;
         item.addSubItem(damage, this);
     }

@@ -8,6 +8,7 @@ import net.minecraftforge.event.EventBus;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 
+import com.teammetallurgy.agriculture.modstuff.ModIntegration;
 import com.teammetallurgy.agriculture.worldgen.WorldGenSalt;
 import com.teammetallurgy.agriculture.worldgen.WorldGenSpice;
 
@@ -85,6 +86,11 @@ public class Agriculture
        {
            logger.fine("Found Iquana Tweaks. Tweaking Recipes");
            AgricultureItems.tweakRecipeIguana();
+       }
+       
+       if(Loader.isModLoaded("MineFactoryReloaded"))
+       {
+           ModIntegration.init("MFR");
        }
     }
 
