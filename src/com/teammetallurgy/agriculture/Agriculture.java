@@ -2,6 +2,7 @@ package com.teammetallurgy.agriculture;
 
 import java.util.logging.Logger;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.src.ModLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.EventBus;
@@ -18,6 +19,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
@@ -77,6 +79,9 @@ public class Agriculture
         proxy.registerEventHandlers();
         MinecraftForge.EVENT_BUS.register(this);
         proxy.registerRenderers();
+        
+        FMLInterModComms.sendMessage("Thaumcraft", "harvestStandardCrop", new ItemStack(AgricultureBlocks.peanut, 1, 6));
+        FMLInterModComms.sendMessage("Thaumcraft", "harvestStandardCrop", new ItemStack(AgricultureBlocks.strawberry, 1, 6));
     }
 
     @EventHandler
