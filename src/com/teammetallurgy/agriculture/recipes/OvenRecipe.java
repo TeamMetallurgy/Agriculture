@@ -1,9 +1,6 @@
 package com.teammetallurgy.agriculture.recipes;
 
-import java.util.ArrayList;
-
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class OvenRecipe extends TempRecipe 
 {
@@ -16,18 +13,14 @@ public class OvenRecipe extends TempRecipe
     @Override
     public boolean matches(ItemStack stack, int currentTemp)
     {
-        if (stack.isItemEqual(this.in) && (currentTemp >= this.temp)) { 
-            return true; 
-        }
         
-        int oreID = OreDictionary.getOreID(this.in);
-        
-        if(oreID != -1)
+        if(currentTemp >= this.temp)
         {
-            ArrayList<ItemStack> ores = OreDictionary.getOres(oreID);
+            if (stack.isItemEqual(this.in)) { 
+                return true; 
+            }
             
-            if(ores.contains(stack) && (currentTemp >= this.temp))
-            {
+            if(RecipeUtils.matchesOreDict(stack, in)) {
                 return true;
             }
         }

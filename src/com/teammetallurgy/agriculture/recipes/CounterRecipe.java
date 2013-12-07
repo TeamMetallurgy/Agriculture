@@ -58,6 +58,12 @@ public class CounterRecipe implements ICounterRecipe
                 return true;
             }
         }
+        
+        if (RecipeUtils.matchesOreDict(stack, recipeItems.toArray(new ItemStack[recipeItems.size()])))
+        {
+            return true;
+        }
+        
         return false;
     }
 
@@ -102,7 +108,7 @@ public class CounterRecipe implements ICounterRecipe
                         {
                             final ItemStack itemstack1 = iterator.next();
 
-                            if (itemstack.itemID == itemstack1.itemID && (itemstack1.getItemDamage() == 32767 || itemstack.getItemDamage() == itemstack1.getItemDamage()))
+                            if (OreDictionary.itemMatches(itemstack1, itemstack, true) || RecipeUtils.matchesOreDict(itemstack1, itemstack))
                             {
                                 flag = true;
                                 arraylist.remove(itemstack1);

@@ -12,7 +12,16 @@ public class FreezerRecipe extends TempRecipe {
     @Override
     public boolean matches(ItemStack stack, int currentTemp)
     {
-        if (stack.isItemEqual(this.in) && currentTemp >= temp) { return true; }
+        if(currentTemp >= this.temp)
+        {
+            if (stack.isItemEqual(this.in)) { 
+                return true; 
+            }
+            
+            if(RecipeUtils.matchesOreDict(stack, in)) {
+                return true;
+            }
+        }
         return false;
     }
 

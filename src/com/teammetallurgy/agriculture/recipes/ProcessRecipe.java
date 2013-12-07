@@ -47,53 +47,20 @@ public class ProcessRecipe
 
     private boolean matchesOreDict(ItemStack first, ItemStack second)
     {
-        if(matchesOreDict(first) && matchesOreDict(second))
+        if(RecipeUtils.matchesOreDict(first) && RecipeUtils.matchesOreDict(second))
         {
             return true;
         }
         
-        if(matchesOreDict(first))
+        if(RecipeUtils.matchesOreDict(first))
         {
             return true;
         }
         
-        if(matchesOreDict(second))
+        if(RecipeUtils.matchesOreDict(second))
         {
             return true;
         }
-        
-        return false;
-    }
-
-    private boolean matchesOreDict(ItemStack itemStack)
-    {
-        if(itemStack == null)
-        {
-            return false;
-        }
-        
-        int oreID = OreDictionary.getOreID(itemStack);
-        
-        if(oreID == -1)
-        {
-            return false;
-        }
-        
-        ArrayList<ItemStack> ores = OreDictionary.getOres(oreID);
-        
-        for(ItemStack ore : ores)
-        {
-            if(first != null && OreDictionary.itemMatches(first, ore, true))
-            {
-                return true;
-            }
-            
-            if(baseItem != null && OreDictionary.itemMatches(baseItem, ore, true))
-            {
-                return true;
-            }
-        }
-               
         
         return false;
     }

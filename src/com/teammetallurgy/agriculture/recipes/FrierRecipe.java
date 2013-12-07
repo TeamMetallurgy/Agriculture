@@ -34,7 +34,18 @@ public class FrierRecipe {
     {
         if (stack != null)
         {
-            if (stack.isItemEqual(this.base) && time >= this.cookTime) { return true; }
+            if(time >= this.cookTime)
+            {
+           
+                if (stack.isItemEqual(this.base)) { 
+                    return true; 
+                }
+                
+                if(RecipeUtils.matchesOreDict(stack, base))
+                {
+                    return true;
+                }
+            }
         }
 
         return false;
