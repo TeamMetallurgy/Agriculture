@@ -2,6 +2,11 @@ package com.teammetallurgy.agriculture;
 
 import java.util.logging.Logger;
 
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.EventBus;
+import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
+
 import com.teammetallurgy.agriculture.worldgen.WorldGenSalt;
 import com.teammetallurgy.agriculture.worldgen.WorldGenSpice;
 
@@ -67,6 +72,7 @@ public class Agriculture
         TickRegistry.registerTickHandler(new TickHandler(), Side.SERVER);
         NetworkRegistry.instance().registerGuiHandler(instance, proxy);
         proxy.registerEventHandlers();
+        MinecraftForge.EVENT_BUS.register(this);
         proxy.registerRenderers();
     }
 
@@ -75,5 +81,11 @@ public class Agriculture
     public Logger getLogger()
     {
         return logger;
+    }
+    
+    @ForgeSubscribe
+    public void oreReg(OreRegisterEvent event)
+    {
+        System.out.println(event.Name);
     }
 }

@@ -28,7 +28,7 @@ public class ProcessorRecipes
     }
 
     /** A list of all the recipes added */
-    private final List recipes = new ArrayList();
+    private final List<ProcessRecipe> recipes = new ArrayList<ProcessRecipe>();
 
     private ProcessorRecipes()
     {
@@ -63,9 +63,6 @@ public class ProcessorRecipes
 
     public ItemStack findMatchingRecipe(ItemStack first, ItemStack second)
     {
-        // System.out.println("recipe " +
-        // first.getItem().getUnlocalizedName(first) + " " +
-        // second.getItem().getUnlocalizedName(second));
         for (int j = 0; j < recipes.size(); ++j)
         {
             final ProcessRecipe irecipe = (ProcessRecipe) recipes.get(j);

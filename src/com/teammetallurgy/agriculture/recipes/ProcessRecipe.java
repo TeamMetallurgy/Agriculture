@@ -1,6 +1,9 @@
 package com.teammetallurgy.agriculture.recipes;
 
+import java.util.ArrayList;
+
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class ProcessRecipe
 {
@@ -18,70 +21,90 @@ public class ProcessRecipe
 
     public ItemStack getCraftingResult()
     {
-        return result;
+        return result.copy();
     }
 
-    public boolean matches(ItemStack first2, ItemStack second)
+    public boolean matches(ItemStack first, ItemStack second)
     {
-        if (first2 == null && second == null)
+        if(uses(first) && uses(second))
+        {
+            return true;
+        }
+        
+        if(uses(first))
+        {
+            return true;
+        }
+        
+        if(uses(second))
+        {
+            return true;
+        }
+
+        return matchesOreDict(first, second);
+    }
+    
+
+    private boolean matchesOreDict(ItemStack first, ItemStack second)
+    {
+        if(matchesOreDict(first) && matchesOreDict(second))
+        {
+            return true;
+        }
+        
+        if(matchesOreDict(first))
+        {
+            return true;
+        }
+        
+        if(matchesOreDict(second))
+        {
+            return true;
+        }
+        
+        return false;
+    }
+
+    private boolean matchesOreDict(ItemStack itemStack)
+    {
+        if(itemStack == null)
         {
             return false;
         }
-
-        if (first != null && baseItem != null)
+        
+        int oreID = OreDictionary.getOreID(itemStack);
+        
+        if(oreID == -1)
         {
-            if (first2 != null && second != null)
+            return false;
+        }
+        
+        ArrayList<ItemStack> ores = OreDictionary.getOres(oreID);
+        
+        for(ItemStack ore : ores)
+        {
+            if(first != null && OreDictionary.itemMatches(first, ore, true))
             {
-                if (first.isItemEqual(first2) && baseItem.isItemEqual(second))
-                {
-                    return true;
-                }
-                else if (first.isItemEqual(second) && baseItem.isItemEqual(first2))
-                {
-                    return true;
-                }
+                return true;
+            }
+            
+            if(baseItem != null && OreDictionary.itemMatches(baseItem, ore, true))
+            {
+                return true;
             }
         }
-        else if (first == null)
-        {
-            if (first2 == null)
-            {
-                if (baseItem.isItemEqual(second))
-                {
-                    return true;
-                }
-            }
-            else if (second == null)
-            {
-                if (baseItem.isItemEqual(first2))
-                {
-                    return true;
-                }
-            }
-        }
-        else if (baseItem == null)
-        {
-            if (first2 == null)
-            {
-                if (first.isItemEqual(second))
-                {
-                    return true;
-                }
-            }
-            else if (second == null)
-            {
-                if (first.isItemEqual(first2))
-                {
-                    return true;
-                }
-            }
-        }
-
+               
+        
         return false;
     }
 
     public boolean uses(ItemStack ingredient)
     {
+        if(ingredient == null)
+        {
+            return false;
+        }
+        
         if (first != null && first.isItemEqual(ingredient))
         {
             return true;

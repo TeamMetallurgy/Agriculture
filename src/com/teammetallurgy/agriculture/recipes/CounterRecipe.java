@@ -6,6 +6,7 @@ import java.util.List;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class CounterRecipe implements ICounterRecipe
 {
@@ -16,7 +17,7 @@ public class CounterRecipe implements ICounterRecipe
 
     private final ItemStack baseItem;
 
-    public CounterRecipe(ItemStack outputStack, ItemStack baseItem, List par2List)
+    public CounterRecipe(ItemStack outputStack, ItemStack baseItem, List<ItemStack> par2List)
     {
         recipeOutput = outputStack;
         recipeItems = par2List;
@@ -35,7 +36,7 @@ public class CounterRecipe implements ICounterRecipe
     @Override
     public ItemStack getRecipeOutput()
     {
-        return recipeOutput;
+        return recipeOutput.copy();
     }
 
     /**
@@ -49,7 +50,7 @@ public class CounterRecipe implements ICounterRecipe
 
     @Override
     public boolean isMat(ItemStack stack)
-    {
+    {        
         for (final ItemStack stack2 : recipeItems)
         {
             if (ItemStack.areItemStacksEqual(stack, stack2))
@@ -66,7 +67,7 @@ public class CounterRecipe implements ICounterRecipe
     @Override
     public boolean matches(IInventory processor)
     {
-        final ArrayList arraylist = new ArrayList(recipeItems);
+        final ArrayList<ItemStack> arraylist = new ArrayList<ItemStack>(recipeItems);
 
         for (int k = 0; k < 4; ++k)
         {
@@ -95,11 +96,11 @@ public class CounterRecipe implements ICounterRecipe
                     if (itemstack != null)
                     {
                         boolean flag = false;
-                        final Iterator iterator = arraylist.iterator();
+                        final Iterator<ItemStack> iterator = arraylist.iterator();
 
                         while (iterator.hasNext())
                         {
-                            final ItemStack itemstack1 = (ItemStack) iterator.next();
+                            final ItemStack itemstack1 = iterator.next();
 
                             if (itemstack.itemID == itemstack1.itemID && (itemstack1.getItemDamage() == 32767 || itemstack.getItemDamage() == itemstack1.getItemDamage()))
                             {

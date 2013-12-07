@@ -429,6 +429,7 @@ public class AgricultureItems {
 		OreDictionary.registerOre("foodCookingOil", cookingOil.getItemStack());
 		OreDictionary.registerOre("foodSalt", salt.getItemStack());
 		OreDictionary.registerOre("foodCinnamon", cinnamon.getItemStack());
+		OreDictionary.registerOre("cropCinnamon", cinnamon.getItemStack());
 		OreDictionary.registerOre("foodGroundCinnamon", groundCinnamon.getItemStack());
 		OreDictionary.registerOre("foodPeanuts", peanuts.getItemStack());
 		OreDictionary.registerOre("foodAppleCinnamonCookieDough", appleCinnamonCookieDough.getItemStack());
@@ -684,6 +685,7 @@ public class AgricultureItems {
 		toastedPBJSandwichStrawberryBurned = createSubItem(foodID, damage++).setUnlocalizedName("ToastedPBJSandwichStrawberryBurned").setCreativeTab(Agriculture.tab);
 		toastedPBSandwichBurned = createSubItem(foodID, damage++).setUnlocalizedName("ToastedPBSandwichBurned").setCreativeTab(Agriculture.tab);
 
+		registerOreDictionary();
 	}
 
 	private static SubItem createSubItemSeed(int id, int damage, int j) {
