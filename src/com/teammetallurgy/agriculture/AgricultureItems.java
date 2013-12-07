@@ -1,8 +1,13 @@
 package com.teammetallurgy.agriculture;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.oredict.OreDictionary;
@@ -738,4 +743,28 @@ public class AgricultureItems {
 		addRecipes();
 		addNames();
 	}
+    public static void tweakRecipeIguana()
+    {
+        ItemStack itemStack = clayBowl.getItemStack(12);
+        
+        List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
+        
+        for (int i = 0; i < recipes.size(); i++)
+        {
+            IRecipe tmpRecipe = recipes.get(i);
+            ItemStack recipeResult = tmpRecipe.getRecipeOutput();
+            if (ItemStack.areItemStacksEqual(itemStack, recipeResult))
+            {
+                recipes.remove(i--);
+            }
+        }
+        
+        notify(itemStack);
+        GameRegistry.addRecipe(clayBowl.getItemStack(20), "X X", "XXX", 'X', Item.clay); 
+    }
+    
+    private static void notify(ItemStack stack)
+    {
+        Agriculture.instance.getLogger().fine("Tweaked " + stack.getUnlocalizedName() + " recipe.");
+    }
 }

@@ -2,6 +2,7 @@ package com.teammetallurgy.agriculture;
 
 import java.util.logging.Logger;
 
+import net.minecraft.src.ModLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.EventBus;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -10,6 +11,7 @@ import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 import com.teammetallurgy.agriculture.worldgen.WorldGenSalt;
 import com.teammetallurgy.agriculture.worldgen.WorldGenSpice;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -76,7 +78,15 @@ public class Agriculture
         proxy.registerRenderers();
     }
 
-   
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event)
+    {
+       if(Loader.isModLoaded("IguanaTweaksTConstruct"))
+       {
+           logger.fine("Found Iquana Tweaks. Tweaking Recipes");
+           AgricultureItems.tweakRecipeIguana();
+       }
+    }
 
     public Logger getLogger()
     {
