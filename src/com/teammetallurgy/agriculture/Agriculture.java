@@ -2,6 +2,7 @@ package com.teammetallurgy.agriculture;
 
 import java.util.logging.Logger;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.src.ModLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -77,11 +78,23 @@ public class Agriculture
         TickRegistry.registerTickHandler(new TickHandler(), Side.SERVER);
         NetworkRegistry.instance().registerGuiHandler(instance, proxy);
         proxy.registerEventHandlers();
-        MinecraftForge.EVENT_BUS.register(this);
         proxy.registerRenderers();
         
-        FMLInterModComms.sendMessage("Thaumcraft", "harvestStandardCrop", new ItemStack(AgricultureBlocks.peanut, 1, 6));
-        FMLInterModComms.sendMessage("Thaumcraft", "harvestStandardCrop", new ItemStack(AgricultureBlocks.strawberry, 1, 6));
+        registerTCCrop(AgricultureBlocks.peanut, 6);
+        registerTCCrop(AgricultureBlocks.strawberry, 6);
+    
+        registerForestryCrop(AgricultureItems.strawberry.itemID, AgricultureItems.strawberry.getDamage(), AgricultureBlocks.strawberry.blockID, 6);
+        registerForestryCrop(AgricultureItems.peanuts.itemID, AgricultureItems.peanuts.getDamage(), AgricultureBlocks.peanut.blockID, 6);
+    }
+
+    private void registerTCCrop(Block crop, int matureMetadata)
+    {
+        FMLInterModComms.sendMessage("Thaumcraft", "harvestStandardCrop", new ItemStack(crop, 1, matureMetadata));
+    }
+
+    private void registerForestryCrop(int seedID, int seedMetadata, int cropBlockID, int cropMatureMetedata)
+    {
+        FMLInterModComms.sendMessage("Forestry", "add-farmable-crop", "farmVegetables@" + seedID + "." + seedMetadata + "." + cropBlockID + "." + cropMatureMetedata);  
     }
 
     @EventHandler
@@ -104,9 +117,4 @@ public class Agriculture
         return logger;
     }
     
-    @ForgeSubscribe
-    public void oreReg(OreRegisterEvent event)
-    {
-        System.out.println(event.Name);
-    }
 }
