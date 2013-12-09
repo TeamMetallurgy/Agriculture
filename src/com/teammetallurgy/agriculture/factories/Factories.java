@@ -24,7 +24,7 @@ public class Factories {
             case GUIIds.OVEN:
                 if (te != null && te instanceof TileEntityOven)
                 {
-                    if(side.isServer()){
+                    if(side.isClient()){
                         return new GUIOven(new ContainerOven(player.inventory, (TileEntityOven) te));
                     } else {
                         return new ContainerOven(player.inventory, (TileEntityOven) te);
@@ -34,7 +34,7 @@ public class Factories {
             case GUIIds.CABINET:
                 if (te != null && te instanceof TileEntityCounter)
                 {
-                    if(side.isServer())
+                    if(side.isClient())
                     {
                         return new GUICabinet(new ContainerCabinet(player.inventory, (TileEntityCounter) te));
                     } else {
@@ -45,7 +45,7 @@ public class Factories {
             case GUIIds.PROCESSOR:
                 if (te != null && te instanceof TileEntityProcessor)
                 {
-                    if(side.isServer())
+                    if(side.isClient())
                     {
                         return new GUIProcessor(new ContainerProcessor(player.inventory, (TileEntityProcessor) te));
                     } else {
@@ -57,7 +57,7 @@ public class Factories {
 
                 if (te != null && te instanceof BaseMachineTileEntity)
                 {
-                    if(side.isServer())
+                    if(side.isClient())
                     {
                         return new GUICounter(new ContainerCounter(player.inventory, ((BaseMachineTileEntity) te).getInventoryCounter()));
                     } else {
@@ -68,7 +68,7 @@ public class Factories {
             case GUIIds.FUEL:
                 if (te != null && te instanceof IFuelSlot)
                 {
-                    if(side.isServer())
+                    if(side.isClient())
                     {
                         return new GUIFuelSlot(new ContainerFuel(player.inventory, ((IFuelSlot) te).getFuelInventory(), ((IFuelSlot) te).getFuelSlot(), (IFuelSlot) te));
                     } else {
@@ -79,7 +79,7 @@ public class Factories {
             case GUIIds.BREWER:
                 if (te != null && te instanceof TileEntityBrewer)
                 {
-                    if(side.isServer())
+                    if(side.isClient())
                     {
                         return new GUIBrewer(new ContainerBrewer(player.inventory, (TileEntityBrewer) te));
                     } else {
@@ -90,7 +90,7 @@ public class Factories {
             case GUIIds.FRIER:
                 if (te != null && te instanceof TileEntityFrier)
                 {
-                    if(side.isServer())
+                    if(side.isClient())
                     {
                         return new GUIFrier(new ContainerFrier(player.inventory, (TileEntityFrier) te));
                     } else {
@@ -100,7 +100,7 @@ public class Factories {
             case GUIIds.ICEBOX:
                 if (te != null && te instanceof TileEntityIcebox)
                 {
-                    if(side.isServer())
+                    if(side.isClient())
                     {
                         return new GUIIcebox(new ContainerIcebox(player.inventory, (TileEntityIcebox) te));
                     } else {
