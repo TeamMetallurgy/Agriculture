@@ -1,8 +1,13 @@
 package com.teammetallurgy.agriculture;
 
+import com.teammetallurgy.agriculture.crops.BlockCrop;
+
+import net.minecraft.block.Block;
 import net.minecraft.util.Icon;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.Event.Result;
+import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 
 public class ExtraIcons
@@ -47,5 +52,20 @@ public class ExtraIcons
 			liquidVodka = evt.map.registerIcon("agriculture:vodka");
 			liquidCider = evt.map.registerIcon("agriculture:cider");
 		}
+	}
+	
+	@ForgeSubscribe
+	public void onBoneMeal(BonemealEvent event)
+	{
+	    Block block = Block.blocksList[event.ID]; 
+	    if(block instanceof BlockCrop)
+	    {
+	        if(((BlockCrop)block).fertilize(event.world, event.X, event.Y, event.Z))
+	        {
+	            event.setResult(Result.ALLOW);  
+	        } else {
+	            event.setCanceled(true);
+	        }
+	    }
 	}
 }

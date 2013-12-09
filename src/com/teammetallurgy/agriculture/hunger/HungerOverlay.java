@@ -10,6 +10,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -26,22 +27,25 @@ public class HungerOverlay
 	@ForgeSubscribe
 	public void drawOverlay(RenderGameOverlayEvent.Post event)
 	{
-		if (event.type == ElementType.FOOD)
-		{
-			final Minecraft client = Minecraft.getMinecraft();
-
-			client.renderEngine.bindTexture(texture);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-			final int bars = (int) (9 * HungerSystem.getPercentage(client.thePlayer));
-			// int bars = 4;
-
-			for (int x = bars; x > 0; x--)
-			{
-				drawTexturedModalRect(event.resolution.getScaledWidth() / 2 + width + -x * 8 + 9 * width, event.resolution.getScaledHeight() - 39, u, v, width, height);
-			}
-			client.renderEngine.bindTexture(icons);
-		}
+	    if(!Loader.isModLoaded("tukmc_Vz"))
+	    {
+    		if (event.type == ElementType.FOOD)
+    		{
+    			final Minecraft client = Minecraft.getMinecraft();
+    
+    			client.renderEngine.bindTexture(texture);
+    			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+    
+    			final int bars = (int) (9 * HungerSystem.getPercentage(client.thePlayer));
+    			// int bars = 4;
+    
+    			for (int x = bars; x > 0; x--)
+    			{
+    				drawTexturedModalRect(event.resolution.getScaledWidth() / 2 + width + -x * 8 + 9 * width, event.resolution.getScaledHeight() - 39, u, v, width, height);
+    			}
+    			client.renderEngine.bindTexture(icons);
+    		}
+	    }
 	}
 
 	public void drawTexturedModalRect(int x, int y, int u, int v, int width, int height)
