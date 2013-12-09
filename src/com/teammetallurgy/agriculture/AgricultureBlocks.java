@@ -3,6 +3,7 @@ package com.teammetallurgy.agriculture;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -99,6 +100,8 @@ public class AgricultureBlocks {
         GameRegistry.registerBlock(AgricultureBlocks.brewer, "AgricultureBrewerBlock");
         GameRegistry.registerBlock(AgricultureBlocks.icebox, "AgricultureIcebox");
         GameRegistry.registerBlock(AgricultureBlocks.frier, "AgricultureFrier");
+        GameRegistry.registerBlock(strawberry, ItemBlock.class, "AgricultureStrawberry");
+        GameRegistry.registerBlock(peanut, ItemBlock.class, "AgriculturePeanut");
         GameRegistry.registerTileEntity(TileEntityOven.class, "AgricultureOvenTileEntity");
         GameRegistry.registerTileEntity(TileEntityCounter.class, "AgricultureCounterTileEntity");
         GameRegistry.registerTileEntity(TileEntityProcessor.class, "AgricultureProcessorTileEntity");
