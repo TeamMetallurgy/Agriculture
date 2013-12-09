@@ -54,6 +54,8 @@ public class AgricultureBlocks {
         LanguageRegistry.addName(AgricultureBlocks.salt, "Salt Ore");
         LanguageRegistry.addName(AgricultureBlocks.icebox, "Ice Box");
         LanguageRegistry.addName(AgricultureBlocks.frier, "Frier");
+        LanguageRegistry.addName(AgricultureBlocks.strawberry, "Strawberries");
+        LanguageRegistry.addName(AgricultureBlocks.peanut, "Peanuts");
     }
 
     public static void init()

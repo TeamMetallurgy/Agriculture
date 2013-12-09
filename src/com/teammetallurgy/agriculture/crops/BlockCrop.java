@@ -61,7 +61,7 @@ public class BlockCrop extends BlockFlower {
 
         int l = meta + MathHelper.getRandomIntegerInRange(par1World.rand, 2, 5);
 
-        if (l > 6)
+        if (l >= 6)
         {
             l = 6;
         }
