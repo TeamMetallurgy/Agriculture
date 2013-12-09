@@ -10,31 +10,11 @@ public abstract class FuelMachineTileEntity extends BaseMachineTileEntity implem
 	protected int currentItemBurnTime = -10;
 	protected int fuelRemaining = 0;
 
-	public int getRemainingFuelLevel()
-	{
-		return fuelRemaining;
-	}
-
-	public void setFuelRemaining(int fuelRemaining)
-	{
-		this.fuelRemaining = fuelRemaining;
-	}
-
-	public void setCurrentItemBurnTime(int currentItemBurnTime)
-	{
-		this.currentItemBurnTime = currentItemBurnTime;
-	}
-
-	public int getCurrentItemBurnTime()
-	{
-		return currentItemBurnTime;
-	}
-
 	protected void burnFuel()
 	{
-		ItemStack fuelStack = getFuelInventory().getStackInSlot(getFuelSlot());
+		final ItemStack fuelStack = getFuelInventory().getStackInSlot(getFuelSlot());
 
-		int fuelAmount = TileEntityFurnace.getItemBurnTime(fuelStack);
+		final int fuelAmount = TileEntityFurnace.getItemBurnTime(fuelStack);
 		if (fuelAmount > 0)
 		{
 			fuelRemaining += fuelAmount / 5;
@@ -48,14 +28,30 @@ public abstract class FuelMachineTileEntity extends BaseMachineTileEntity implem
 		}
 	}
 
-	@Override
-	public void updateEntity()
+	public int getCurrentItemBurnTime()
 	{
-		super.updateEntity();
+		return currentItemBurnTime;
+	}
 
-		if (this.fuelRemaining <= 0)
+	@Override
+	public int getRemainingFuelLevel()
+	{
+		return fuelRemaining;
+	}
+
+	@Override
+	public void readCustomNBT(NBTTagCompound tag)
+	{
+		super.readCustomNBT(tag);
+		currentItemBurnTime = tag.getInteger("BurnTime");
+
+		final NBTTagList tagList2 = tag.getTagList("FuelSlot");
+
+		for (int i = 0; i < tagList2.tagCount(); i++)
 		{
-			burnFuel();
+			final NBTTagCompound base = (NBTTagCompound) tagList2.tagAt(i);
+			Integer.valueOf(base.getByte("Slot"));
+			getFuelInventory().setInventorySlotContents(getFuelSlot(), ItemStack.loadItemStackFromNBT(base));
 		}
 	}
 
@@ -63,29 +59,27 @@ public abstract class FuelMachineTileEntity extends BaseMachineTileEntity implem
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		this.readCustomNBT(tag);
+		readCustomNBT(tag);
+	}
+
+	public void setCurrentItemBurnTime(int currentItemBurnTime)
+	{
+		this.currentItemBurnTime = currentItemBurnTime;
+	}
+
+	public void setFuelRemaining(int fuelRemaining)
+	{
+		this.fuelRemaining = fuelRemaining;
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public void updateEntity()
 	{
-		super.writeToNBT(tag);
-		this.writeCustomNBT(tag);
-	}
+		super.updateEntity();
 
-	@Override
-	public void readCustomNBT(NBTTagCompound tag)
-	{
-		super.readCustomNBT(tag);
-		this.currentItemBurnTime = tag.getInteger("BurnTime");
-
-		NBTTagList tagList2 = tag.getTagList("FuelSlot");
-
-		for (int i = 0; i < tagList2.tagCount(); i++)
+		if (fuelRemaining <= 0)
 		{
-			NBTTagCompound base = (NBTTagCompound) tagList2.tagAt(i);
-			int slot = Integer.valueOf(base.getByte("Slot"));
-			getFuelInventory().setInventorySlotContents(getFuelSlot(), ItemStack.loadItemStackFromNBT(base));
+			burnFuel();
 		}
 	}
 
@@ -95,16 +89,23 @@ public abstract class FuelMachineTileEntity extends BaseMachineTileEntity implem
 		super.writeCustomNBT(tag);
 		tag.setInteger("BurnTime", currentItemBurnTime);
 
-		NBTTagList itemListTag2 = new NBTTagList();
-		
+		final NBTTagList itemListTag2 = new NBTTagList();
+
 		if (getFuelInventory().getStackInSlot(getFuelSlot()) != null)
 		{
-			NBTTagCompound itemTag = new NBTTagCompound();
+			final NBTTagCompound itemTag = new NBTTagCompound();
 			itemTag.setByte("Slot", (byte) getFuelSlot());
 			getFuelInventory().getStackInSlot(getFuelSlot()).writeToNBT(itemTag);
 			itemListTag2.appendTag(itemTag);
 		}
 
 		tag.setTag("FuelSlot", itemListTag2);
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound tag)
+	{
+		super.writeToNBT(tag);
+		writeCustomNBT(tag);
 	}
 }

@@ -9,8 +9,8 @@ import org.lwjgl.opengl.GL11;
 public class GUIFuelSlot extends GuiContainer
 {
 
-	private ResourceLocation texture = new ResourceLocation("agriculture", "textures/gui/Fuel.png");
-	private ContainerFuel containerFuel;
+	private final ResourceLocation texture = new ResourceLocation("agriculture", "textures/gui/Fuel.png");
+	private final ContainerFuel containerFuel;
 
 	public GUIFuelSlot(ContainerFuel containerFuel)
 	{
@@ -19,24 +19,15 @@ public class GUIFuelSlot extends GuiContainer
 	}
 
 	@Override
-	public void initGui()
-	{
-		this.xSize = 177;
-		this.ySize = 167;
-
-		super.initGui();
-	}
-
-	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
 	{
-		Minecraft.getMinecraft().renderEngine.func_110577_a(texture);
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glColor3f(1f, 1f, 1f);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		int fuelRemaining = 80 - this.containerFuel.getTe().getRemainingFuelLevel();
+		int fuelRemaining = 80 - containerFuel.getTe().getRemainingFuelLevel();
 		if (fuelRemaining > 80)
 		{
 			fuelRemaining = 80;
@@ -47,9 +38,18 @@ public class GUIFuelSlot extends GuiContainer
 		}
 		// fuelRemaining = 0;
 
-		float scale = fuelRemaining / 80f;
+		final float scale = fuelRemaining / 80f;
 		drawTexturedModalRect(guiLeft + 80, guiTop + 22 + (int) (scale * 15), 180, (int) (4 + 15 * scale), 15, 15 - (int) (scale * 15));
 		GL11.glEnable(GL11.GL_LIGHTING);
+	}
+
+	@Override
+	public void initGui()
+	{
+		xSize = 177;
+		ySize = 167;
+
+		super.initGui();
 	}
 
 }

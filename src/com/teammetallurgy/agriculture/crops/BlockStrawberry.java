@@ -37,7 +37,6 @@ public class BlockStrawberry extends BlockFlower
     public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
     {
     	int id = par1World.getBlockId(par2, par3-1, par4);
-    	System.out.println(id + " " + Block.tilledField.blockID);
     	return id == Block.tilledField.blockID;
     }
 
@@ -71,11 +70,11 @@ public class BlockStrawberry extends BlockFlower
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
     {
     	
-    	float temp = growthRate;
-    	this.growthRate = 100;
-    	updateTick(world, x, y, z, new Random());
-    	this.growthRate = temp;
-    	
+//    	float temp = growthRate;
+//    	this.growthRate = 100;
+//    	updateTick(world, x, y, z, new Random());
+//    	this.growthRate = temp;
+//    	
     	
     	return false;
     }
@@ -121,7 +120,7 @@ public class BlockStrawberry extends BlockFlower
 
         for (int i = 0; i < this.iconArray.length; ++i)
         {
-            this.iconArray[i] = par1IconRegister.registerIcon(this.func_111023_E() + "_stage_" + i);
+            this.iconArray[i] = par1IconRegister.registerIcon(this.getTextureName() + "_stage_" + i);
         }
     }
 }

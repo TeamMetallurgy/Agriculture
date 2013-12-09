@@ -21,130 +21,24 @@ import cpw.mods.fml.relauncher.Side;
 
 public class TileEntityProcessor extends FuelMachineTileEntity
 {
-	private InventoryProcessor inventory = new InventoryProcessor("", false, 3);
+	private final InventoryProcessor inventory = new InventoryProcessor("", false, 3);
 
-	private IInventory fuelSlot = new InventoryBasic("", false, 1);
+	private final IInventory fuelSlot = new InventoryBasic("", false, 1);
 
-	private int sync = 0;
 	private int processingTime = 0;
 	private ItemStack result;
 	private int coolDown = 0;
 
-	public IInventory getInventory()
-	{
-		return inventory;
-	}
-
-	public int getFuelSlot()
-	{
-		return 0;
-	}
-	
-	
-
-	@Override
-	public void updateEntity()
-	{
-		super.updateEntity();
-		
-		if (this.processingTime > 0)
-		{
-			--this.processingTime;
-			--this.currentItemBurnTime;
-			--this.fuelRemaining;
-		}
-
-		if (this.worldObj.isRemote)
-			return;
-		if (this.processingTime == 0)
-		{
-			if (currentItemBurnTime == 0)
-			{
-				process();
-			}
-
-			ItemStack stackInSlot = inventory.getStackInSlot(0);
-			ItemStack stackInSlot2 = inventory.getStackInSlot(1);
-
-			if (coolDown-- <= 0)
-			{
-				this.result = ProcessorRecipes.getInstance().findMatchingRecipe(stackInSlot, stackInSlot2);
-
-				this.coolDown = this.processingTime = getProcessTime(result);
-
-				if (this.processingTime > 0 && canProcess(stackInSlot, stackInSlot2) && fuelRemaining >= processingTime)
-				{
-					if (stackInSlot2 != null)
-					{
-						this.currentItemBurnTime = processingTime;
-						--stackInSlot2.stackSize;
-						sendPacket();
-						if (stackInSlot2.stackSize == 0)
-						{
-							inventory.setInventorySlotContents(1, null);
-						}
-
-						if (stackInSlot != null)
-						{
-							--stackInSlot.stackSize;
-							if (stackInSlot.stackSize == 0)
-							{
-								inventory.setInventorySlotContents(0, null);
-							}
-						}
-					} else
-					{
-						this.currentItemBurnTime = processingTime;
-						--stackInSlot.stackSize;
-						sendPacket();
-						if (stackInSlot.stackSize == 0)
-						{
-							inventory.setInventorySlotContents(0, null);
-						}
-					}
-				}
-			}
-		}
-	}
-
-
-	public void process()
-	{
-		if (result != null)
-		{
-			ItemStack stackInSlot = inventory.getStackInSlot(2);
-			if (stackInSlot != null && stackInSlot.itemID == result.itemID && stackInSlot.getItemDamage() == result.getItemDamage())
-			{
-				stackInSlot.stackSize += result.stackSize;
-			} else
-			{
-				inventory.setInventorySlotContents(2, result.copy());
-			}
-
-			result = null;
-			this.currentItemBurnTime = -1;
-			sendPacket();
-		}
-	}
-
-	public int getCoolDown()
-	{
-		return coolDown;
-	}
-
-	public void setCoolDown(int coolDown)
-	{
-		this.coolDown = coolDown;
-	}
-
 	private boolean canProcess(ItemStack stackInSlot, ItemStack stackInSlot22)
 	{
 		if (result == null)
+		{
 			return false;
+		}
 
-		ItemStack stackInSlot2 = inventory.getStackInSlot(2);
+		final ItemStack stackInSlot2 = inventory.getStackInSlot(2);
 
-		ItemStack result2 = ProcessorRecipes.getInstance().findMatchingRecipe(stackInSlot, stackInSlot22);
+		final ItemStack result2 = ProcessorRecipes.getInstance().findMatchingRecipe(stackInSlot, stackInSlot22);
 
 		if (result2 == null)
 		{
@@ -158,7 +52,7 @@ public class TileEntityProcessor extends FuelMachineTileEntity
 
 		if (result2.itemID == stackInSlot2.itemID && result2.getItemDamage() == stackInSlot2.getItemDamage())
 		{
-			ItemStack copy = stackInSlot2.copy();
+			final ItemStack copy = stackInSlot2.copy();
 			if (copy.stackSize++ >= inventory.getInventoryStackLimit())
 			{
 				return false;
@@ -171,14 +65,26 @@ public class TileEntityProcessor extends FuelMachineTileEntity
 		return result2 != null;
 	}
 
-	public void setProcessingTime(int processingTime)
+	public int getCoolDown()
 	{
-		this.processingTime = processingTime;
+		return coolDown;
 	}
 
-	public void setResult(ItemStack result)
+	@Override
+	public IInventory getFuelInventory()
 	{
-		this.result = result;
+		return fuelSlot;
+	}
+
+	@Override
+	public int getFuelSlot()
+	{
+		return 0;
+	}
+
+	public IInventory getInventory()
+	{
+		return inventory;
 	}
 
 	private int getProcessTime(ItemStack stackInSlot)
@@ -186,10 +92,46 @@ public class TileEntityProcessor extends FuelMachineTileEntity
 		return ProcessorRecipes.getProcessTime(stackInSlot);
 	}
 
+	public void process()
+	{
+		if (result != null)
+		{
+			final ItemStack stackInSlot = inventory.getStackInSlot(2);
+			if (stackInSlot != null && stackInSlot.itemID == result.itemID && stackInSlot.getItemDamage() == result.getItemDamage())
+			{
+				stackInSlot.stackSize += result.stackSize;
+			} else
+			{
+				inventory.setInventorySlotContents(2, result.copy());
+			}
+
+			result = null;
+			currentItemBurnTime = -1;
+			sendPacket();
+		}
+	}
+
+	@Override
+	public void readCustomNBT(NBTTagCompound tag)
+	{
+		super.readCustomNBT(tag);
+		coolDown = tag.getInteger("CoolDown");
+		processingTime = tag.getInteger("ProcessingTime");
+
+		final NBTTagList tagList = tag.getTagList("Items");
+
+		for (int i = 0; i < tagList.tagCount(); i++)
+		{
+			final NBTTagCompound base = (NBTTagCompound) tagList.tagAt(i);
+			final int slot = Integer.valueOf(base.getByte("Slot"));
+			inventory.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(base));
+		}
+	}
+
 	public void sendPacket()
 	{
-		ByteArrayOutputStream bos = new ByteArrayOutputStream(140);
-		DataOutputStream dos = new DataOutputStream(bos);
+		final ByteArrayOutputStream bos = new ByteArrayOutputStream(140);
+		final DataOutputStream dos = new DataOutputStream(bos);
 		try
 		{
 			dos.writeShort(1);
@@ -213,12 +155,12 @@ public class TileEntityProcessor extends FuelMachineTileEntity
 				dos.writeInt(result.stackSize);
 			}
 
-		} catch (IOException e)
+		} catch (final IOException e)
 		{
 			System.out.println(e);
 		}
 
-		Packet250CustomPayload packet = new Packet250CustomPayload();
+		final Packet250CustomPayload packet = new Packet250CustomPayload();
 		packet.channel = Agriculture.MODID;
 		packet.data = bos.toByteArray();
 		packet.length = bos.size();
@@ -236,20 +178,85 @@ public class TileEntityProcessor extends FuelMachineTileEntity
 		}
 	}
 
-	@Override
-	public void readCustomNBT(NBTTagCompound tag)
+	public void setCoolDown(int coolDown)
 	{
-		super.readCustomNBT(tag);
-		this.coolDown = tag.getInteger("CoolDown");
-		this.processingTime = tag.getInteger("ProcessingTime");
+		this.coolDown = coolDown;
+	}
 
-		NBTTagList tagList = tag.getTagList("Items");
+	public void setProcessingTime(int processingTime)
+	{
+		this.processingTime = processingTime;
+	}
 
-		for (int i = 0; i < tagList.tagCount(); i++)
+	public void setResult(ItemStack result)
+	{
+		this.result = result;
+	}
+
+	@Override
+	public void updateEntity()
+	{
+		super.updateEntity();
+
+		if (processingTime > 0)
 		{
-			NBTTagCompound base = (NBTTagCompound) tagList.tagAt(i);
-			int slot = Integer.valueOf(base.getByte("Slot"));
-			inventory.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(base));
+			--processingTime;
+			--currentItemBurnTime;
+			--fuelRemaining;
+		}
+
+		if (worldObj.isRemote)
+		{
+			return;
+		}
+		if (processingTime == 0)
+		{
+			if (currentItemBurnTime == 0)
+			{
+				process();
+			}
+
+			final ItemStack stackInSlot = inventory.getStackInSlot(0);
+			final ItemStack stackInSlot2 = inventory.getStackInSlot(1);
+
+			if (coolDown-- <= 0)
+			{
+				result = ProcessorRecipes.getInstance().findMatchingRecipe(stackInSlot, stackInSlot2);
+
+				coolDown = processingTime = getProcessTime(result);
+
+				if (processingTime > 0 && canProcess(stackInSlot, stackInSlot2) && fuelRemaining >= processingTime)
+				{
+					if (stackInSlot2 != null)
+					{
+						currentItemBurnTime = processingTime;
+						--stackInSlot2.stackSize;
+						sendPacket();
+						if (stackInSlot2.stackSize == 0)
+						{
+							inventory.setInventorySlotContents(1, null);
+						}
+
+						if (stackInSlot != null)
+						{
+							--stackInSlot.stackSize;
+							if (stackInSlot.stackSize == 0)
+							{
+								inventory.setInventorySlotContents(0, null);
+							}
+						}
+					} else
+					{
+						currentItemBurnTime = processingTime;
+						--stackInSlot.stackSize;
+						sendPacket();
+						if (stackInSlot.stackSize == 0)
+						{
+							inventory.setInventorySlotContents(0, null);
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -260,24 +267,18 @@ public class TileEntityProcessor extends FuelMachineTileEntity
 		tag.setInteger("CoolDown", coolDown);
 		tag.setInteger("ProcessingTime", processingTime);
 
-		NBTTagList itemListTag = new NBTTagList();
-		for (int i = 0; i < this.inventory.getSizeInventory(); ++i)
+		final NBTTagList itemListTag = new NBTTagList();
+		for (int i = 0; i < inventory.getSizeInventory(); ++i)
 		{
-			if (this.inventory.getStackInSlot(i) != null)
+			if (inventory.getStackInSlot(i) != null)
 			{
-				NBTTagCompound itemTag = new NBTTagCompound();
+				final NBTTagCompound itemTag = new NBTTagCompound();
 				itemTag.setByte("Slot", (byte) i);
-				this.inventory.getStackInSlot(i).writeToNBT(itemTag);
+				inventory.getStackInSlot(i).writeToNBT(itemTag);
 				itemListTag.appendTag(itemTag);
 			}
 		}
 
 		tag.setTag("Items", itemListTag);
-	}
-
-	@Override
-	public IInventory getFuelInventory()
-	{
-		return fuelSlot;
 	}
 }

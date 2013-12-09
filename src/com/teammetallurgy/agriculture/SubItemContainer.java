@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.IFluidContainerItem;
 public class SubItemContainer extends SubItem implements IFluidContainerItem
 {
 
-	private int capacity;
+	private final int capacity;
 
 	public SubItemContainer(int id, int damage, int capacity)
 	{
@@ -17,19 +17,38 @@ public class SubItemContainer extends SubItem implements IFluidContainerItem
 	}
 
 	@Override
-	public FluidStack getFluid(ItemStack container)
+	public FluidStack drain(ItemStack container, int maxDrain, boolean doDrain)
 	{
 		if (container.stackTagCompound == null || !container.stackTagCompound.hasKey("Fluid"))
 		{
 			return null;
 		}
-		return FluidStack.loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag("Fluid"));
-	}
 
-	@Override
-	public int getCapacity(ItemStack container)
-	{
-		return capacity;
+		final FluidStack stack = FluidStack.loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag("Fluid"));
+		if (stack == null)
+		{
+			return null;
+		}
+
+		stack.amount = Math.min(stack.amount, maxDrain);
+		if (doDrain)
+		{
+			if (maxDrain >= capacity)
+			{
+				container.stackTagCompound.removeTag("Fluid");
+
+				if (container.stackTagCompound.hasNoTags())
+				{
+					container.stackTagCompound = null;
+				}
+				return stack;
+			}
+
+			final NBTTagCompound fluidTag = container.stackTagCompound.getCompoundTag("Fluid");
+			fluidTag.setInteger("Amount", fluidTag.getInteger("Amount") - maxDrain);
+			container.stackTagCompound.setTag("Fluid", fluidTag);
+		}
+		return stack;
 	}
 
 	@Override
@@ -47,7 +66,7 @@ public class SubItemContainer extends SubItem implements IFluidContainerItem
 				return Math.min(capacity, resource.amount);
 			}
 
-			FluidStack stack = FluidStack.loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag("Fluid"));
+			final FluidStack stack = FluidStack.loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag("Fluid"));
 
 			if (stack == null)
 			{
@@ -69,7 +88,7 @@ public class SubItemContainer extends SubItem implements IFluidContainerItem
 
 		if (!container.stackTagCompound.hasKey("Fluid"))
 		{
-			NBTTagCompound fluidTag = resource.writeToNBT(new NBTTagCompound());
+			final NBTTagCompound fluidTag = resource.writeToNBT(new NBTTagCompound());
 
 			if (capacity < resource.amount)
 			{
@@ -82,8 +101,8 @@ public class SubItemContainer extends SubItem implements IFluidContainerItem
 			return resource.amount;
 		}
 
-		NBTTagCompound fluidTag = container.stackTagCompound.getCompoundTag("Fluid");
-		FluidStack stack = FluidStack.loadFluidStackFromNBT(fluidTag);
+		final NBTTagCompound fluidTag = container.stackTagCompound.getCompoundTag("Fluid");
+		final FluidStack stack = FluidStack.loadFluidStackFromNBT(fluidTag);
 
 		if (!stack.isFluidEqual(resource))
 		{
@@ -105,38 +124,19 @@ public class SubItemContainer extends SubItem implements IFluidContainerItem
 	}
 
 	@Override
-	public FluidStack drain(ItemStack container, int maxDrain, boolean doDrain)
+	public int getCapacity(ItemStack container)
+	{
+		return capacity;
+	}
+
+	@Override
+	public FluidStack getFluid(ItemStack container)
 	{
 		if (container.stackTagCompound == null || !container.stackTagCompound.hasKey("Fluid"))
 		{
 			return null;
 		}
-
-		FluidStack stack = FluidStack.loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag("Fluid"));
-		if (stack == null)
-		{
-			return null;
-		}
-
-		stack.amount = Math.min(stack.amount, maxDrain);
-		if (doDrain)
-		{
-			if (maxDrain >= capacity)
-			{
-				container.stackTagCompound.removeTag("Fluid");
-
-				if (container.stackTagCompound.hasNoTags())
-				{
-					container.stackTagCompound = null;
-				}
-				return stack;
-			}
-
-			NBTTagCompound fluidTag = container.stackTagCompound.getCompoundTag("Fluid");
-			fluidTag.setInteger("Amount", fluidTag.getInteger("Amount") - maxDrain);
-			container.stackTagCompound.setTag("Fluid", fluidTag);
-		}
-		return stack;
+		return FluidStack.loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag("Fluid"));
 	}
 
 }

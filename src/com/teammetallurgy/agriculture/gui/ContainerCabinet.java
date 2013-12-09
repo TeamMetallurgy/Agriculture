@@ -11,7 +11,7 @@ import com.teammetallurgy.agriculture.machines.counter.TileEntityCounter;
 public class ContainerCabinet extends Container
 {
 
-	private TileEntityCounter cabinet;
+	private final TileEntityCounter cabinet;
 
 	public ContainerCabinet(InventoryPlayer invPlayer, TileEntityCounter cabinet)
 	{
@@ -24,7 +24,7 @@ public class ContainerCabinet extends Container
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				this.addSlotToContainer(new Slot(cabinet.getCabinet(), i + j * 4, 8 + 18 * i, 14 + 18 * j));
+				addSlotToContainer(new Slot(cabinet.getCabinet(), i + j * 4, 8 + 18 * i, 14 + 18 * j));
 			}
 		}
 
@@ -32,7 +32,7 @@ public class ContainerCabinet extends Container
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				this.addSlotToContainer(new Slot(cabinet.getCabinet(), (i + j * 4) + 12, 98 + 18 * i, 14 + 18 * j));
+				addSlotToContainer(new Slot(cabinet.getCabinet(), i + j * 4 + 12, 98 + 18 * i, 14 + 18 * j));
 			}
 		}
 
@@ -40,17 +40,23 @@ public class ContainerCabinet extends Container
 		{
 			for (int j = 0; j < 9; ++j)
 			{
-				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+				addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
 			}
 		}
 
 		for (i = 0; i < 9; ++i)
 		{
-			this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 142));
+			addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 142));
 		}
 
 	}
-	
+
+	@Override
+	public boolean canInteractWith(EntityPlayer entityplayer)
+	{
+		return true;
+	}
+
 	@Override
 	public void onContainerClosed(EntityPlayer entityplayer)
 	{
@@ -62,20 +68,20 @@ public class ContainerCabinet extends Container
 	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2)
 	{
 		ItemStack itemstack = null;
-		Slot slot = (Slot) this.inventorySlots.get(par2);
+		final Slot slot = (Slot) inventorySlots.get(par2);
 
 		if (slot != null && slot.getHasStack())
 		{
-			ItemStack itemstack1 = slot.getStack();
+			final ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 
 			if (par2 < 24)
 			{
-				if (!this.mergeItemStack(itemstack1, 24, this.inventorySlots.size(), true))
+				if (!mergeItemStack(itemstack1, 24, inventorySlots.size(), true))
 				{
 					return null;
 				}
-			} else if (!this.mergeItemStack(itemstack1, 0, 24, false))
+			} else if (!mergeItemStack(itemstack1, 0, 24, false))
 			{
 				return null;
 			}
@@ -90,12 +96,6 @@ public class ContainerCabinet extends Container
 		}
 
 		return itemstack;
-	}
-
-	@Override
-	public boolean canInteractWith(EntityPlayer entityplayer)
-	{
-		return true;
 	}
 
 }

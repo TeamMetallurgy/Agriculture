@@ -2,35 +2,27 @@ package com.teammetallurgy.agriculture;
 
 import java.util.EnumSet;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+
 import com.teammetallurgy.agriculture.hunger.HungerSystem;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 
 public class TickHandler implements ITickHandler
 {
 	int hungerUpdate = 20;
-	
+
 	@Override
-	public void tickStart(EnumSet<TickType> type, Object... tickData)
+	public String getLabel()
 	{
-		EntityPlayerMP player = (EntityPlayerMP) tickData[0];
-		if(hungerUpdate-- <= 0)
-		{
-		
-			HungerSystem.tick(player);
-			HungerSystem.applyBonuses(player);
-			hungerUpdate = 20;
-		}
-		
+		return "AgricultureTickHandler";
 	}
 
 	@Override
 	public void tickEnd(EnumSet<TickType> type, Object... tickData)
 	{
-		
+
 	}
 
 	@Override
@@ -40,9 +32,17 @@ public class TickHandler implements ITickHandler
 	}
 
 	@Override
-	public String getLabel()
+	public void tickStart(EnumSet<TickType> type, Object... tickData)
 	{
-		return "AgricultureTickHandler";
+		final EntityPlayerMP player = (EntityPlayerMP) tickData[0];
+		if (hungerUpdate-- <= 0)
+		{
+
+			HungerSystem.tick(player);
+			HungerSystem.applyBonuses(player);
+			hungerUpdate = 20;
+		}
+
 	}
 
 }

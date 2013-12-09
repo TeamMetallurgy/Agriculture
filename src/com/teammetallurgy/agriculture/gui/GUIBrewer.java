@@ -8,45 +8,41 @@ import org.lwjgl.opengl.GL11;
 
 public class GUIBrewer extends GuiLiquids
 {
-	private ResourceLocation texture = new ResourceLocation("agriculture", "textures/gui/Brewer.png");
+	private final ResourceLocation texture = new ResourceLocation("agriculture", "textures/gui/Brewer.png");
 	ContainerBrewer brewer;
+    private FluidWidget fluidWidgetLeft;
+    private FluidWidget fluidWidgetRight;
 
 	public GUIBrewer(ContainerBrewer containerBrewer)
 	{
 		super(containerBrewer);
-		this.brewer = containerBrewer;
-	}
-
-	@Override
-	public void initGui()
-	{
-		this.xSize = 176;
-		this.ySize = 166;
-
-		super.initGui();
+		brewer = containerBrewer;
+		
+		fluidWidgetLeft = new GuiLiquids.FluidWidget(brewer.getTe().getLeftTank(), 50, 10, 179, 3, 19, 65);
+		fluidWidgetRight = new GuiLiquids.FluidWidget(brewer.getTe().getRightTank(), 110, 10, 179, 3, 19, 65);
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
 	{
-		Minecraft.getMinecraft().renderEngine.func_110577_a(texture);
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glColor3f(1f, 1f, 1f);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		FluidTank leftTank = brewer.getTe().getLeftTank();
-		FluidTank rightTank = brewer.getTe().getRightTank();
+		final FluidTank leftTank = brewer.getTe().getLeftTank();
+		final FluidTank rightTank = brewer.getTe().getRightTank();
 
-		float scaledLeft = leftTank.getFluidAmount() / (float) leftTank.getCapacity();
-		float scaledRight = rightTank.getFluidAmount() / (float) rightTank.getCapacity();
+		final float scaledLeft = leftTank.getFluidAmount() / (float) leftTank.getCapacity();
+		final float scaledRight = rightTank.getFluidAmount() / (float) rightTank.getCapacity();
 
-		float scaledProcess = brewer.getTe().getProcessScaled();
+		final float scaledProcess = brewer.getTe().getProcessScaled();
 
 		drawTexturedModalRect(guiLeft + 66, guiTop + 16, 180, 109, (int) (43 * scaledProcess), 9);
 		drawTexturedModalRect(guiLeft + 79, guiTop + 12, 79, 12, 17, 17);
 
-		int fuelRemaining = 80 - this.brewer.getTe().getRemainingFuelLevel();
+		int fuelRemaining = 80 - brewer.getTe().getRemainingFuelLevel();
 		if (fuelRemaining > 80)
 		{
 			fuelRemaining = 80;
@@ -55,20 +51,14 @@ public class GUIBrewer extends GuiLiquids
 		{
 			fuelRemaining = 0;
 		}
-		float scale = fuelRemaining / 80f;
+		final float scale = fuelRemaining / 80f;
 
 		drawTexturedModalRect(guiLeft + 81, guiTop + 43 + (int) (scale * 15), 179, (int) (82 + 15 * scale), 15, 15 - (int) (scale * 15));
 
-		displayLiquid(guiLeft, guiTop, 49, 10, (int) (scaledLeft * 64), leftTank.getFluid());
-		displayLiquid(guiLeft, guiTop, 109, 10, (int) (scaledRight * 64), rightTank.getFluid());
-
+		fluidWidgetLeft.drawLiquid(this, guiLeft, guiTop, texture);
+		fluidWidgetRight.drawLiquid(this, guiLeft, guiTop, texture);
+		
 		GL11.glEnable(GL11.GL_LIGHTING);
-	}
-
-	@Override
-	public void handleMouseInput()
-	{
-		super.handleMouseInput();
 	}
 
 	@Override
@@ -86,5 +76,20 @@ public class GUIBrewer extends GuiLiquids
 		}
 
 		return null;
+	}
+
+	@Override
+	public void handleMouseInput()
+	{
+		super.handleMouseInput();
+	}
+
+	@Override
+	public void initGui()
+	{
+		xSize = 176;
+		ySize = 166;
+
+		super.initGui();
 	}
 }

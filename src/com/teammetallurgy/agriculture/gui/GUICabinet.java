@@ -9,33 +9,31 @@ import org.lwjgl.opengl.GL11;
 public class GUICabinet extends GuiContainer
 {
 
-	private ResourceLocation texture = new ResourceLocation("agriculture", "textures/gui/Cabinet.png");
-	private ContainerCabinet cabinet;
-	
+	private final ResourceLocation texture = new ResourceLocation("agriculture", "textures/gui/Cabinet.png");
+
 	public GUICabinet(ContainerCabinet containerCabinet)
 	{
 		super(containerCabinet);
-		this.cabinet = containerCabinet;
-	}
-	
-	@Override
-	public void initGui()
-	{
-		this.xSize = 177;
-		this.ySize = 167;
-		
-		super.initGui();
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
 	{
-		Minecraft.getMinecraft().renderEngine.func_110577_a(texture);
-		
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glColor3f(1f, 1f, 1f);
-		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);		
+		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		GL11.glEnable(GL11.GL_LIGHTING);
+	}
+
+	@Override
+	public void initGui()
+	{
+		xSize = 177;
+		ySize = 167;
+
+		super.initGui();
 	}
 
 }

@@ -54,42 +54,26 @@ public class ModelBrewer extends ModelBase
 		setRotation(tophatch, 0F, 0F, 0F);
 	}
 
-	public void setLiquidLevel(float level)
+	public void getLiquidIcon(FluidStack fluid)
 	{
-		if (level > 0)
+		if (fluid != null)
 		{
-			if(level > 1)
-				level = 1;
-			
-			int height = (int) (level * 12);
-			liquid = new ModelSimpleBox(16, 16, 0, 0, -7, 23 - height, -6, 14, height, 13, 0, liquidIcon);
-		} else
-		{
-			liquid = null;
+			final Icon stillIcon = fluid.getFluid().getStillIcon();
+			if (stillIcon != null)
+			{
+				liquidIcon = stillIcon;
+			}
 		}
 	}
 
-	public void setFlowing(int i)
+	@Override
+	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
 	{
-		if (i > 0)
-		{
-			float scaled = i / 1000f;
-			
-			scaled = scaled > 1 ? 1 : scaled;
-
-			int width = (int) (3 * scaled);
-			int height = 10;
-
-			int x1 = (int) -(width / 2f);
-			int y1 = 12;
-			int z1 = (int) -(width / 2f);
-
-			if (filling == null)
-				filling = new ModelSimpleBox(16, 16, 0, 0, x1, y1, z1, width, height, width, 0, liquidIcon);
-		} else
-		{
-			filling = null;
-		}
+		super.render(entity, f, f1, f2, f3, f4, f5);
+		base.render(f5);
+		top.render(f5);
+		nozzle.render(f5);
+		tophatch.render(f5);
 	}
 
 	public void renderAll()
@@ -100,13 +84,64 @@ public class ModelBrewer extends ModelBase
 		tophatch.render(1 / 16f);
 	}
 
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+	public void renderLiquids()
 	{
-		super.render(entity, f, f1, f2, f3, f4, f5);
-		base.render(f5);
-		top.render(f5);
-		nozzle.render(f5);
-		tophatch.render(f5);
+		if (liquid != null)
+		{
+			liquid.render(Tessellator.instance, 1 / 16f);
+		}
+
+		if (filling != null)
+		{
+			filling.render(Tessellator.instance, 1 / 16f);
+		}
+	}
+
+	public void setDoorAngle(float angle)
+	{
+		tophatch.rotateAngleX = 1.5F * -angle;
+	}
+
+	public void setFlowing(int i)
+	{
+		if (i > 0)
+		{
+			float scaled = i / 1000f;
+
+			scaled = scaled > 1 ? 1 : scaled;
+
+			final int width = (int) (3 * scaled);
+			final int height = 10;
+
+			final int x1 = (int) -(width / 2f);
+			final int y1 = 12;
+			final int z1 = (int) -(width / 2f);
+
+			if (filling == null)
+			{
+				filling = new ModelSimpleBox(16, 16, 0, 0, x1, y1, z1, width, height, width, 0, liquidIcon);
+			}
+		} else
+		{
+			filling = null;
+		}
+	}
+
+	public void setLiquidLevel(float level)
+	{
+		if (level > 0)
+		{
+			if (level > 1)
+			{
+				level = 1;
+			}
+
+			final int height = (int) (level * 12);
+			liquid = new ModelSimpleBox(16, 16, 0, 0, -7, 23 - height, -6, 14, height, 13, 0, liquidIcon);
+		} else
+		{
+			liquid = null;
+		}
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z)
@@ -114,29 +149,5 @@ public class ModelBrewer extends ModelBase
 		model.rotateAngleX = x;
 		model.rotateAngleY = y;
 		model.rotateAngleZ = z;
-	}
-
-	public void setDoorAngle(float angle)
-	{
-		this.tophatch.rotateAngleX = 1.5F * -angle;
-	}
-
-	public void renderLiquids()
-	{
-		if (liquid != null)
-			liquid.render(Tessellator.instance, 1 / 16f);
-
-		if (filling != null)
-			filling.render(Tessellator.instance, 1 / 16f);
-	}
-
-	public void getLiquidIcon(FluidStack fluid)
-	{
-		if (fluid != null)
-		{
-			Icon stillIcon = fluid.getFluid().getStillIcon();
-			if (stillIcon != null)
-				this.liquidIcon = stillIcon;
-		}
 	}
 }

@@ -11,32 +11,35 @@ import com.teammetallurgy.agriculture.machines.IFuelSlot;
 
 public class ContainerFuel extends Container
 {
-	private IInventory inventory;
-	private IFuelSlot te;
+	private final IFuelSlot te;
 
 	public ContainerFuel(InventoryPlayer invPlayer, IInventory inventory, int slot, IFuelSlot te2)
 	{
-		this.inventory = inventory;
-
-		this.te = te2;
+		te = te2;
 
 		int i;
 
-		this.addSlotToContainer(new Slot(inventory, slot, 80, 39));
+		addSlotToContainer(new Slot(inventory, slot, 80, 39));
 
 		for (i = 0; i < 3; ++i)
 		{
 			for (int j = 0; j < 9; ++j)
 			{
-				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+				addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
 			}
 		}
 
 		for (i = 0; i < 9; ++i)
 		{
-			this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 142));
+			addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 142));
 		}
 
+	}
+
+	@Override
+	public boolean canInteractWith(EntityPlayer entityplayer)
+	{
+		return true;
 	}
 
 	public IFuelSlot getTe()
@@ -54,20 +57,20 @@ public class ContainerFuel extends Container
 	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2)
 	{
 		ItemStack itemstack = null;
-		Slot slot = (Slot) this.inventorySlots.get(par2);
+		final Slot slot = (Slot) inventorySlots.get(par2);
 
 		if (slot != null && slot.getHasStack())
 		{
-			ItemStack itemstack1 = slot.getStack();
+			final ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 
 			if (par2 < 1)
 			{
-				if (!this.mergeItemStack(itemstack1, 1, this.inventorySlots.size(), true))
+				if (!mergeItemStack(itemstack1, 1, inventorySlots.size(), true))
 				{
 					return null;
 				}
-			} else if (!this.mergeItemStack(itemstack1, 0, 1, false))
+			} else if (!mergeItemStack(itemstack1, 0, 1, false))
 			{
 				return null;
 			}
@@ -82,11 +85,5 @@ public class ContainerFuel extends Container
 		}
 
 		return itemstack;
-	}
-
-	@Override
-	public boolean canInteractWith(EntityPlayer entityplayer)
-	{
-		return true;
 	}
 }

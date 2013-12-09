@@ -36,68 +36,9 @@ public class CommonProxy implements IGuiHandler
 {
 
 	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
-	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
-		switch (ID)
-		{
-		case GUIIds.OVEN:
-
-			if (te != null && te instanceof TileEntityOven)
-			{
-				return new ContainerOven(player.inventory, (TileEntityOven) te);
-			}
-			break;
-		case GUIIds.CABINET:
-			if (te != null && te instanceof TileEntityCounter)
-			{
-				return new ContainerCabinet(player.inventory, (TileEntityCounter) te);
-			}
-			break;
-		case GUIIds.PROCESSOR:
-			if (te != null && te instanceof TileEntityProcessor)
-			{
-				return new ContainerProcessor(player.inventory, (TileEntityProcessor) te);
-			}
-			break;
-		case GUIIds.COUNTER:
-			if (te != null && te instanceof BaseMachineTileEntity)
-			{
-				return new ContainerCounter(player.inventory, ((BaseMachineTileEntity) te).getInventoryCounter());
-			}
-			break;
-		case GUIIds.FUEL:
-			if (te != null && te instanceof IFuelSlot)
-			{
-				return new ContainerFuel(player.inventory, ((IFuelSlot) te).getFuelInventory(), ((IFuelSlot) te).getFuelSlot(), (IFuelSlot)te);
-			}
-			break;
-		case GUIIds.BREWER:
-			if (te != null && te instanceof TileEntityBrewer)
-			{
-				return new ContainerBrewer(player.inventory, (TileEntityBrewer)te);
-			}
-			break;
-		case GUIIds.FRIER:
-			if (te != null && te instanceof TileEntityFrier)
-			{
-				return new ContainerFrier(player.inventory, (TileEntityFrier)te);
-			}
-		case GUIIds.ICEBOX:
-			if (te != null && te instanceof TileEntityIcebox)
-			{
-				return new ContainerIcebox(player.inventory, (TileEntityIcebox)te);
-			}
-		default:
-			return null;
-		}
-		return null;
-	}
-
-	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		final TileEntity te = world.getBlockTileEntity(x, y, z);
 		switch (ID)
 		{
 		case GUIIds.OVEN:
@@ -128,26 +69,85 @@ public class CommonProxy implements IGuiHandler
 		case GUIIds.FUEL:
 			if (te != null && te instanceof IFuelSlot)
 			{
-				return new GUIFuelSlot(new ContainerFuel(player.inventory, ((IFuelSlot) te).getFuelInventory(),((IFuelSlot) te).getFuelSlot(), (IFuelSlot)te));
+				return new GUIFuelSlot(new ContainerFuel(player.inventory, ((IFuelSlot) te).getFuelInventory(), ((IFuelSlot) te).getFuelSlot(), (IFuelSlot) te));
 			}
 			break;
 		case GUIIds.BREWER:
 			if (te != null && te instanceof TileEntityBrewer)
 			{
-				return new GUIBrewer(new ContainerBrewer(player.inventory, (TileEntityBrewer)te));
+				return new GUIBrewer(new ContainerBrewer(player.inventory, (TileEntityBrewer) te));
 			}
 			break;
 		case GUIIds.FRIER:
 			if (te != null && te instanceof TileEntityFrier)
 			{
-				return new GUIFrier(new ContainerFrier(player.inventory, (TileEntityFrier)te));
+				return new GUIFrier(new ContainerFrier(player.inventory, (TileEntityFrier) te));
 			}
 		case GUIIds.ICEBOX:
 			if (te != null && te instanceof TileEntityIcebox)
 			{
-				return new GUIIcebox(new ContainerIcebox(player.inventory, (TileEntityIcebox)te));
+				return new GUIIcebox(new ContainerIcebox(player.inventory, (TileEntityIcebox) te));
 			}
 			break;
+		default:
+			return null;
+		}
+		return null;
+	}
+
+	@Override
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	{
+		final TileEntity te = world.getBlockTileEntity(x, y, z);
+		switch (ID)
+		{
+		case GUIIds.OVEN:
+
+			if (te != null && te instanceof TileEntityOven)
+			{
+				return new ContainerOven(player.inventory, (TileEntityOven) te);
+			}
+			break;
+		case GUIIds.CABINET:
+			if (te != null && te instanceof TileEntityCounter)
+			{
+				return new ContainerCabinet(player.inventory, (TileEntityCounter) te);
+			}
+			break;
+		case GUIIds.PROCESSOR:
+			if (te != null && te instanceof TileEntityProcessor)
+			{
+				return new ContainerProcessor(player.inventory, (TileEntityProcessor) te);
+			}
+			break;
+		case GUIIds.COUNTER:
+			if (te != null && te instanceof BaseMachineTileEntity)
+			{
+				return new ContainerCounter(player.inventory, ((BaseMachineTileEntity) te).getInventoryCounter());
+			}
+			break;
+		case GUIIds.FUEL:
+			if (te != null && te instanceof IFuelSlot)
+			{
+				return new ContainerFuel(player.inventory, ((IFuelSlot) te).getFuelInventory(), ((IFuelSlot) te).getFuelSlot(), (IFuelSlot) te);
+			}
+			break;
+		case GUIIds.BREWER:
+			if (te != null && te instanceof TileEntityBrewer)
+			{
+				return new ContainerBrewer(player.inventory, (TileEntityBrewer) te);
+			}
+			break;
+		case GUIIds.FRIER:
+			if (te != null && te instanceof TileEntityFrier)
+			{
+				return new ContainerFrier(player.inventory, (TileEntityFrier) te);
+			}
+		case GUIIds.ICEBOX:
+			if (te != null && te instanceof TileEntityIcebox)
+			{
+				return new ContainerIcebox(player.inventory, (TileEntityIcebox) te);
+			}
 		default:
 			return null;
 		}
@@ -160,6 +160,12 @@ public class CommonProxy implements IGuiHandler
 
 	public void registerRenderers()
 	{
+	}
+
+	public void updateHunger(float hunger)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }
