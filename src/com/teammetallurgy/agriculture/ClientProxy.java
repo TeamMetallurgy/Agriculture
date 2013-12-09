@@ -25,38 +25,40 @@ import com.teammetallurgy.agriculture.machines.processor.TileEntityProcessorRend
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
-public class ClientProxy extends CommonProxy
-{
-	@Override
-	public void registerEventHandlers()
-	{
-		MinecraftForge.EVENT_BUS.register(new HungerOverlay());
-		MinecraftForge.EVENT_BUS.register(new ExtraIcons());
-	}
+public class ClientProxy extends CommonProxy {
+    @Override
+    public void registerEventHandlers()
+    {
+        MinecraftForge.EVENT_BUS.register(new HungerOverlay());
+        MinecraftForge.EVENT_BUS.register(new ExtraIcons());
+    }
 
-	@Override
-	public void registerRenderers()
-	{
+    @Override
+    public void registerRenderers()
+    {
         registerTERender(AgricultureBlocks.oven, TileEntityOven.class, new TileEntityOvenRenderer());
         registerTERender(AgricultureBlocks.counter, TileEntityCounter.class, new TileEntityCounterRenderer());
         registerTERender(AgricultureBlocks.processor, TileEntityProcessor.class, new TileEntityProcessorRenderer());
         registerTERender(AgricultureBlocks.brewer, TileEntityBrewer.class, new TileEntityBrewerRenderer());
         registerTERender(AgricultureBlocks.icebox, TileEntityIcebox.class, new TileEntityIceboxRenderer());
         registerTERender(AgricultureBlocks.frier, TileEntityFrier.class, new TileEntityFrierRenderer());
-	}
+    }
 
-    private void registerTERender(Block block, Class<? extends TileEntity> tileEntity, TileEntitySpecialRenderer ovenRenderer)
+    private void registerTERender(final Block block, final Class<? extends TileEntity> tileEntity, final TileEntitySpecialRenderer ovenRenderer)
     {
         ClientRegistry.bindTileEntitySpecialRenderer(tileEntity, ovenRenderer);
-        try {
+        try
+        {
             RenderingRegistry.registerBlockHandler(new RenderHelper(block, tileEntity.newInstance()));
-        } catch (Exception ignored) {
+        }
+        catch (final Exception ignored)
+        {
         }
     }
 
     @Override
-	public void updateHunger(float hunger)
-	{
-		new HungerSystem(Minecraft.getMinecraft().thePlayer, hunger);
-	}
+    public void updateHunger(final float hunger)
+    {
+        new HungerSystem(Minecraft.getMinecraft().thePlayer, hunger);
+    }
 }

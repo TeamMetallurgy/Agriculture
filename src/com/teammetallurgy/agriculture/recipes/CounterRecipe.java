@@ -8,29 +8,42 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class CounterRecipe implements ICounterRecipe
-{
-
-    private final ItemStack recipeOutput;
-
-    public final List<ItemStack> recipeItems;
+public class CounterRecipe implements ICounterRecipe {
 
     private final ItemStack baseItem;
 
-    public CounterRecipe(ItemStack outputStack, ItemStack baseItem, List<ItemStack> par2List)
+    public final List<ItemStack> recipeItems;
+
+    private final ItemStack recipeOutput;
+
+    public CounterRecipe(final ItemStack outputStack, final ItemStack baseItem, final List<ItemStack> par2List)
     {
         recipeOutput = outputStack;
         recipeItems = par2List;
         this.baseItem = baseItem;
     }
 
+    public ItemStack getCraftingResult()
+    {
+        return recipeOutput;
+    }
+
     /**
      * Returns an Item that is the result of this recipe
      */
     @Override
-    public ItemStack getCraftingResult(IInventory procesor)
+    public ItemStack getCraftingResult(final IInventory procesor)
     {
         return recipeOutput.copy();
+    }
+
+    public ItemStack[] getIngredients()
+    {
+        final ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+        ret.add(baseItem);
+        ret.addAll(recipeItems);
+
+        return ret.toArray(new ItemStack[] {});
     }
 
     @Override
@@ -49,21 +62,15 @@ public class CounterRecipe implements ICounterRecipe
     }
 
     @Override
-    public boolean isMat(ItemStack stack)
-    {        
+    public boolean isMat(final ItemStack stack)
+    {
         for (final ItemStack stack2 : recipeItems)
         {
-            if (ItemStack.areItemStacksEqual(stack, stack2))
-            {
-                return true;
-            }
+            if (ItemStack.areItemStacksEqual(stack, stack2)) { return true; }
         }
-        
-        if (RecipeUtils.matchesOreDict(stack, recipeItems.toArray(new ItemStack[recipeItems.size()])))
-        {
-            return true;
-        }
-        
+
+        if (RecipeUtils.matchesOreDict(stack, recipeItems.toArray(new ItemStack[recipeItems.size()]))) { return true; }
+
         return false;
     }
 
@@ -71,7 +78,7 @@ public class CounterRecipe implements ICounterRecipe
      * Used to check if a recipe matches current crafting inventory
      */
     @Override
-    public boolean matches(IInventory processor)
+    public boolean matches(final IInventory processor)
     {
         final ArrayList<ItemStack> arraylist = new ArrayList<ItemStack>(recipeItems);
 
@@ -116,10 +123,7 @@ public class CounterRecipe implements ICounterRecipe
                             }
                         }
 
-                        if (!flag)
-                        {
-                            return false;
-                        }
+                        if (!flag) { return false; }
                     }
                 }
             }
@@ -129,22 +133,7 @@ public class CounterRecipe implements ICounterRecipe
         return false;
     }
 
-    public ItemStack getCraftingResult()
-    {
-        return recipeOutput;
-    }
-
-    public ItemStack[] getIngredients()
-    {
-        ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
-        ret.add(baseItem);
-        ret.addAll(recipeItems);
-
-        return ret.toArray(new ItemStack[]
-        {});
-    }
-
-    public boolean uses(ItemStack ingredient)
+    public boolean uses(final ItemStack ingredient)
     {
         return baseItem.isItemEqual(ingredient) || isMat(ingredient);
     }

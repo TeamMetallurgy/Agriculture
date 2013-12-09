@@ -4,29 +4,34 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.IPlantable;
-
-import com.teammetallurgy.agriculture.Agriculture;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockSpice extends BlockFlower {
-    private ItemStack drop;
-    private float growthRate = 0.5f;
+public class BlockCrop extends BlockFlower {
+
+    private final ItemStack drop;
+    private final float growthRate = 0.5f;
+
     private Icon[] iconArray;
 
-    public BlockSpice(final int par1)
+    public BlockCrop(final int par1, final ItemStack drop)
     {
         super(par1);
-        drop = new ItemStack(0, 0, 0);
+        this.drop = drop;
+    }
+
+    public BlockCrop(final int par1, final Material par2Material, final ItemStack drop)
+    {
+        super(par1, par2Material);
+        this.drop = drop;
     }
 
     @Override
@@ -39,6 +44,30 @@ public class BlockSpice extends BlockFlower {
     @Override
     public boolean canSustainPlant(final World world, final int x, final int y, final int z, final ForgeDirection direction, final IPlantable plant)
     {
+        return true;
+    }
+
+    @Override
+    public int damageDropped(final int par1)
+    {
+        return drop.getItemDamage();
+    }
+
+    public boolean fertilize(final World par1World, final int par2, final int par3, final int par4)
+    {
+        final int meta = par1World.getBlockMetadata(par2, par3, par4);
+
+        if (meta >= 6) { return false; }
+
+        int l = meta + MathHelper.getRandomIntegerInRange(par1World.rand, 2, 5);
+
+        if (l > 6)
+        {
+            l = 6;
+        }
+
+        par1World.setBlockMetadataWithNotify(par2, par3, par4, l, 2);
+
         return true;
     }
 
@@ -55,53 +84,19 @@ public class BlockSpice extends BlockFlower {
     }
 
     @Override
-    public boolean onBlockActivated(final World world, final int x, final int y, final int z, final EntityPlayer player, final int side, final float xOffset, final float yOffset, final float zOffset)
+    public int idDropped(final int par1, final Random par2Random, final int par3)
     {
-        if (player.getHeldItem() != null)
-        {
-            if (player.getHeldItem().itemID == Item.dyePowder.itemID && player.getHeldItem().getItemDamage() == 15)
-            {
-                if (world.getBlockMetadata(x, y, z) < 6)
-                {
-                    final float temp = growthRate;
-                    growthRate = 100;
-                    updateTick(world, x, y, z, new Random());
-                    growthRate = temp;
-
-                    --player.getHeldItem().stackSize;
-
-                    return true;
-                }
-            }
-        }
-        if (Agriculture.debug)
-        {
-            final float temp = growthRate;
-            growthRate = 100;
-            updateTick(world, x, y, z, new Random());
-            growthRate = temp;
-        }
-
-        return false;
+        return drop.itemID;
     }
 
     @Override
-    public void onBlockClicked(final World par1World, final int x, final int y, final int z, final EntityPlayer par5EntityPlayer)
+    public int quantityDropped(final Random par1Random)
     {
-        final int meta = par1World.getBlockMetadata(x, y, z);
-        if (meta > 0)
-        {
-            dropBlockAsItem_do(par1World, x, y, z, drop.copy());
-            par1World.setBlock(x, y, z, blockID, meta - 1, 2);
-        }
+        return 2 + par1Random.nextInt(3);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    /**
-     * When this method is called, your block should register all the icons it needs with the given IconRegister. This
-     * is the only chance you get to register icons.
-     */
     public void registerIcons(final IconRegister par1IconRegister)
     {
         iconArray = new Icon[8];
@@ -110,12 +105,6 @@ public class BlockSpice extends BlockFlower {
         {
             iconArray[i] = par1IconRegister.registerIcon(getTextureName() + "_stage_" + i);
         }
-    }
-
-    public BlockSpice setDrop(final ItemStack drop)
-    {
-        this.drop = drop.copy();
-        return this;
     }
 
     @Override
@@ -136,4 +125,5 @@ public class BlockSpice extends BlockFlower {
             }
         }
     }
+
 }

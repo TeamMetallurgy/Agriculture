@@ -6,35 +6,26 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class RecipeUtils {
-    
-    public static boolean matchesOreDict(ItemStack input, ItemStack... stacks)
+
+    public static boolean matchesOreDict(final ItemStack input, final ItemStack... stacks)
     {
-        if(input == null)
+        if (input == null) { return false; }
+
+        final int oreID = OreDictionary.getOreID(input);
+
+        if (oreID == -1) { return false; }
+
+        final ArrayList<ItemStack> ores = OreDictionary.getOres(oreID);
+
+        for (final ItemStack ore : ores)
         {
-            return false;
-        }
-        
-        int oreID = OreDictionary.getOreID(input);
-        
-        if(oreID == -1)
-        {
-            return false;
-        }
-        
-        ArrayList<ItemStack> ores = OreDictionary.getOres(oreID);
-        
-        for(ItemStack ore : ores)
-        {
-            for(ItemStack stack : stacks)
+            for (final ItemStack stack : stacks)
             {
-                if(stack != null && OreDictionary.itemMatches(stack, ore, true))
-                {
-                    return true;
-                }
+                if (stack != null && OreDictionary.itemMatches(stack, ore, true)) { return true; }
             }
 
-        }       
-        
+        }
+
         return false;
     }
 }

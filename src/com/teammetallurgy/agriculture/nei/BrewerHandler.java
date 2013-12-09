@@ -12,40 +12,23 @@ import com.teammetallurgy.agriculture.gui.GUIProcessor;
 import com.teammetallurgy.agriculture.recipes.ProcessRecipe;
 import com.teammetallurgy.agriculture.recipes.ProcessorRecipes;
 
-public class BrewerHandler extends TemplateRecipeHandler
-{
-    class NEIProcessRecipe extends CachedRecipe
-    {
+public class BrewerHandler extends TemplateRecipeHandler {
+    class NEIProcessRecipe extends CachedRecipe {
 
         public ArrayList<PositionedStack> ingredients;
         public PositionedStack result;
 
-        public NEIProcessRecipe(int width, int height, Object[] items, ItemStack out, ItemStack meh)
+        public NEIProcessRecipe(final int width, final int height, final Object[] items, final ItemStack out, final ItemStack meh)
         {
             result = new PositionedStack(out, 98, 21);
             ingredients = new ArrayList<PositionedStack>();
             setIngredients(width, height, items, out);
         }
 
-        private void setIngredients(int width, int height, Object[] items, ItemStack out)
-        {
-            PositionedStack stack = new PositionedStack(items[0], 16, 21);
-            stack.setMaxSize(1);
-            ingredients.add(stack);
-
-            if(items.length > 1 && items[1] != null) 
-            {
-                stack = new PositionedStack(items[1], 52, 21);
-                stack.setMaxSize(1);
-                ingredients.add(stack);
-            }
-            
-        }
-
         @Override
         public List<PositionedStack> getIngredients()
         {
-            return getCycledIngredients(cycleticks / 20, ingredients);
+            return getCycledIngredients(BrewerHandler.this.cycleticks / 20, ingredients);
         }
 
         @Override
@@ -53,35 +36,21 @@ public class BrewerHandler extends TemplateRecipeHandler
         {
             return result;
         }
-    }
 
-    @Override
-    public void loadUsageRecipes(ItemStack ingredient)
-    {
-        ArrayList<ProcessRecipe> allRecipes = ProcessorRecipes.getInstance().getAllRecipes(ingredient);
-
-        for (ProcessRecipe recipe : allRecipes)
+        private void setIngredients(final int width, final int height, final Object[] items, final ItemStack out)
         {
-            NEIProcessRecipe recipeT = new NEIProcessRecipe(3, 3, recipe.getIngredients(), recipe.getCraftingResult(), ingredient);
-            arecipes.add(recipeT);
-        }
-    }
-    
-    @Override
-    public void loadCraftingRecipes(ItemStack ingredient)
-    {
-        ArrayList<ProcessRecipe> allRecipes = ProcessorRecipes.getInstance().getRecipesFor(ingredient);
+            PositionedStack stack = new PositionedStack(items[0], 16, 21);
+            stack.setMaxSize(1);
+            ingredients.add(stack);
 
-        for (ProcessRecipe recipe : allRecipes)
-        {
-            NEIProcessRecipe recipeT = new NEIProcessRecipe(3, 3, recipe.getIngredients(), recipe.getCraftingResult(), ingredient);
-            arecipes.add(recipeT);
-        }
-    }
+            if (items.length > 1 && items[1] != null)
+            {
+                stack = new PositionedStack(items[1], 52, 21);
+                stack.setMaxSize(1);
+                ingredients.add(stack);
+            }
 
-    public String getRecipeName()
-    {
-        return "Processed Recipe";
+        }
     }
 
     @Override
@@ -94,5 +63,35 @@ public class BrewerHandler extends TemplateRecipeHandler
     public String getGuiTexture()
     {
         return "agriculture:textures/gui/Processor.png";
+    }
+
+    @Override
+    public String getRecipeName()
+    {
+        return "Processed Recipe";
+    }
+
+    @Override
+    public void loadCraftingRecipes(final ItemStack ingredient)
+    {
+        final ArrayList<ProcessRecipe> allRecipes = ProcessorRecipes.getInstance().getRecipesFor(ingredient);
+
+        for (final ProcessRecipe recipe : allRecipes)
+        {
+            final NEIProcessRecipe recipeT = new NEIProcessRecipe(3, 3, recipe.getIngredients(), recipe.getCraftingResult(), ingredient);
+            arecipes.add(recipeT);
+        }
+    }
+
+    @Override
+    public void loadUsageRecipes(final ItemStack ingredient)
+    {
+        final ArrayList<ProcessRecipe> allRecipes = ProcessorRecipes.getInstance().getAllRecipes(ingredient);
+
+        for (final ProcessRecipe recipe : allRecipes)
+        {
+            final NEIProcessRecipe recipeT = new NEIProcessRecipe(3, 3, recipe.getIngredients(), recipe.getCraftingResult(), ingredient);
+            arecipes.add(recipeT);
+        }
     }
 }

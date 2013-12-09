@@ -14,43 +14,42 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
-public class PacketSyncHunger extends Packet
-{
-	private float hungerPoints;
+public class PacketSyncHunger extends Packet {
+    private float hungerPoints;
 
-	public PacketSyncHunger(float hungerPoints)
-	{
-		this.hungerPoints = hungerPoints;
-	}
+    public PacketSyncHunger(final float hungerPoints)
+    {
+        this.hungerPoints = hungerPoints;
+    }
 
-	@Override
-	public int getPacketSize()
-	{
-		return Float.SIZE;
-	}
+    @Override
+    public int getPacketSize()
+    {
+        return Float.SIZE;
+    }
 
-	@Override
-	public void processPacket(NetHandler nethandler)
-	{
-		System.out.println("recive packet");
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
-		{
-			final Minecraft client = FMLClientHandler.instance().getClient();
+    @Override
+    public void processPacket(final NetHandler nethandler)
+    {
+        System.out.println("recive packet");
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+        {
+            final Minecraft client = FMLClientHandler.instance().getClient();
 
-			new HungerSystem(client.thePlayer, hungerPoints);
-		}
-	}
+            new HungerSystem(client.thePlayer, hungerPoints);
+        }
+    }
 
-	@Override
-	public void readPacketData(DataInput datainput) throws IOException
-	{
-		hungerPoints = datainput.readFloat();
-	}
+    @Override
+    public void readPacketData(final DataInput datainput) throws IOException
+    {
+        hungerPoints = datainput.readFloat();
+    }
 
-	@Override
-	public void writePacketData(DataOutput dataoutput) throws IOException
-	{
-		dataoutput.writeFloat(hungerPoints);
-	}
+    @Override
+    public void writePacketData(final DataOutput dataoutput) throws IOException
+    {
+        dataoutput.writeFloat(hungerPoints);
+    }
 
 }

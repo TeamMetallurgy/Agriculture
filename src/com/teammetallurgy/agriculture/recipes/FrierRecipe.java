@@ -5,46 +5,41 @@ import net.minecraft.item.ItemStack;
 public class FrierRecipe {
 
     ItemStack base;
-    int       cookTime;
+    int cookTime;
     ItemStack result;
 
     public FrierRecipe(final ItemStack item, final ItemStack result, final int cookTime)
     {
-        this.base = item;
+        base = item;
         this.result = result;
         this.cookTime = cookTime;
     }
 
     public ItemStack getCraftingResult()
     {
-        return this.result.copy();
+        return result.copy();
     }
 
     public ItemStack getInput()
     {
-        return this.base.copy();
+        return base.copy();
     }
 
     public ItemStack getResult()
     {
-        return this.result.copy();
+        return result.copy();
     }
 
     public boolean matches(final ItemStack stack, final int time)
     {
         if (stack != null)
         {
-            if(time >= this.cookTime)
+            if (time >= cookTime)
             {
-           
-                if (stack.isItemEqual(this.base)) { 
-                    return true; 
-                }
-                
-                if(RecipeUtils.matchesOreDict(stack, base))
-                {
-                    return true;
-                }
+
+                if (stack.isItemEqual(base)) { return true; }
+
+                if (RecipeUtils.matchesOreDict(stack, base)) { return true; }
             }
         }
 

@@ -2,27 +2,22 @@ package com.teammetallurgy.agriculture.recipes;
 
 import net.minecraft.item.ItemStack;
 
-public class OvenRecipe extends TempRecipe 
-{
+public class OvenRecipe extends TempRecipe {
 
-    public OvenRecipe(ItemStack in, ItemStack out, int temp)
+    public OvenRecipe(final ItemStack in, final ItemStack out, final int temp)
     {
         super(in, out, temp);
     }
 
     @Override
-    public boolean matches(ItemStack stack, int currentTemp)
+    public boolean matches(final ItemStack stack, final int currentTemp)
     {
-        
-        if(currentTemp >= this.temp)
+
+        if (currentTemp >= temp)
         {
-            if (stack.isItemEqual(this.in)) { 
-                return true; 
-            }
-            
-            if(RecipeUtils.matchesOreDict(stack, in)) {
-                return true;
-            }
+            if (stack.isItemEqual(in)) { return true; }
+
+            if (RecipeUtils.matchesOreDict(stack, in)) { return true; }
         }
 
         return false;

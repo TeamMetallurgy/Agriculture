@@ -10,12 +10,11 @@ import com.teammetallurgy.agriculture.machines.icebox.InventoryIcebox;
 import com.teammetallurgy.agriculture.machines.icebox.TileEntityIcebox;
 import com.teammetallurgy.agriculture.machines.oven.TileEntityOven;
 
-public class ContainerIcebox extends Container
-{
+public class ContainerIcebox extends Container {
     private final InventoryIcebox oven;
     private final TileEntityIcebox teOven;
 
-    public ContainerIcebox(InventoryPlayer invePlayer, TileEntityIcebox teOven)
+    public ContainerIcebox(final InventoryPlayer invePlayer, final TileEntityIcebox teOven)
     {
         oven = teOven.getInventory();
         oven.openChest();
@@ -56,13 +55,13 @@ public class ContainerIcebox extends Container
     }
 
     @Override
-    public boolean canDragIntoSlot(Slot par1Slot)
+    public boolean canDragIntoSlot(final Slot par1Slot)
     {
         return true;
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer entityplayer)
+    public boolean canInteractWith(final EntityPlayer entityplayer)
     {
         return true;
     }
@@ -72,7 +71,7 @@ public class ContainerIcebox extends Container
         return teOven;
     }
 
-    protected boolean mergeItemStack2(ItemStack par1ItemStack, int par2, int par3, boolean par4)
+    protected boolean mergeItemStack2(final ItemStack par1ItemStack, final int par2, final int par3, final boolean par4)
     {
         boolean flag1 = false;
         int k = par2;
@@ -92,9 +91,7 @@ public class ContainerIcebox extends Container
                 slot = (Slot) inventorySlots.get(k);
                 itemstack1 = slot.getStack();
 
-                if (itemstack1 != null && slot.isItemValid(par1ItemStack) && itemstack1.itemID == par1ItemStack.itemID
-                        && (!par1ItemStack.getHasSubtypes() || par1ItemStack.getItemDamage() == itemstack1.getItemDamage())
-                        && ItemStack.areItemStackTagsEqual(par1ItemStack, itemstack1))
+                if (itemstack1 != null && slot.isItemValid(par1ItemStack) && itemstack1.itemID == par1ItemStack.itemID && (!par1ItemStack.getHasSubtypes() || par1ItemStack.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(par1ItemStack, itemstack1))
                 {
                     final int l = itemstack1.stackSize + par1ItemStack.stackSize;
 
@@ -167,14 +164,14 @@ public class ContainerIcebox extends Container
     }
 
     @Override
-    public void onContainerClosed(EntityPlayer entityplayer)
+    public void onContainerClosed(final EntityPlayer entityplayer)
     {
         super.onContainerClosed(entityplayer);
         oven.closeChest();
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2)
+    public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int par2)
     {
         ItemStack itemstack = null;
         final Slot slot = (Slot) inventorySlots.get(par2);
@@ -188,26 +185,17 @@ public class ContainerIcebox extends Container
 
             if (par2 <= 19)
             {
-                if (!mergeItemStack(itemstack1, 20, inventorySlots.size(), true))
-                {
-                    return null;
-                }
+                if (!mergeItemStack(itemstack1, 20, inventorySlots.size(), true)) { return null; }
             }
             else
             {
                 if (TileEntityOven.getItemBurnTime(itemstack) > 0)
                 {
-                    if (!mergeItemStack(itemstack1, 0, 1, false))
-                    {
-                        return null;
-                    }
+                    if (!mergeItemStack(itemstack1, 0, 1, false)) { return null; }
                 }
                 else
                 {
-                    if (!mergeItemStack2(itemstack1, 1, 13, false))
-                    {
-                        return null;
-                    }
+                    if (!mergeItemStack2(itemstack1, 1, 13, false)) { return null; }
                 }
             }
 
@@ -220,10 +208,7 @@ public class ContainerIcebox extends Container
                 slot.onSlotChanged();
             }
 
-            if (itemstack1.stackSize == itemstack.stackSize)
-            {
-                return null;
-            }
+            if (itemstack1.stackSize == itemstack.stackSize) { return null; }
 
             slot.onPickupFromSlot(par1EntityPlayer, itemstack1);
         }

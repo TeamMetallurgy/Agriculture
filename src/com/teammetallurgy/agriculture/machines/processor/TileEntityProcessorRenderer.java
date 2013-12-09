@@ -10,47 +10,46 @@ import org.lwjgl.opengl.GL12;
 
 import com.teammetallurgy.agriculture.machines.FuelMachineTileEntity;
 
-public class TileEntityProcessorRenderer extends TileEntitySpecialRenderer
-{
-	private final ModelProcessor model = new ModelProcessor();
-	private final ResourceLocation texture = new ResourceLocation("agriculture", "textures/blocks/Processor.png");
+public class TileEntityProcessorRenderer extends TileEntitySpecialRenderer {
+    private static int[] rotations = { 0, 0, 180, 0, 90, -90 };
+    private final ModelProcessor model = new ModelProcessor();
 
-	private static int[] rotations =
-	{ 0, 0, 180, 0, 90, -90 };
+    private final ResourceLocation texture = new ResourceLocation("agriculture", "textures/blocks/Processor.png");
 
-	public void renderTileEntityAt(FuelMachineTileEntity tileentity, double x, double y, double z, float unknown)
-	{
-		int direction = 0;
-		float yOffset = 0;
-		if (tileentity.worldObj != null)
-		{
-			direction = tileentity.worldObj.getBlockMetadata(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord);
-		} else
-		{
-			yOffset = -0.1f;
-		}
+    public void renderTileEntityAt(final FuelMachineTileEntity tileentity, final double x, final double y, final double z, final float unknown)
+    {
+        int direction = 0;
+        float yOffset = 0;
+        if (tileentity.worldObj != null)
+        {
+            direction = tileentity.worldObj.getBlockMetadata(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord);
+        }
+        else
+        {
+            yOffset = -0.1f;
+        }
 
-		final int rotation = rotations[direction];
+        final int rotation = TileEntityProcessorRenderer.rotations[direction];
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+        Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
-		GL11.glPushMatrix();
-		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glTranslatef((float) x + 0.5f, (float) y + 1.5f + yOffset, (float) z + 0.5f);
-		GL11.glScalef(1F, -1F, -1F);
+        GL11.glPushMatrix();
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        GL11.glColor4f(1F, 1F, 1F, 1F);
+        GL11.glTranslatef((float) x + 0.5f, (float) y + 1.5f + yOffset, (float) z + 0.5f);
+        GL11.glScalef(1F, -1F, -1F);
 
-		GL11.glRotatef(rotation, 0F, 1F, 0F);
+        GL11.glRotatef(rotation, 0F, 1F, 0F);
 
-		model.renderAll();
+        model.renderAll();
 
-		GL11.glPopMatrix();
-	}
+        GL11.glPopMatrix();
+    }
 
-	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float unknown)
-	{
-		this.renderTileEntityAt((FuelMachineTileEntity) tileentity, x, y, z, unknown);
-	}
+    @Override
+    public void renderTileEntityAt(final TileEntity tileentity, final double x, final double y, final double z, final float unknown)
+    {
+        this.renderTileEntityAt((FuelMachineTileEntity) tileentity, x, y, z, unknown);
+    }
 
 }

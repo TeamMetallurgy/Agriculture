@@ -18,155 +18,158 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 
-public class HungerSystem
-{
-	static Map<String, HungerSystem> playerInstances = new WeakHashMap<String, HungerSystem>();
+public class HungerSystem {
+    static final int DECAYRATE = 5;
 
-	static final float MAXPOINTS = 200;
+    static final float MAXPOINTS = 200;
 
-	public static void applyBonuses(EntityPlayerMP player)
-	{
-		if (!player.worldObj.isRemote)
-		{
-			getInstance(player).applyInstanceBonuses(player);
-		}
-	}
+    static Map<String, HungerSystem> playerInstances = new WeakHashMap<String, HungerSystem>();
 
-	public static HungerSystem getInstance(EntityPlayer player)
-	{
-		HungerSystem instance = null;
+    public static void addPoints(final EntityPlayer player, final float points)
+    {
+        HungerSystem.getInstance(player).addPoints(points);
+    }
 
-		if (playerInstances.containsKey(player.username))
-		{
-			instance = playerInstances.get(player.username);
-		} else
-		{
-			instance = new HungerSystem(player);
-			playerInstances.put(player.username, instance);
-		}
+    public static void applyBonuses(final EntityPlayerMP player)
+    {
+        if (!player.worldObj.isRemote)
+        {
+            HungerSystem.getInstance(player).applyInstanceBonuses(player);
+        }
+    }
 
-		return instance;
-	}
+    public static HungerSystem getInstance(final EntityPlayer player)
+    {
+        HungerSystem instance = null;
 
-	public static float getPercentage(EntityPlayer player)
-	{
-		return getInstance(player).getPercentage();
-	}
+        if (HungerSystem.playerInstances.containsKey(player.username))
+        {
+            instance = HungerSystem.playerInstances.get(player.username);
+        }
+        else
+        {
+            instance = new HungerSystem(player);
+            HungerSystem.playerInstances.put(player.username, instance);
+        }
 
-	public static void tick(EntityPlayer player)
-	{
-		getInstance(player).tick();
-	}
+        return instance;
+    }
 
-	float hungerPoints = 0;
+    public static float getPercentage(final EntityPlayer player)
+    {
+        return HungerSystem.getInstance(player).getPercentage();
+    }
 
-	static final int DECAYRATE = 5;
+    public static void removePoints(final EntityPlayer player, final float points)
+    {
+        HungerSystem.getInstance(player).removePoints(points);
+    }
 
-	public static void addPoints(EntityPlayer player, float points)
-	{
-		getInstance(player).addPoints(points);
-	}
+    public static void tick(final EntityPlayer player)
+    {
+        HungerSystem.getInstance(player).tick();
+    }
 
-	public static void removePoints(EntityPlayer player, float points)
-	{
-		getInstance(player).removePoints(points);
-	}
+    float hungerPoints = 0;
 
-	final EntityPlayer player;
+    final EntityPlayer player;
 
-	public HungerSystem(EntityPlayer player)
-	{
-		this(player, 0f);
-	}
+    public HungerSystem(final EntityPlayer player)
+    {
+        this(player, 0f);
+    }
 
-	public HungerSystem(EntityPlayer player, float points)
-	{
-		this.player = player;
-		hungerPoints = points;
+    public HungerSystem(final EntityPlayer player, final float points)
+    {
+        this.player = player;
+        hungerPoints = points;
 
-		playerInstances.put(player.username, this);
-	}
+        HungerSystem.playerInstances.put(player.username, this);
+    }
 
-	public void addPoints(float points)
-	{
-		if (points + hungerPoints <= MAXPOINTS)
-		{
-			hungerPoints += points;
-		} else
-		{
-			hungerPoints = MAXPOINTS;
-		}
-		// System.out.println("points " + hungerPoints);
-		syncClientWithServer(player);
-	}
+    public void addPoints(final float points)
+    {
+        if (points + hungerPoints <= HungerSystem.MAXPOINTS)
+        {
+            hungerPoints += points;
+        }
+        else
+        {
+            hungerPoints = HungerSystem.MAXPOINTS;
+        }
+        // System.out.println("points " + hungerPoints);
+        syncClientWithServer(player);
+    }
 
-	public void applyInstanceBonuses(EntityPlayer playerMP)
-	{
-		if (getPercentage() >= .20f)
-		{
-			// if (!player.isPotionActive(Potion.digSpeed.id))
-			{
-				playerMP.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 200, 1, true));
-			}
+    public void applyInstanceBonuses(final EntityPlayer playerMP)
+    {
+        if (this.getPercentage() >= .20f)
+        {
+            // if (!player.isPotionActive(Potion.digSpeed.id))
+            {
+                playerMP.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 200, 1, true));
+            }
 
-			// if (!player.isPotionActive(Potion.moveSpeed.id))
-			{
-				playerMP.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 200, 1, true));
-			}
-		}
-	}
+            // if (!player.isPotionActive(Potion.moveSpeed.id))
+            {
+                playerMP.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 200, 1, true));
+            }
+        }
+    }
 
-	public float getPercentage()
-	{
-		return hungerPoints / MAXPOINTS;
-	}
+    public float getPercentage()
+    {
+        return hungerPoints / HungerSystem.MAXPOINTS;
+    }
 
-	public void removePoints(float points)
-	{
-		if (hungerPoints - points >= 0)
-		{
-			hungerPoints -= points;
-		} else
-		{
-			hungerPoints = 0;
-		}
-		// System.out.println(hungerPoints);
-		syncClientWithServer(player);
-	}
+    public void removePoints(final float points)
+    {
+        if (hungerPoints - points >= 0)
+        {
+            hungerPoints -= points;
+        }
+        else
+        {
+            hungerPoints = 0;
+        }
+        // System.out.println(hungerPoints);
+        syncClientWithServer(player);
+    }
 
-	public void syncClientWithServer(EntityPlayer player)
-	{
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-		{
-			// PacketDispatcher.sendPacketToPlayer(new
-			// PacketSyncHunger(hungerPoints), (Player)player);
+    public void syncClientWithServer(final EntityPlayer player)
+    {
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+        {
+            // PacketDispatcher.sendPacketToPlayer(new
+            // PacketSyncHunger(hungerPoints), (Player)player);
 
-			final ByteArrayOutputStream bos = new ByteArrayOutputStream(140);
-			final DataOutputStream dos = new DataOutputStream(bos);
-			try
-			{
-				dos.writeShort(256);
-				dos.writeFloat(hungerPoints);
-			} catch (final IOException e)
-			{
-				System.out.println(e);
-			}
+            final ByteArrayOutputStream bos = new ByteArrayOutputStream(140);
+            final DataOutputStream dos = new DataOutputStream(bos);
+            try
+            {
+                dos.writeShort(256);
+                dos.writeFloat(hungerPoints);
+            }
+            catch (final IOException e)
+            {
+                System.out.println(e);
+            }
 
-			final Packet250CustomPayload packet = new Packet250CustomPayload();
-			packet.channel = Agriculture.MODID;
-			packet.data = bos.toByteArray();
-			packet.length = bos.size();
+            final Packet250CustomPayload packet = new Packet250CustomPayload();
+            packet.channel = Agriculture.MODID;
+            packet.data = bos.toByteArray();
+            packet.length = bos.size();
 
-			if (packet != null)
-			{
-				PacketDispatcher.sendPacketToAllPlayers(packet);
-				// PacketDispatcher.sendPacketToPlayer(packet, (Player) player);
-			}
-		}
-	}
+            if (packet != null)
+            {
+                PacketDispatcher.sendPacketToAllPlayers(packet);
+                // PacketDispatcher.sendPacketToPlayer(packet, (Player) player);
+            }
+        }
+    }
 
-	public void tick()
-	{
-		removePoints(DECAYRATE);
-	}
+    public void tick()
+    {
+        this.removePoints(HungerSystem.DECAYRATE);
+    }
 }

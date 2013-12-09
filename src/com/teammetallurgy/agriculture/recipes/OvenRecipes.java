@@ -1,7 +1,6 @@
 package com.teammetallurgy.agriculture.recipes;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,11 +10,11 @@ import com.teammetallurgy.agriculture.SubItem;
 
 public class OvenRecipes {
 
-    private static final int         BURNTIME    = 50000;
+    private static final int BURNTIME = 50000;
 
-    private static final int         DEFAULTTEMP = 100000;
+    private static final int DEFAULTTEMP = 100000;
 
-    private static final OvenRecipes instance    = new OvenRecipes();
+    private static final OvenRecipes instance = new OvenRecipes();
 
     public static OvenRecipes getInstance()
     {
@@ -101,7 +100,7 @@ public class OvenRecipes {
 
     public void addRecipe(final ItemStack in, final ItemStack out, final int heat)
     {
-        this.recipes.add(new OvenRecipe(out, in, heat));
+        recipes.add(new OvenRecipe(out, in, heat));
     }
 
     public void addRecipe(final SubItem in, final SubItem out)
@@ -111,19 +110,16 @@ public class OvenRecipes {
 
     public ItemStack findMatchingRecipe(final ItemStack in, final int heat)
     {
-        OvenRecipe recipe = this.getMatchingRecipe(in, heat);
-        
-        if (recipe != null) 
-        {
-            return recipe.getResult();
-        }
-        
+        final OvenRecipe recipe = getMatchingRecipe(in, heat);
+
+        if (recipe != null) { return recipe.getResult(); }
+
         return null;
     }
 
     public OvenRecipe getMatchingRecipe(final ItemStack in, final int heat)
     {
-        for (final OvenRecipe recipe : this.recipes)
+        for (final OvenRecipe recipe : recipes)
         {
             if (recipe.matches(in, heat)) { return recipe; }
         }
@@ -131,11 +127,16 @@ public class OvenRecipes {
         return null;
     }
 
+    public ArrayList<OvenRecipe> getRecipes()
+    {
+        return recipes;
+    }
+
     public ArrayList<OvenRecipe> getRecipesFor(final ItemStack ingredient)
     {
         final ArrayList<OvenRecipe> retRecipes = new ArrayList<OvenRecipe>();
 
-        for (final OvenRecipe recipe : this.recipes)
+        for (final OvenRecipe recipe : recipes)
         {
             if (recipe.getResult().isItemEqual(ingredient))
             {
@@ -150,7 +151,7 @@ public class OvenRecipes {
     {
         final ArrayList<OvenRecipe> retRecipes = new ArrayList<OvenRecipe>();
 
-        for (final OvenRecipe recipe : this.recipes)
+        for (final OvenRecipe recipe : recipes)
         {
             if (recipe.getInput().isItemEqual(ingredient))
             {
@@ -159,10 +160,5 @@ public class OvenRecipes {
         }
 
         return retRecipes;
-    }
-    
-    public ArrayList<OvenRecipe> getRecipes()
-    {
-        return recipes;
     }
 }

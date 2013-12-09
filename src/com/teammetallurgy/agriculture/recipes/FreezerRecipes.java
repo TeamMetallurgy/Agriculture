@@ -8,83 +8,50 @@ import com.teammetallurgy.agriculture.AgricultureItems;
 import com.teammetallurgy.agriculture.SubItem;
 
 public class FreezerRecipes {
-    
+
     private static final int DEFAULTTEMP = 100000;
 
     private static FreezerRecipes instance = new FreezerRecipes();
-    
-    private ArrayList<FreezerRecipe> recipes = new ArrayList<FreezerRecipe>();
 
     public static FreezerRecipes getInstance()
     {
-        return instance;
+        return FreezerRecipes.instance;
     }
-    
+
+    private final ArrayList<FreezerRecipe> recipes = new ArrayList<FreezerRecipe>();
+
     public FreezerRecipes()
     {
-        addRecipe(AgricultureItems.vanillaIceCream, AgricultureItems.vanillaIceCreamMix);
-        addRecipe(AgricultureItems.strawberryIceCream, AgricultureItems.strawberryIceCreamMix);
-        addRecipe(AgricultureItems.chocolateIceCream, AgricultureItems.chocolateIceCreamMix);
+        this.addRecipe(AgricultureItems.vanillaIceCream, AgricultureItems.vanillaIceCreamMix);
+        this.addRecipe(AgricultureItems.strawberryIceCream, AgricultureItems.strawberryIceCreamMix);
+        this.addRecipe(AgricultureItems.chocolateIceCream, AgricultureItems.chocolateIceCreamMix);
     }
 
-    public void addRecipe(SubItem out, SubItem in)
-    {
-        addRecipe(out.getItemStack(), in.getItemStack(), DEFAULTTEMP);
-        
-    }
-
-    public void addRecipe(ItemStack out, ItemStack in, int temp)
+    public void addRecipe(final ItemStack out, final ItemStack in, final int temp)
     {
         recipes.add(new FreezerRecipe(in, out, temp));
     }
 
-    public ArrayList<FreezerRecipe> getUsageFor(ItemStack ingredient)
+    public void addRecipe(final SubItem out, final SubItem in)
     {
-        ArrayList<FreezerRecipe> retRecipes = new ArrayList<FreezerRecipe>();
-        
-        for (FreezerRecipe recipe : recipes)
-        {
-            if(recipe.getInput().isItemEqual(ingredient))
-            {
-                retRecipes.add(recipe);
-            }
-        }
+        this.addRecipe(out.getItemStack(), in.getItemStack(), FreezerRecipes.DEFAULTTEMP);
 
-        return retRecipes;
     }
 
-    public ArrayList<FreezerRecipe> getRecipesFor(ItemStack ingredient)
+    public ItemStack findMatchingRecipe(final ItemStack stack, final int currentTemp)
     {
-        ArrayList<FreezerRecipe> retRecipes = new ArrayList<FreezerRecipe>();
-        
-        for (FreezerRecipe recipe : recipes)
-        {
-            if(recipe.getResult().isItemEqual(ingredient))
-            {
-                retRecipes.add(recipe);
-            }
-        }
+        final TempRecipe recipe = getMatchingRecipe(stack, currentTemp);
 
-        return retRecipes;
-    }
+        if (recipe != null) { return recipe.getResult(); }
 
-    public ItemStack findMatchingRecipe(ItemStack stack, int currentTemp)
-    {
-        TempRecipe recipe = this.getMatchingRecipe(stack, currentTemp);
-        
-        if(recipe != null)
-        {
-            return recipe.getResult();
-        }
-        
         return null;
     }
 
-    private TempRecipe getMatchingRecipe(ItemStack stack, int currentTemp)
+    private TempRecipe getMatchingRecipe(final ItemStack stack, final int currentTemp)
     {
-        for(TempRecipe recipe : recipes)
+        for (final TempRecipe recipe : recipes)
         {
-            if(recipe.matches(stack, currentTemp)) { return recipe; }
+            if (recipe.matches(stack, currentTemp)) { return recipe; }
         }
         return null;
     }
@@ -92,6 +59,36 @@ public class FreezerRecipes {
     public ArrayList<FreezerRecipe> getRecipes()
     {
         return recipes;
+    }
+
+    public ArrayList<FreezerRecipe> getRecipesFor(final ItemStack ingredient)
+    {
+        final ArrayList<FreezerRecipe> retRecipes = new ArrayList<FreezerRecipe>();
+
+        for (final FreezerRecipe recipe : recipes)
+        {
+            if (recipe.getResult().isItemEqual(ingredient))
+            {
+                retRecipes.add(recipe);
+            }
+        }
+
+        return retRecipes;
+    }
+
+    public ArrayList<FreezerRecipe> getUsageFor(final ItemStack ingredient)
+    {
+        final ArrayList<FreezerRecipe> retRecipes = new ArrayList<FreezerRecipe>();
+
+        for (final FreezerRecipe recipe : recipes)
+        {
+            if (recipe.getInput().isItemEqual(ingredient))
+            {
+                retRecipes.add(recipe);
+            }
+        }
+
+        return retRecipes;
     }
 
 }

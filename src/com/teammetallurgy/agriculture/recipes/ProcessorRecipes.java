@@ -9,8 +9,7 @@ import net.minecraft.item.ItemStack;
 import com.teammetallurgy.agriculture.AgricultureItems;
 import com.teammetallurgy.agriculture.SubItem;
 
-public class ProcessorRecipes
-{
+public class ProcessorRecipes {
     /** The static instance of this class */
     private static final ProcessorRecipes instance = new ProcessorRecipes();
 
@@ -19,10 +18,10 @@ public class ProcessorRecipes
      */
     public static final ProcessorRecipes getInstance()
     {
-        return instance;
+        return ProcessorRecipes.instance;
     }
 
-    public static int getProcessTime(ItemStack stackInSlot)
+    public static int getProcessTime(final ItemStack stackInSlot)
     {
         return stackInSlot != null ? 20 : 0;
     }
@@ -32,51 +31,65 @@ public class ProcessorRecipes
 
     private ProcessorRecipes()
     {
-        addRecipe(AgricultureItems.appleMush, Item.sugar, AgricultureItems.appleJelly);
-        addRecipe(Item.appleRed, AgricultureItems.appleMush);
-        addRecipe(Item.bread, AgricultureItems.breadCrumbs.getItemStack(8));
-        addRecipe(AgricultureItems.milk, AgricultureItems.butter);
-        addRecipe(AgricultureItems.groundCinnamon, Item.sugar, AgricultureItems.cinnamonAndSugar);
-        addRecipe(AgricultureItems.roastedPeanuts, AgricultureItems.water, AgricultureItems.cookingOil);
-        addRecipe(AgricultureItems.roastedPeanuts, AgricultureItems.crushedPeanuts);
-        addRecipe(Item.wheat, AgricultureItems.flour);
-        addRecipe(Item.bone, AgricultureItems.gelatin);
-        addRecipe(Item.beefRaw, AgricultureItems.groundBeef.getItemStack(2));
-        addRecipe(Item.chickenRaw, AgricultureItems.groundChicken.getItemStack(2));
-        addRecipe(AgricultureItems.cinnamon, AgricultureItems.groundCinnamon);
-        addRecipe(Item.porkRaw, AgricultureItems.groundPork.getItemStack(2));
-        addRecipe(AgricultureItems.crushedPeanuts, Item.sugar, AgricultureItems.peanutButter);
-        addRecipe(AgricultureItems.strawberryMush, Item.sugar, AgricultureItems.strawberryJelly);
-        addRecipe(AgricultureItems.strawberry, AgricultureItems.strawberryMush);
-        addRecipe(AgricultureItems.milk, Item.sugar, AgricultureItems.whippedCream);
+        this.addRecipe(AgricultureItems.appleMush, Item.sugar, AgricultureItems.appleJelly);
+        this.addRecipe(Item.appleRed, AgricultureItems.appleMush);
+        this.addRecipe(Item.bread, AgricultureItems.breadCrumbs.getItemStack(8));
+        this.addRecipe(AgricultureItems.milk, AgricultureItems.butter);
+        this.addRecipe(AgricultureItems.groundCinnamon, Item.sugar, AgricultureItems.cinnamonAndSugar);
+        this.addRecipe(AgricultureItems.roastedPeanuts, AgricultureItems.water, AgricultureItems.cookingOil);
+        this.addRecipe(AgricultureItems.roastedPeanuts, AgricultureItems.crushedPeanuts);
+        this.addRecipe(Item.wheat, AgricultureItems.flour);
+        this.addRecipe(Item.bone, AgricultureItems.gelatin);
+        this.addRecipe(Item.beefRaw, AgricultureItems.groundBeef.getItemStack(2));
+        this.addRecipe(Item.chickenRaw, AgricultureItems.groundChicken.getItemStack(2));
+        this.addRecipe(AgricultureItems.cinnamon, AgricultureItems.groundCinnamon);
+        this.addRecipe(Item.porkRaw, AgricultureItems.groundPork.getItemStack(2));
+        this.addRecipe(AgricultureItems.crushedPeanuts, Item.sugar, AgricultureItems.peanutButter);
+        this.addRecipe(AgricultureItems.strawberryMush, Item.sugar, AgricultureItems.strawberryJelly);
+        this.addRecipe(AgricultureItems.strawberry, AgricultureItems.strawberryMush);
+        this.addRecipe(AgricultureItems.milk, Item.sugar, AgricultureItems.whippedCream);
     }
 
-    public void addRecipe(Object item, Object result)
+    public void addRecipe(final Object item, final Object result)
     {
-        addRecipe(item, null, result);
+        this.addRecipe(item, null, result);
     }
 
-    public void addRecipe(Object par1ItemStack, Object baseItem, Object result)
+    public void addRecipe(final Object par1ItemStack, final Object baseItem, final Object result)
     {
         recipes.add(new ProcessRecipe(getItemStack(par1ItemStack), getItemStack(baseItem), getItemStack(result)));
     }
 
-    public ItemStack findMatchingRecipe(ItemStack first, ItemStack second)
+    public ItemStack findMatchingRecipe(final ItemStack first, final ItemStack second)
     {
         for (int j = 0; j < recipes.size(); ++j)
         {
-            final ProcessRecipe irecipe = (ProcessRecipe) recipes.get(j);
+            final ProcessRecipe irecipe = recipes.get(j);
 
-            if (irecipe.matches(first, second))
-            {
-                return irecipe.getCraftingResult();
-            }
+            if (irecipe.matches(first, second)) { return irecipe.getCraftingResult(); }
         }
 
         return null;
     }
 
-    public ItemStack getItemStack(Object object)
+    public ArrayList<ProcessRecipe> getAllRecipes(final ItemStack ingredient)
+    {
+        final ArrayList<ProcessRecipe> recipesTemp = new ArrayList<ProcessRecipe>();
+
+        for (int j = 0; j < recipes.size(); ++j)
+        {
+            final ProcessRecipe irecipe = recipes.get(j);
+
+            if (irecipe.uses(ingredient))
+            {
+                recipesTemp.add(irecipe);
+            }
+        }
+
+        return recipesTemp;
+    }
+
+    public ItemStack getItemStack(final Object object)
     {
         ItemStack stack = null;
         if (object instanceof ItemStack)
@@ -94,37 +107,20 @@ public class ProcessorRecipes
         return stack;
     }
 
-    public ArrayList<ProcessRecipe> getAllRecipes(ItemStack ingredient)
+    public ArrayList<ProcessRecipe> getRecipesFor(final ItemStack ingredient)
     {
-        ArrayList<ProcessRecipe> recipesTemp = new ArrayList<ProcessRecipe>();
+        final ArrayList<ProcessRecipe> recipesTemp = new ArrayList<ProcessRecipe>();
 
         for (int j = 0; j < recipes.size(); ++j)
         {
-            final ProcessRecipe irecipe = (ProcessRecipe) recipes.get(j);
-
-            if (irecipe.uses(ingredient))
-            {
-                recipesTemp.add(irecipe);
-            }
-        }
-        
-        return recipesTemp;
-    }
-
-    public ArrayList<ProcessRecipe> getRecipesFor(ItemStack ingredient)
-    {
-        ArrayList<ProcessRecipe> recipesTemp = new ArrayList<ProcessRecipe>();
-
-        for (int j = 0; j < recipes.size(); ++j)
-        {
-            final ProcessRecipe irecipe = (ProcessRecipe) recipes.get(j);
+            final ProcessRecipe irecipe = recipes.get(j);
 
             if (irecipe.getCraftingResult().isItemEqual(ingredient))
             {
                 recipesTemp.add(irecipe);
             }
         }
-        
+
         return recipesTemp;
     }
 }

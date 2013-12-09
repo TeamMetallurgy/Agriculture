@@ -16,25 +16,26 @@ import com.teammetallurgy.agriculture.recipes.OvenRecipe;
 import com.teammetallurgy.agriculture.recipes.OvenRecipes;
 import com.teammetallurgy.agriculture.recipes.TempRecipe;
 
-public class OvenHandler extends TemplateRecipeHandler  
-{
+public class OvenHandler extends TemplateRecipeHandler {
 
-    private static final int YPOSITION = 23;
-    
-    private static ArrayList<LocalFuelPair> afuels;
-    private static TreeSet<Integer> efuels;
+    protected class LocalFuelPair extends FuelPair {
 
-    
-    private class NEIBakedRecipe extends CachedRecipe
-    {
+        public LocalFuelPair(final ItemStack ingred, final int burnTime)
+        {
+            super(ingred, burnTime);
+            stack = new PositionedStack(ingred, 7, OvenHandler.YPOSITION, false);
+        }
+    }
+
+    private class NEIBakedRecipe extends CachedRecipe {
 
         public PositionedStack ingredient;
         public PositionedStack result;
 
-        public NEIBakedRecipe(ItemStack input, ItemStack output)
+        public NEIBakedRecipe(final ItemStack input, final ItemStack output)
         {
-            result = new PositionedStack(output, 98, YPOSITION);
-            ingredient = new PositionedStack(input, 51, YPOSITION);
+            result = new PositionedStack(output, 98, OvenHandler.YPOSITION);
+            ingredient = new PositionedStack(input, 51, OvenHandler.YPOSITION);
         }
 
         @Override
@@ -42,82 +43,66 @@ public class OvenHandler extends TemplateRecipeHandler
         {
             return ingredient;
         }
-        
+
+        @Override
+        public PositionedStack getOtherStack()
+        {
+            return OvenHandler.afuels.get(OvenHandler.this.cycleticks / 48 % OvenHandler.afuels.size()).stack;
+        }
+
         @Override
         public PositionedStack getResult()
         {
             return result;
         }
-        
-        @Override
-        public PositionedStack getOtherStack() 
-        {
-            return afuels.get((cycleticks/48) % afuels.size()).stack;
-        }
 
-        
     }
-    
-    @Override
-    public void loadTransferRects()
+
+    private static ArrayList<LocalFuelPair> afuels;
+
+    private static TreeSet<Integer> efuels;
+
+    private static final int YPOSITION = 23;
+
+    static
     {
-//        transferRects.add(new RecipeTransferRect(new Rectangle(75, 25, 14, 14), "baked"));
-//        transferRects.add(new RecipeTransferRect(new Rectangle(7, YPOSITION, 16, 16), "fuel"));
+        OvenHandler.removeFuels();
     }
-    
-    @Override
-    public void loadUsageRecipes(String inputId, Object... ingredients)
+
+    private static void removeFuels()
     {
-        if(inputId.equals("fuel") && getClass() == OvenHandler.class)
+        OvenHandler.efuels = new TreeSet<Integer>();
+    }
+
+    protected void addRecipes(final ArrayList<? extends TempRecipe> allRecipes)
+    {
+        for (final TempRecipe recipe : allRecipes)
         {
-            loadCraftingRecipes("baked");
-        }
-        else
-        {
-            super.loadUsageRecipes(inputId, ingredients);
+            final NEIBakedRecipe recipeT = new NEIBakedRecipe(recipe.getInput(), recipe.getResult());
+            arecipes.add(recipeT);
         }
     }
 
     @Override
-    public void loadUsageRecipes(ItemStack ingredient)
+    public void drawExtras(final int recipe)
     {
-        ArrayList<OvenRecipe> allRecipes = OvenRecipes.getInstance().getUsageFor(ingredient);
-        
-        if (isFuel(ingredient))
-        {
-            loadUsageRecipes("fuel");
-        }
-        else 
-        {
-            addRecipes(allRecipes);
-        }
-    }
-    
-    @Override
-    public void loadCraftingRecipes(String outputId, Object... results)
-    {
-        if(outputId.equals("baked") && getClass() == OvenHandler.class)
-        {
-            ArrayList<OvenRecipe> allRecipes = OvenRecipes.getInstance().getRecipes();
-            addRecipes(allRecipes);
-        }
-        else 
-        {
-            super.loadCraftingRecipes(outputId, results);
-        }
-    }
-    
-    @Override
-    public void loadCraftingRecipes(ItemStack ingredient)
-    {
-        ArrayList<OvenRecipe> allRecipes = OvenRecipes.getInstance().getRecipesFor(ingredient);
-
-        addRecipes(allRecipes);
+        this.drawProgressBar(75, 25, 179, 89, 14, 14, 100, 3);
     }
 
-    public String getRecipeName()
+    protected void findFuels()
     {
-        return "Baked Recipe";
+        OvenHandler.afuels = new ArrayList<LocalFuelPair>();
+        for (final ItemStack item : ItemList.items)
+        {
+            if (!OvenHandler.efuels.contains(item.itemID))
+            {
+                final int burnTime = getItemBurnTime(item);
+                if (burnTime > 0)
+                {
+                    OvenHandler.afuels.add(new LocalFuelPair(item.copy(), burnTime));
+                }
+            }
+        }
     }
 
     @Override
@@ -131,81 +116,94 @@ public class OvenHandler extends TemplateRecipeHandler
     {
         return "agriculture:textures/gui/OvenNEI.png";
     }
-    
-    @Override
-    public void drawExtras(int recipe)
+
+    protected int getItemBurnTime(final ItemStack item)
     {
-        drawProgressBar(75, 25, 179, 89, 14, 14, 100, 3);
+        return TileEntityFurnace.getItemBurnTime(item);
     }
-    
-    protected boolean isFuel(ItemStack ingredient)
+
+    @Override
+    public String getRecipeName()
     {
-        for(LocalFuelPair fuel : afuels)
-        {   
-            if(fuel != null && ingredient.isItemEqual(fuel.stack.item))
-            {
-                return true;
-            }
+        return "Baked Recipe";
+    }
+
+    protected boolean isFuel(final ItemStack ingredient)
+    {
+        for (final LocalFuelPair fuel : OvenHandler.afuels)
+        {
+            if (fuel != null && ingredient.isItemEqual(fuel.stack.item)) { return true; }
         }
-        
+
         return false;
     }
 
-    protected void addRecipes(ArrayList<? extends TempRecipe> allRecipes)
+    @Override
+    public void loadCraftingRecipes(final ItemStack ingredient)
     {
-        for (TempRecipe recipe : allRecipes)
+        final ArrayList<OvenRecipe> allRecipes = OvenRecipes.getInstance().getRecipesFor(ingredient);
+
+        addRecipes(allRecipes);
+    }
+
+    @Override
+    public void loadCraftingRecipes(final String outputId, final Object... results)
+    {
+        if (outputId.equals("baked") && this.getClass() == OvenHandler.class)
         {
-            NEIBakedRecipe recipeT = new NEIBakedRecipe(recipe.getInput(), recipe.getResult());
-            arecipes.add(recipeT);
+            final ArrayList<OvenRecipe> allRecipes = OvenRecipes.getInstance().getRecipes();
+            addRecipes(allRecipes);
+        }
+        else
+        {
+            super.loadCraftingRecipes(outputId, results);
+        }
+    }
+
+    @Override
+    public void loadTransferRects()
+    {
+        // transferRects.add(new RecipeTransferRect(new Rectangle(75, 25, 14,
+        // 14), "baked"));
+        // transferRects.add(new RecipeTransferRect(new Rectangle(7, YPOSITION,
+        // 16, 16), "fuel"));
+    }
+
+    @Override
+    public void loadUsageRecipes(final ItemStack ingredient)
+    {
+        final ArrayList<OvenRecipe> allRecipes = OvenRecipes.getInstance().getUsageFor(ingredient);
+
+        if (isFuel(ingredient))
+        {
+            this.loadUsageRecipes("fuel");
+        }
+        else
+        {
+            addRecipes(allRecipes);
+        }
+    }
+
+    @Override
+    public void loadUsageRecipes(final String inputId, final Object... ingredients)
+    {
+        if (inputId.equals("fuel") && this.getClass() == OvenHandler.class)
+        {
+            this.loadCraftingRecipes("baked");
+        }
+        else
+        {
+            super.loadUsageRecipes(inputId, ingredients);
         }
     }
 
     @Override
     public TemplateRecipeHandler newInstance()
     {
-        if(afuels == null)
+        if (OvenHandler.afuels == null)
         {
             findFuels();
         }
         return super.newInstance();
-    }
-
-    protected void findFuels()
-    {
-        afuels = new ArrayList<LocalFuelPair>();
-        for(ItemStack item : ItemList.items)
-        {
-            if(!efuels.contains(item.itemID))
-            {
-                int burnTime = getItemBurnTime(item);
-                if(burnTime > 0)
-                    afuels.add(new LocalFuelPair(item.copy(), burnTime));
-            }
-        }
-    }
-    
-    protected class LocalFuelPair extends FuelPair
-    {
-
-        public LocalFuelPair(ItemStack ingred, int burnTime)
-        {
-            super(ingred, burnTime);
-            this.stack = new PositionedStack(ingred, 7, YPOSITION, false);
-        }
-    }
-
-    protected int getItemBurnTime(ItemStack item)
-    {
-        return TileEntityFurnace.getItemBurnTime(item);
-    }
-    
-    static 
-    {
-        removeFuels();
-    }
-
-    private static void removeFuels()
-    {
-        efuels = new TreeSet<Integer>(); 
     }
 }

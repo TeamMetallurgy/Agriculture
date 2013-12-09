@@ -5,54 +5,50 @@ import net.minecraft.item.ItemStack;
 
 import com.teammetallurgy.agriculture.AgricultureItems;
 
-public class InventoryOven extends InventoryBasic
-{
+public class InventoryOven extends InventoryBasic {
 
-	private final TileEntityOven oven;
+    private final TileEntityOven oven;
 
-	public InventoryOven(String par1Str, boolean par2, int par3, TileEntityOven tileEntityOven)
-	{
-		super(par1Str, par2, par3);
+    public InventoryOven(final String par1Str, final boolean par2, final int par3, final TileEntityOven tileEntityOven)
+    {
+        super(par1Str, par2, par3);
 
-		oven = tileEntityOven;
-	}
+        oven = tileEntityOven;
+    }
 
-	@Override
-	public void closeChest()
-	{
-		if (oven.getBlockType() != null && oven.getBlockType() instanceof BlockOven)
-		{
-			--oven.numUsingPlayers;
-			oven.worldObj.addBlockEvent(oven.xCoord, oven.yCoord, oven.zCoord, oven.getBlockType().blockID, 1, oven.numUsingPlayers);
-		}
-	}
+    @Override
+    public void closeChest()
+    {
+        if (oven.getBlockType() != null && oven.getBlockType() instanceof BlockOven)
+        {
+            --oven.numUsingPlayers;
+            oven.worldObj.addBlockEvent(oven.xCoord, oven.yCoord, oven.zCoord, oven.getBlockType().blockID, 1, oven.numUsingPlayers);
+        }
+    }
 
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return 64;
-	}
+    @Override
+    public int getInventoryStackLimit()
+    {
+        return 64;
+    }
 
-	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack)
-	{
-		if (i >= 17 && i <= 19)
-		{
-			return itemstack.itemID == AgricultureItems.ovenRack.itemID;
-		}
+    @Override
+    public boolean isItemValidForSlot(final int i, final ItemStack itemstack)
+    {
+        if (i >= 17 && i <= 19) { return itemstack.itemID == AgricultureItems.ovenRack.itemID; }
 
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	public void openChest()
-	{
-		if (oven.numUsingPlayers < 0)
-		{
-			oven.numUsingPlayers = 0;
-		}
+    @Override
+    public void openChest()
+    {
+        if (oven.numUsingPlayers < 0)
+        {
+            oven.numUsingPlayers = 0;
+        }
 
-		++oven.numUsingPlayers;
-		oven.worldObj.addBlockEvent(oven.xCoord, oven.yCoord, oven.zCoord, oven.getBlockType().blockID, 1, oven.numUsingPlayers);
-	}
+        ++oven.numUsingPlayers;
+        oven.worldObj.addBlockEvent(oven.xCoord, oven.yCoord, oven.zCoord, oven.getBlockType().blockID, 1, oven.numUsingPlayers);
+    }
 }

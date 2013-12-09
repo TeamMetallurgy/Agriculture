@@ -12,37 +12,51 @@ import powercrystals.minefactoryreloaded.api.HarvestType;
 import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
 import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 
-public class MFRHarvest implements IFactoryFertilizable, IFactoryHarvestable{
-    
-    private int plantId;
-    
-    public MFRHarvest(int plantId)
+public class MFRHarvest implements IFactoryFertilizable, IFactoryHarvestable {
+
+    private final int plantId;
+
+    public MFRHarvest(final int plantId)
     {
         this.plantId = plantId;
     }
 
     @Override
-    public int getFertilizableBlockId()
+    public boolean breakBlock()
     {
-        return plantId;
+        return true;
     }
 
     @Override
-    public boolean canFertilizeBlock(World world, int x, int y, int z, FertilizerType fertilizerType)
+    public boolean canBeHarvested(final World world, final Map<String, Boolean> harvesterSettings, final int x, final int y, final int z)
+    {
+        final boolean flag = world.getBlockMetadata(x, y, z) >= 6;
+
+        return flag;
+    }
+
+    @Override
+    public boolean canFertilizeBlock(final World world, final int x, final int y, final int z, final FertilizerType fertilizerType)
     {
         return world.getBlockMetadata(x, y, z) < 6;
     }
 
     @Override
-    public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+    public boolean fertilize(final World world, final Random rand, final int x, final int y, final int z, final FertilizerType fertilizerType)
     {
         int metadata = world.getBlockMetadata(x, y, z);
-        
+
         return world.setBlockMetadataWithNotify(x, y, z, ++metadata, 2);
     }
 
     @Override
-    public int getPlantId()
+    public List<ItemStack> getDrops(final World world, final Random rand, final Map<String, Boolean> harvesterSettings, final int x, final int y, final int z)
+    {
+        return Block.blocksList[plantId].getBlockDropped(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+    }
+
+    @Override
+    public int getFertilizableBlockId()
     {
         return plantId;
     }
@@ -54,34 +68,20 @@ public class MFRHarvest implements IFactoryFertilizable, IFactoryHarvestable{
     }
 
     @Override
-    public boolean breakBlock()
+    public int getPlantId()
     {
-        return true;
+        return plantId;
     }
 
     @Override
-    public boolean canBeHarvested(World world, Map<String, Boolean> harvesterSettings, int x, int y, int z)
-    {
-        boolean flag = world.getBlockMetadata(x, y, z) >= 6;
-        
-        return flag;
-    }
-
-    @Override
-    public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
-    {
-        return Block.blocksList[plantId].getBlockDropped(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
-    }
-
-    @Override
-    public void preHarvest(World world, int x, int y, int z)
+    public void postHarvest(final World world, final int x, final int y, final int z)
     {
 
     }
 
     @Override
-    public void postHarvest(World world, int x, int y, int z)
+    public void preHarvest(final World world, final int x, final int y, final int z)
     {
-  
+
     }
 }

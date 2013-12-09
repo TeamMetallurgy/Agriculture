@@ -9,44 +9,40 @@ import com.teammetallurgy.agriculture.Agriculture;
 import com.teammetallurgy.agriculture.libs.GUIIds;
 import com.teammetallurgy.agriculture.machines.BaseMachineBlock;
 
-public class BlockBrewer extends BaseMachineBlock
-{
-	public BlockBrewer(int par1, Material par2Material)
-	{
-		super(par1, par2Material);
-	}
+public class BlockBrewer extends BaseMachineBlock {
+    public BlockBrewer(final int par1, final Material par2Material)
+    {
+        super(par1, par2Material);
+    }
 
-	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		return new TileEntityBrewer();
-	}
+    @Override
+    public TileEntity createNewTileEntity(final World world)
+    {
+        return new TileEntityBrewer();
+    }
 
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xFace, float yFace, float zFace)
-	{
+    @Override
+    public boolean onBlockActivated(final World world, final int x, final int y, final int z, final EntityPlayer player, final int side, final float xFace, final float yFace, final float zFace)
+    {
 
-		if (player.isSneaking())
-		{
-			return false;
-		}
+        if (player.isSneaking()) { return false; }
 
-		if (!world.isRemote)
-		{
-			final int blockMetadata = world.getBlockMetadata(x, y, z);
-			if (side == 1)
-			{
-				player.openGui(Agriculture.instance, GUIIds.BREWER, world, x, y, z);
-				return true;
-			}
+        if (!world.isRemote)
+        {
+            final int blockMetadata = world.getBlockMetadata(x, y, z);
+            if (side == 1)
+            {
+                player.openGui(Agriculture.instance, GUIIds.BREWER, world, x, y, z);
+                return true;
+            }
 
-			if (side == blockMetadata)
-			{
+            if (side == blockMetadata)
+            {
 
-			}
-			return true;
-		}
+            }
+            return true;
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

@@ -14,67 +14,78 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-public class RenderEntityBlock extends Render{
-    public static RenderEntityBlock INSTANCE = new RenderEntityBlock();
-
-    @Override
-    protected ResourceLocation getEntityTexture(Entity entity) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
+public class RenderEntityBlock extends Render {
     public static class RenderInfo {
 
-        public double minX;
-        public double minY;
-        public double minZ;
+        public Block baseBlock = Block.sand;
+        public int brightness = -1;
+        public float light = -1f;
         public double maxX;
         public double maxY;
         public double maxZ;
-        public Block baseBlock = Block.sand;
+        public double minX;
+        public double minY;
+        public double minZ;
+        public boolean[] renderSide = new boolean[6];
         public Icon texture = null;
         public Icon[] textureArray = null;
-        public boolean[] renderSide = new boolean[6];
-        public float light = -1f;
-        public int brightness = -1;
 
-        public RenderInfo() {
+        public RenderInfo()
+        {
             setRenderAllSides();
         }
 
-        public RenderInfo(Block template, Icon[] texture) {
+        public RenderInfo(final Block template, final Icon[] texture)
+        {
             this();
-            this.baseBlock = template;
-            this.textureArray = texture;
+            baseBlock = template;
+            textureArray = texture;
         }
 
-        public RenderInfo(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
+        public RenderInfo(final float minX, final float minY, final float minZ, final float maxX, final float maxY, final float maxZ)
+        {
             this();
             setBounds(minX, minY, minZ, maxX, maxY, maxZ);
         }
 
-        public float getBlockBrightness(IBlockAccess iblockaccess, int i, int j, int k) {
+        public float getBlockBrightness(final IBlockAccess iblockaccess, final int i, final int j, final int k)
+        {
             return baseBlock.getBlockBrightness(iblockaccess, i, j, k);
         }
 
-        public final void setBounds(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
-            this.minX = minX;
-            this.minY = minY;
-            this.minZ = minZ;
-            this.maxX = maxX;
-            this.maxY = maxY;
-            this.maxZ = maxZ;
+        public Icon getBlockTextureFromSide(int i)
+        {
+            if (texture != null) { return texture; }
+            if (textureArray == null || textureArray.length == 0)
+            {
+                return baseBlock.getBlockTextureFromSide(i);
+            }
+            else
+            {
+                if (i >= textureArray.length)
+                {
+                    i = 0;
+                }
+                return textureArray[i];
+            }
         }
 
-        public final void setRenderSingleSide(int side) {
-            Arrays.fill(renderSide, false);
-            renderSide[side] = true;
+        public void reverseX()
+        {
+            final double temp = minX;
+            minX = 1 - maxX;
+            maxX = 1 - temp;
         }
 
-        public final void setRenderAllSides() {
-            Arrays.fill(renderSide, true);
+        public void reverseZ()
+        {
+            final double temp = minZ;
+            minZ = 1 - maxZ;
+            maxZ = 1 - temp;
         }
 
-        public void rotate() {
+        public void rotate()
+        {
             double temp = minX;
             minX = minZ;
             minZ = temp;
@@ -84,64 +95,68 @@ public class RenderEntityBlock extends Render{
             maxZ = temp;
         }
 
-        public void reverseX() {
-            double temp = minX;
-            minX = 1 - maxX;
-            maxX = 1 - temp;
+        public final void setBounds(final double minX, final double minY, final double minZ, final double maxX, final double maxY, final double maxZ)
+        {
+            this.minX = minX;
+            this.minY = minY;
+            this.minZ = minZ;
+            this.maxX = maxX;
+            this.maxY = maxY;
+            this.maxZ = maxZ;
         }
 
-        public void reverseZ() {
-            double temp = minZ;
-            minZ = 1 - maxZ;
-            maxZ = 1 - temp;
+        public final void setRenderAllSides()
+        {
+            Arrays.fill(renderSide, true);
         }
 
-        public Icon getBlockTextureFromSide(int i) {
-            if (texture != null)
-                return texture;
-            if (textureArray == null || textureArray.length == 0)
-                return baseBlock.getBlockTextureFromSide(i);
-            else {
-                if (i >= textureArray.length)
-                    i = 0;
-                return textureArray[i];
-            }
+        public final void setRenderSingleSide(final int side)
+        {
+            Arrays.fill(renderSide, false);
+            renderSide[side] = true;
         }
     }
 
-    private RenderEntityBlock() {
+    public static RenderEntityBlock INSTANCE = new RenderEntityBlock();
+
+    private RenderEntityBlock()
+    {
     }
 
     @Override
-    public void doRender(Entity entity, double i, double j, double k, float f, float f1) {
+    public void doRender(final Entity entity, final double i, final double j, final double k, final float f, final float f1)
+    {
         doRenderBlock((EntityBlock) entity, i, j, k);
     }
 
-    public void doRenderBlock(EntityBlock entity, double i, double j, double k) {
-        if (entity.isDead)
-            return;
+    public void doRenderBlock(final EntityBlock entity, final double i, final double j, final double k)
+    {
+        if (entity.isDead) { return; }
 
         shadowSize = entity.shadowSize;
-        World world = entity.worldObj;
-        RenderInfo util = new RenderInfo();
+        final World world = entity.worldObj;
+        final RenderInfo util = new RenderInfo();
         util.texture = entity.texture;
         bindTexture(TextureMap.locationBlocksTexture);
 
-        for (int iBase = 0; iBase < entity.iSize; ++iBase) {
-            for (int jBase = 0; jBase < entity.jSize; ++jBase) {
-                for (int kBase = 0; kBase < entity.kSize; ++kBase) {
+        for (int iBase = 0; iBase < entity.iSize; ++iBase)
+        {
+            for (int jBase = 0; jBase < entity.jSize; ++jBase)
+            {
+                for (int kBase = 0; kBase < entity.kSize; ++kBase)
+                {
 
                     util.minX = 0;
                     util.minY = 0;
                     util.minZ = 0;
 
-                    double remainX = entity.iSize - iBase;
-                    double remainY = entity.jSize - jBase;
-                    double remainZ = entity.kSize - kBase;
+                    final double remainX = entity.iSize - iBase;
+                    final double remainY = entity.jSize - jBase;
+                    final double remainZ = entity.kSize - kBase;
 
-                    util.maxX = (remainX > 1.0 ? 1.0 : remainX);
-                    util.maxY = (remainY > 1.0 ? 1.0 : remainY);
-                    util.maxZ = (remainZ > 1.0 ? 1.0 : remainZ);
+                    util.maxX = remainX > 1.0 ? 1.0 : remainX;
+                    util.maxY = remainY > 1.0 ? 1.0 : remainY;
+                    util.maxZ = remainZ > 1.0 ? 1.0 : remainZ;
 
                     GL11.glPushMatrix();
                     GL11.glTranslatef((float) i, (float) j, (float) k);
@@ -157,7 +172,7 @@ public class RenderEntityBlock extends Render{
                     lightZ = (int) (Math.floor(entity.posZ) + kBase);
 
                     GL11.glDisable(2896 /* GL_LIGHTING */);
-                    renderBlock(util, world, 0, 0, 0, lightX, lightY, lightZ, false, true);
+                    this.renderBlock(util, world, 0, 0, 0, lightX, lightY, lightZ, false, true);
                     GL11.glEnable(2896 /* GL_LIGHTING */);
                     GL11.glPopMatrix();
 
@@ -166,80 +181,129 @@ public class RenderEntityBlock extends Render{
         }
     }
 
-    public void renderBlock(RenderInfo info, IBlockAccess blockAccess, int x, int y, int z, boolean doLight, boolean doTessellating) {
-        renderBlock(info, blockAccess, x, y, z, x, y, z, doLight, doTessellating);
+    @Override
+    protected ResourceLocation getEntityTexture(final Entity entity)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void renderBlock(RenderInfo info, IBlockAccess blockAccess, double x, double y, double z, int lightX, int lightY, int lightZ, boolean doLight, boolean doTessellating) {
-        float lightBottom = 0.5F;
-        float lightTop = 1.0F;
-        float lightEastWest = 0.8F;
-        float lightNorthSouth = 0.6F;
+    public void renderBlock(final RenderInfo info, final IBlockAccess blockAccess, final double x, final double y, final double z, final int lightX, final int lightY, final int lightZ, boolean doLight, final boolean doTessellating)
+    {
+        final float lightBottom = 0.5F;
+        final float lightTop = 1.0F;
+        final float lightEastWest = 0.8F;
+        final float lightNorthSouth = 0.6F;
 
-        Tessellator tessellator = Tessellator.instance;
+        final Tessellator tessellator = Tessellator.instance;
 
         if (blockAccess == null)
+        {
             doLight = false;
+        }
 
         if (doTessellating && !tessellator.isDrawing)
+        {
             tessellator.startDrawingQuads();
+        }
 
         float light = 0;
-        if (doLight) {
-            if (info.light < 0) {
-                light = info.baseBlock.getBlockBrightness(blockAccess, (int) lightX, (int) lightY, (int) lightZ);
-                light = light + ((1.0f - light) * 0.4f);
-            } else
+        if (doLight)
+        {
+            if (info.light < 0)
+            {
+                light = info.baseBlock.getBlockBrightness(blockAccess, lightX, lightY, lightZ);
+                light = light + (1.0f - light) * 0.4f;
+            }
+            else
+            {
                 light = info.light;
+            }
             int brightness = 0;
             if (info.brightness < 0)
+            {
                 brightness = info.baseBlock.getMixedBrightnessForBlock(blockAccess, lightX, lightY, lightZ);
+            }
             else
+            {
                 brightness = info.brightness;
+            }
             tessellator.setBrightness(brightness);
             tessellator.setColorOpaque_F(lightBottom * light, lightBottom * light, lightBottom * light);
-        } else {
-//          tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
+        }
+        else
+        {
+            // tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
             if (info.brightness >= 0)
+            {
                 tessellator.setBrightness(info.brightness);
+            }
         }
 
         renderBlocks.setRenderBounds(info.minX, info.minY, info.minZ, info.maxX, info.maxY, info.maxZ);
 
         if (info.renderSide[0])
+        {
             renderBlocks.renderFaceYNeg(info.baseBlock, x, y, z, info.getBlockTextureFromSide(0));
+        }
 
         if (doLight)
+        {
             tessellator.setColorOpaque_F(lightTop * light, lightTop * light, lightTop * light);
+        }
 
         if (info.renderSide[1])
+        {
             renderBlocks.renderFaceYPos(info.baseBlock, x, y, z, info.getBlockTextureFromSide(1));
+        }
 
         if (doLight)
+        {
             tessellator.setColorOpaque_F(lightEastWest * light, lightEastWest * light, lightEastWest * light);
+        }
 
         if (info.renderSide[2])
+        {
             renderBlocks.renderFaceZNeg(info.baseBlock, x, y, z, info.getBlockTextureFromSide(2));
+        }
 
         if (doLight)
+        {
             tessellator.setColorOpaque_F(lightEastWest * light, lightEastWest * light, lightEastWest * light);
+        }
 
         if (info.renderSide[3])
+        {
             renderBlocks.renderFaceZPos(info.baseBlock, x, y, z, info.getBlockTextureFromSide(3));
+        }
 
         if (doLight)
+        {
             tessellator.setColorOpaque_F(lightNorthSouth * light, lightNorthSouth * light, lightNorthSouth * light);
+        }
 
         if (info.renderSide[4])
+        {
             renderBlocks.renderFaceXNeg(info.baseBlock, x, y, z, info.getBlockTextureFromSide(4));
+        }
 
         if (doLight)
+        {
             tessellator.setColorOpaque_F(lightNorthSouth * light, lightNorthSouth * light, lightNorthSouth * light);
+        }
 
         if (info.renderSide[5])
+        {
             renderBlocks.renderFaceXPos(info.baseBlock, x, y, z, info.getBlockTextureFromSide(5));
+        }
 
         if (doTessellating && tessellator.isDrawing)
+        {
             tessellator.draw();
+        }
+    }
+
+    public void renderBlock(final RenderInfo info, final IBlockAccess blockAccess, final int x, final int y, final int z, final boolean doLight, final boolean doTessellating)
+    {
+        this.renderBlock(info, blockAccess, x, y, z, x, y, z, doLight, doTessellating);
     }
 }

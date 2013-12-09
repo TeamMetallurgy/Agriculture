@@ -8,7 +8,7 @@ public abstract class TempRecipe {
     protected ItemStack out;
     protected int temp;
 
-    public TempRecipe(ItemStack in, ItemStack out, int temp)
+    public TempRecipe(final ItemStack in, final ItemStack out, final int temp)
     {
         this.in = in;
         this.out = out;

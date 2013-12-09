@@ -12,38 +12,48 @@ import com.teammetallurgy.agriculture.gui.GUICounter;
 import com.teammetallurgy.agriculture.recipes.CounterRecipe;
 import com.teammetallurgy.agriculture.recipes.CounterRecipes;
 
-public class CounterHandler extends TemplateRecipeHandler
-{
-    class NEICounterRecipe extends CachedRecipe
-    {
+public class CounterHandler extends TemplateRecipeHandler {
+    class NEICounterRecipe extends CachedRecipe {
 
         public ArrayList<PositionedStack> ingredients;
         public PositionedStack result;
 
-        public NEICounterRecipe(int width, int height, Object[] items, ItemStack out, ItemStack meh)
+        public NEICounterRecipe(final int width, final int height, final Object[] items, final ItemStack out, final ItemStack meh)
         {
             result = new PositionedStack(out, 135, 14);
             ingredients = new ArrayList<PositionedStack>();
             setIngredients(width, height, items, out);
         }
 
-        private void setIngredients(int width, int height, Object[] items, ItemStack out)
+        @Override
+        public List<PositionedStack> getIngredients()
+        {
+            return getCycledIngredients(CounterHandler.this.cycleticks / 20, ingredients);
+        }
+
+        @Override
+        public PositionedStack getResult()
+        {
+            return result;
+        }
+
+        private void setIngredients(final int width, final int height, final Object[] items, final ItemStack out)
         {
 
             PositionedStack stack = new PositionedStack(items[0], 11, 14);
             stack.setMaxSize(1);
             ingredients.add(stack);
-            
+
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
-                    if(x == 0 && y == 0)
+                    if (x == 0 && y == 0)
                     {
                         continue;
                     }
-                    
-                    if ((x + y * width) >= items.length)
+
+                    if (x + y * width >= items.length)
                     {
                         continue;
                     }
@@ -60,57 +70,6 @@ public class CounterHandler extends TemplateRecipeHandler
             }
 
         }
-
-        @Override
-        public List<PositionedStack> getIngredients()
-        {
-            return getCycledIngredients(cycleticks / 20, ingredients);
-        }
-
-        @Override
-        public PositionedStack getResult()
-        {
-            return result;
-        }
-    }
-
-    @Override
-    public void loadUsageRecipes(ItemStack ingredient)
-    {
-        ArrayList<CounterRecipe> allRecipes = CounterRecipes.getInstance().getRecipesUsing(ingredient);
-
-        if (allRecipes == null)
-        {
-            return;
-        }
-
-        for (CounterRecipe recipe : allRecipes)
-        {
-            NEICounterRecipe recipeT = new NEICounterRecipe(4, 2, recipe.getIngredients(), recipe.getCraftingResult(), ingredient);
-            arecipes.add(recipeT);
-        }
-    }
-
-    @Override
-    public void loadCraftingRecipes(ItemStack ingredient)
-    {
-        ArrayList<CounterRecipe> allRecipes = CounterRecipes.getInstance().getRecipesFor(ingredient);
-
-        if (allRecipes == null)
-        {
-            return;
-        }
-
-        for (CounterRecipe recipe : allRecipes)
-        {
-            NEICounterRecipe recipeT = new NEICounterRecipe(4, 2, recipe.getIngredients(), recipe.getCraftingResult(), ingredient);
-            arecipes.add(recipeT);
-        }
-    }
-
-    public String getRecipeName()
-    {
-        return "Prepared Recipe";
     }
 
     @Override
@@ -123,5 +82,39 @@ public class CounterHandler extends TemplateRecipeHandler
     public String getGuiTexture()
     {
         return "agriculture:textures/gui/CounterNEI.png";
+    }
+
+    @Override
+    public String getRecipeName()
+    {
+        return "Prepared Recipe";
+    }
+
+    @Override
+    public void loadCraftingRecipes(final ItemStack ingredient)
+    {
+        final ArrayList<CounterRecipe> allRecipes = CounterRecipes.getInstance().getRecipesFor(ingredient);
+
+        if (allRecipes == null) { return; }
+
+        for (final CounterRecipe recipe : allRecipes)
+        {
+            final NEICounterRecipe recipeT = new NEICounterRecipe(4, 2, recipe.getIngredients(), recipe.getCraftingResult(), ingredient);
+            arecipes.add(recipeT);
+        }
+    }
+
+    @Override
+    public void loadUsageRecipes(final ItemStack ingredient)
+    {
+        final ArrayList<CounterRecipe> allRecipes = CounterRecipes.getInstance().getRecipesUsing(ingredient);
+
+        if (allRecipes == null) { return; }
+
+        for (final CounterRecipe recipe : allRecipes)
+        {
+            final NEICounterRecipe recipeT = new NEICounterRecipe(4, 2, recipe.getIngredients(), recipe.getCraftingResult(), ingredient);
+            arecipes.add(recipeT);
+        }
     }
 }
