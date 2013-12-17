@@ -97,7 +97,7 @@
 	<!-- Download necessary files -->
 	<target name="download-files">
 		<get src="https://dl.dropboxusercontent.com/u/21347544/libs.zip" dest="${download.dir}"/>
-		<get src="http://jenkins.dev.dryware.org/job/skyboy-MineFactoryReloaded/193/artifact/build/dist/MFR-API-2.7.4B1-193.zip" dest="${download.dir}"/>
+		<get src="http://www.curseforge.com/media/files/755/870/MFR-API-2.7.3-179.zip" dest="${download.dir}"/>
 		<antcall target="download-forge"/>
 	</target>
 
