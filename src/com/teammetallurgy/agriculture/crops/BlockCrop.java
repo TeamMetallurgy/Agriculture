@@ -1,11 +1,14 @@
 package com.teammetallurgy.agriculture.crops;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
@@ -17,8 +20,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockCrop extends BlockFlower {
 
-    private final ItemStack drop;
-    private final float growthRate = 0.5f;
+    private static final int FULLYGROWN = 6;
+	private ItemStack drop;
+    private static final float growthRate = 0.5f;
 
     private Icon[] iconArray;
 
@@ -57,13 +61,13 @@ public class BlockCrop extends BlockFlower {
     {
         final int meta = par1World.getBlockMetadata(par2, par3, par4);
 
-        if (meta >= 6) { return false; }
+        if (meta >= FULLYGROWN) { return false; }
 
         int l = meta + MathHelper.getRandomIntegerInRange(par1World.rand, 2, 5);
 
-        if (l >= 6)
+        if (l >= FULLYGROWN)
         {
-            l = 6;
+            l = FULLYGROWN;
         }
 
         par1World.setBlockMetadataWithNotify(par2, par3, par4, l, 2);
@@ -92,7 +96,7 @@ public class BlockCrop extends BlockFlower {
     @Override
     public int quantityDropped(final Random par1Random)
     {
-        return 2 + par1Random.nextInt(3);
+        return 1;
     }
 
     @Override
@@ -106,21 +110,60 @@ public class BlockCrop extends BlockFlower {
             iconArray[i] = par1IconRegister.registerIcon(getTextureName() + "_stage_" + i);
         }
     }
+    
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset) {
+    	
+    	int meta = world.getBlockMetadata(x, y, z);
+    	
+    	ItemStack equippedItem = player.getCurrentEquippedItem();
+    	
+    	if(equippedItem != null && equippedItem.getItem().equals(Item.dyePowder))
+    	{
+    		return false;
+    	}
+    	
+    	if (meta > 0 && !player.isSneaking())
+    	{
+    		if(world.isRemote)
+    		{
+    			return true;
+    		}
+    		
+    		world.setBlockMetadataWithNotify(x, y, z, --meta, 2);
+    		ArrayList<ItemStack> dropped = getBlockDropped(world, x, y, z, meta, 0);
+    		
+    		for(ItemStack stack : dropped)
+    		{
+    			dropBlockAsItem_do(world, x, y, z, stack);
+    		}
+    		
+    		return true;
+    	}
+    	
+    	return false;
+    }
+    
+    public BlockCrop setDrop(ItemStack drop)
+    {
+    	this.drop = drop.copy();
+    	return this;
+    }
 
     @Override
-    public void updateTick(final World par1World, final int par2, final int par3, final int par4, final Random par5Random)
+    public void updateTick(final World world, final int x, final int y, final int z, final Random random)
     {
-        super.updateTick(par1World, par2, par3, par4, par5Random);
+        super.updateTick(world, x, y, z, random);
 
-        if (par1World.getBlockLightValue(par2, par3 + 1, par4) >= 9)
+        if (world.getBlockLightValue(x, y + 1, z) >= 9)
         {
-            int l = par1World.getBlockMetadata(par2, par3, par4);
-            if (l < 6)
+            int l = world.getBlockMetadata(x, y, z);
+            if (l < FULLYGROWN)
             {
-                if (par5Random.nextInt((int) (25.0F / growthRate) + 1) == 0)
+                if (random.nextInt((int) (25.0F / growthRate) + 1) == 0)
                 {
                     ++l;
-                    par1World.setBlockMetadataWithNotify(par2, par3, par4, l, 2);
+                    world.setBlockMetadataWithNotify(x, y, z, l, 2);
                 }
             }
         }

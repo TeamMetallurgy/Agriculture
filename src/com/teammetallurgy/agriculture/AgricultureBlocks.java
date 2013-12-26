@@ -68,13 +68,13 @@ public class AgricultureBlocks {
         AgricultureBlocks.counter = new BlockCounter(ConfigHandler.getBlockId("Counter", def++), Material.wood).setUnlocalizedName("agriculture:counter").setCreativeTab(Agriculture.tab);
         AgricultureBlocks.processor = new BlockProcessor(ConfigHandler.getBlockId("Processor", def++), Material.wood).setUnlocalizedName("agriculture:processor").setCreativeTab(Agriculture.tab);
         AgricultureBlocks.salt = new BlockSalt(ConfigHandler.getBlockId("Salt", def++), Material.rock).setHardness(1.5F).setUnlocalizedName("agriculture:salt").setTextureName("agriculture:Salt").setCreativeTab(Agriculture.tab);
-        AgricultureBlocks.cinnamon = new BlockSpice(ConfigHandler.getBlockId("Cinnamon", def++)).setDrop(AgricultureItems.cinnamon.getItemStack()).setHardness(1.0f).setUnlocalizedName("agriculture:cinnamon").setTextureName("agriculture:cinnamon").setCreativeTab(Agriculture.tab);
+        AgricultureBlocks.cinnamon = new BlockSpice(ConfigHandler.getBlockId("Cinnamon", def++), AgricultureItems.cinnamon.getItemStack()).setHardness(1.0f).setUnlocalizedName("agriculture:cinnamon").setTextureName("agriculture:cinnamon").setCreativeTab(Agriculture.tab);
 
         AgricultureBlocks.brewer = new BlockBrewer(ConfigHandler.getBlockId("Brewer", def++), Material.wood).setUnlocalizedName("agriculture:brewer").setCreativeTab(Agriculture.tab);
         AgricultureBlocks.icebox = new BlockIcebox(ConfigHandler.getBlockId("Icebox", def++), Material.wood).setUnlocalizedName("agriculture:icebox").setCreativeTab(Agriculture.tab);
         AgricultureBlocks.frier = new BlockFrier(ConfigHandler.getBlockId("Frier", def++), Material.wood).setUnlocalizedName("agriculture:frier").setCreativeTab(Agriculture.tab);
 
-        AgricultureBlocks.vanilla = new BlockSpice(ConfigHandler.getBlockId("Vanilla", def++)).setDrop(AgricultureItems.vanilla.getItemStack()).setHardness(1.0f).setUnlocalizedName("agriculture:vanilla").setTextureName("agriculture:vanilla").setCreativeTab(Agriculture.tab);
+        AgricultureBlocks.vanilla = new BlockSpice(ConfigHandler.getBlockId("Vanilla", def++), AgricultureItems.vanilla.getItemStack()).setHardness(1.0f).setUnlocalizedName("agriculture:vanilla").setTextureName("agriculture:vanilla").setCreativeTab(Agriculture.tab);
         AgricultureBlocks.peanut = new BlockPeanut(ConfigHandler.getBlockId("Peanut", def++)).setHardness(0.1f).setUnlocalizedName("agriculture:peanut").setTextureName("agriculture:peanut").setCreativeTab(Agriculture.tab);
         AgricultureBlocks.strawberry = new BlockStrawberry(ConfigHandler.getBlockId("Strawberry", def++)).setHardness(0.1f).setUnlocalizedName("agriculture:strawberry").setTextureName("agriculture:strawberry").setCreativeTab(Agriculture.tab);
 
