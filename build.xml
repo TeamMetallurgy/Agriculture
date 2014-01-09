@@ -114,7 +114,7 @@
 		<delete dir="${api.dir}" failonerror="false"/>
 		<unzip dest="${api.dir}">
 		    <fileset dir="${download.dir}">
-		    	<include name="**/MFR-API-*.zip""/>
+		    	<include name="**/MFR-API-*.zip"/>
 		    </fileset>
 		</unzip>
 	</target>
