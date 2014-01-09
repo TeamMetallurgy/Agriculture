@@ -112,7 +112,7 @@
 		<unzip dest="./" src="${download.dir}/libs.zip" />
 		
 		<delete dir="${api.dir}" failonerror="false"/>
-		<unzip dest="${api.dir}" src="${download.dir}/MFR-API-2.7.4B1-193.zip"/>
+		<unzip dest="${api.dir}" src="${download.dir}/MFR-API-*.zip"/>
 	</target>
 		
 	<target name="setup-forge" if="out-of-date">
