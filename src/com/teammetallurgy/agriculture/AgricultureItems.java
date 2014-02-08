@@ -749,10 +749,10 @@ public class AgricultureItems {
         ((SubItemSeed) AgricultureItems.peanuts).setPlantBlock(AgricultureBlocks.peanut);
         ((SubItemSeed) AgricultureItems.strawberry).setPlantBlock(AgricultureBlocks.strawberry);
 
-        ChestGenHooks.addItem("dungeonChest", new WeightedRandomChestContent(AgricultureItems.strawberry.getItemStack(), 1, 3, 5));
-        ChestGenHooks.addItem("villageBlacksmithChestContents", new WeightedRandomChestContent(AgricultureItems.strawberry.getItemStack(), 1, 3, 5));
-        ChestGenHooks.addItem("dungeonChest", new WeightedRandomChestContent(AgricultureItems.peanuts.getItemStack(), 1, 3, 5));
-        ChestGenHooks.addItem("villageBlacksmithChestContents", new WeightedRandomChestContent(AgricultureItems.peanuts.getItemStack(), 1, 3, 5));
+        ChestGenHooks.addItem(ChestGenHooks.BONUS_CHEST, new WeightedRandomChestContent(AgricultureItems.strawberry.getItemStack(), 1, 3, 5));
+        ChestGenHooks.addItem(ChestGenHooks.VILLAGE_BLACKSMITH, new WeightedRandomChestContent(AgricultureItems.strawberry.getItemStack(), 1, 3, 5));
+        ChestGenHooks.addItem(ChestGenHooks.BONUS_CHEST, new WeightedRandomChestContent(AgricultureItems.peanuts.getItemStack(), 1, 3, 5));
+        ChestGenHooks.addItem(ChestGenHooks.VILLAGE_BLACKSMITH, new WeightedRandomChestContent(AgricultureItems.peanuts.getItemStack(), 1, 3, 5));
 
         AgricultureItems.addRecipes();
         AgricultureItems.addNames();
