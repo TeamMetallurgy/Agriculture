@@ -111,7 +111,7 @@ public class TileEntityBrewer extends FuelMachineTileEntity implements IFluidHan
 
             totalUsed += used;
         }
-
+        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
         return totalUsed;
     }
 
