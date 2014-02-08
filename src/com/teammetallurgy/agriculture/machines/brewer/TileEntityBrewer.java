@@ -91,28 +91,13 @@ public class TileEntityBrewer extends FuelMachineTileEntity implements IFluidHan
     @Override
     public int fill(final ForgeDirection from, FluidStack resource, final boolean doFill)
     {
-        if (resource == null) { return 0; }
-
-        resource = resource.copy();
-        int totalUsed = 0;
-
-        final FluidStack fluid = leftTank.getFluid();
-
-        if (fluid != null && fluid.amount > 0 && !fluid.isFluidEqual(resource)) { return 0; }
-
-        while (resource.amount > 0)
-        {
-            final int used = leftTank.fill(resource, doFill);
-            resource.amount -= used;
-            if (used > 0)
-            {
-                hasUpdate = true;
-            }
-
-            totalUsed += used;
+        int fill = leftTank.fill(resource, doFill);
+        
+        if(fill > 0  && doFill){
+        	hasUpdate = true;
         }
-        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-        return totalUsed;
+        
+        return fill;
     }
 
     public int getAmountRightInput()
