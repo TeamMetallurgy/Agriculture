@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import com.teammetallurgy.agriculture.modstuff.ModIntegration;
 import com.teammetallurgy.agriculture.worldgen.WorldGenSalt;
 import com.teammetallurgy.agriculture.worldgen.WorldGenSpice;
+import com.teammetallurgy.metallurgycore.handlers.ConfigHandler;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -47,7 +48,7 @@ public class Agriculture {
     @EventHandler
     public void preInit(final FMLPreInitializationEvent event)
     {
-        ConfigHandler.init(event.getSuggestedConfigurationFile());
+        ConfigHandler.setFile(event.getSuggestedConfigurationFile());
 
         logger = event.getModLog();
     }
@@ -59,7 +60,7 @@ public class Agriculture {
         LanguageRegistry.instance().addStringLocalization("itemGroup.Agriculture", "en_US", "Agriculture");
         AgricultureItems.init();
         AgricultureBlocks.init();
-        Agriculture.tab.setItemID(AgricultureBlocks.oven.blockID);
+//        Agriculture.tab.setItemID(AgricultureBlocks.oven.blockID);
 
         AgricultureItems.setupItems();
 

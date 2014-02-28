@@ -8,15 +8,20 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import com.teammetallurgy.agriculture.machines.FuelMachineTileEntity;
-
-public class TileEntityProcessorRenderer extends TileEntitySpecialRenderer {
+public class TileEntityProcessorRenderer extends TileEntitySpecialRenderer
+{
     private static int[] rotations = { 0, 0, 180, 0, 90, -90 };
     private final ModelProcessor model = new ModelProcessor();
 
-    private final ResourceLocation texture = new ResourceLocation("agriculture", "textures/blocks/Processor.png");
+    private final ResourceLocation texture = new ResourceLocation("agriculture:textures/blocks/Processor.png");
 
-    public void renderTileEntityAt(final FuelMachineTileEntity tileentity, final double x, final double y, final double z, final float unknown)
+    @Override
+    public void renderTileEntityAt(final TileEntity tileentity, final double x, final double y, final double z, final float unknown)
+    {
+        this.renderTileEntityAt((TileEntityProcessor) tileentity, x, y, z, unknown);
+    }
+
+    private void renderTileEntityAt(final TileEntityProcessor tileentity, final double x, final double y, final double z, final float unknown)
     {
         int direction = 0;
         float yOffset = 0;
@@ -31,7 +36,7 @@ public class TileEntityProcessorRenderer extends TileEntitySpecialRenderer {
 
         final int rotation = TileEntityProcessorRenderer.rotations[direction];
 
-        Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+        Minecraft.getMinecraft().renderEngine.bindTexture(this.texture);
 
         GL11.glPushMatrix();
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
@@ -41,15 +46,8 @@ public class TileEntityProcessorRenderer extends TileEntitySpecialRenderer {
 
         GL11.glRotatef(rotation, 0F, 1F, 0F);
 
-        model.renderAll();
+        this.model.renderAll();
 
         GL11.glPopMatrix();
     }
-
-    @Override
-    public void renderTileEntityAt(final TileEntity tileentity, final double x, final double y, final double z, final float unknown)
-    {
-        this.renderTileEntityAt((FuelMachineTileEntity) tileentity, x, y, z, unknown);
-    }
-
 }

@@ -2,6 +2,8 @@ package com.teammetallurgy.agriculture;
 
 import java.util.List;
 
+import com.teammetallurgy.metallurgycore.handlers.ConfigHandler;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -83,11 +85,11 @@ public class AgricultureItems {
     public static SubItem crushedPeanuts;
     public static SubItem deluxeHotCocoa;
     public static SubItem dicedPotatoes;
-    public static int dishID = ConfigHandler.getItemId("Dish", 19999);
+    public static int dishID = ConfigHandler.getItem("Dish", 19999);
     public static SubItem doubleBaconCheeseburger;
     public static SubItem dough;
     public static SubItem flour;
-    public static int foodID = ConfigHandler.getItemId("Food", 20000);
+    public static int foodID = ConfigHandler.getItem("Food", 20000);
     public static SubItem frenchFries;
     public static SubItem frenchToast;
     public static SubItem frenchToastBurned;

@@ -1,11 +1,13 @@
 package com.teammetallurgy.agriculture;
 
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class AgricultureTab extends CreativeTabs {
-    private int itemID;
+public class AgricultureTab extends CreativeTabs
+{
+    private int itemID = Block.brick.blockID;
 
     public AgricultureTab(final String label)
     {

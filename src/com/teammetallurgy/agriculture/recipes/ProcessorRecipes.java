@@ -66,7 +66,9 @@ public class ProcessorRecipes {
         {
             final ProcessRecipe irecipe = recipes.get(j);
 
-            if (irecipe.matches(first, second)) { return irecipe.getCraftingResult(); }
+            if (irecipe.matches(first, second)) { 
+                return irecipe.getCraftingResult();
+                }
         }
 
         return null;

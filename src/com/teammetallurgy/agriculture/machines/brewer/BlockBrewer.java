@@ -7,12 +7,13 @@ import net.minecraft.world.World;
 
 import com.teammetallurgy.agriculture.Agriculture;
 import com.teammetallurgy.agriculture.libs.GUIIds;
-import com.teammetallurgy.agriculture.machines.BaseMachineBlock;
+import com.teammetallurgy.agriculture.machines.BlockAgriculture;
 
-public class BlockBrewer extends BaseMachineBlock {
-    public BlockBrewer(final int par1, final Material par2Material)
+public class BlockBrewer extends BlockAgriculture
+{
+    public BlockBrewer(final int id)
     {
-        super(par1, par2Material);
+        super(id);
     }
 
     @Override
@@ -22,27 +23,12 @@ public class BlockBrewer extends BaseMachineBlock {
     }
 
     @Override
-    public boolean onBlockActivated(final World world, final int x, final int y, final int z, final EntityPlayer player, final int side, final float xFace, final float yFace, final float zFace)
+    protected void doOnActivate(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
     {
-
-        if (player.isSneaking()) { return false; }
-
-        if (!world.isRemote)
+        final int blockMetadata = world.getBlockMetadata(x, y, z);
+        if (side == 1)
         {
-            final int blockMetadata = world.getBlockMetadata(x, y, z);
-            if (side == 1)
-            {
-                player.openGui(Agriculture.instance, GUIIds.BREWER, world, x, y, z);
-                return true;
-            }
-
-            if (side == blockMetadata)
-            {
-
-            }
-            return true;
+            player.openGui(Agriculture.instance, GUIIds.BREWER, world, x, y, z);
         }
-
-        return true;
     }
 }
