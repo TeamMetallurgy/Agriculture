@@ -353,7 +353,7 @@ public class AgricultureItems {
         GameRegistry.addRecipe(AgricultureItems.clayBowl.getItemStack(12), "X X", " X ", 'X', Item.clay);
         GameRegistry.addRecipe(AgricultureItems.clayPlate.getItemStack(12), "XXX", 'X', Item.clay);
         GameRegistry.addRecipe(AgricultureItems.clayCup.getItemStack(12), "X", "X", 'X', Item.clay);
-        GameRegistry.addRecipe(AgricultureItems.ovenRack.getItemStack(), "XXX", "XXX", "XXX", 'X', Block.fenceIron);
+        GameRegistry.addRecipe(AgricultureItems.ovenRack.getItemStack(16), "XXX", "XXX", "XXX", 'X', Block.fenceIron);
 
         GameRegistry.addShapelessRecipe(AgricultureItems.water.getItemStack(), AgricultureItems.ceramicCup.getItemStack(), Item.bucketWater);
         GameRegistry.addShapelessRecipe(AgricultureItems.milk.getItemStack(), AgricultureItems.ceramicCup.getItemStack(), Item.bucketMilk);
@@ -762,6 +762,12 @@ public class AgricultureItems {
     {
         final ItemStack itemStack = AgricultureItems.clayBowl.getItemStack(12);
 
+        tweakRecipe(itemStack);
+        GameRegistry.addRecipe(AgricultureItems.clayBowl.getItemStack(20), "X X", "XXX", 'X', Item.clay);
+    }
+
+    private static void tweakRecipe(final ItemStack itemStack)
+    {
         final List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
 
         for (int i = 0; i < recipes.size(); i++)
@@ -775,6 +781,12 @@ public class AgricultureItems {
         }
 
         AgricultureItems.notify(itemStack);
-        GameRegistry.addRecipe(AgricultureItems.clayBowl.getItemStack(20), "X X", "XXX", 'X', Item.clay);
+    }
+
+    public static void tweakRecipeOvenRack()
+    {
+        final ItemStack itemStack = AgricultureItems.ovenRack.getItemStack(16);
+        tweakRecipe(itemStack);
+        GameRegistry.addRecipe(AgricultureItems.ovenRack.getItemStack(), "sss", "sfs", "sss", 's', Item.stick, 'f', Block.fenceIron);
     }
 }

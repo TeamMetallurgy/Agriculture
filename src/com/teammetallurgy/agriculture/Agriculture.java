@@ -97,6 +97,11 @@ public class Agriculture {
             logger.fine("Found Iquana Tweaks. Tweaking Recipes");
             AgricultureItems.tweakRecipeIguana();
         }
+        
+        if(Loader.isModLoaded("OpenBlocks"))
+        {
+            AgricultureItems.tweakRecipeOvenRack();
+        }
 
         if (Loader.isModLoaded("MineFactoryReloaded"))
         {
