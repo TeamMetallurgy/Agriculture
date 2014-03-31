@@ -1,16 +1,10 @@
-*.class
-
-# Package Files #
-*.jar
-*.war
-*.ear
-
 /.classpath
 /.project
-/.settings/org.eclipse.jdt.core.prefs
-/.settings/org.eclipse.jdt.ui.prefs
-
-bin/
-dist/
-mod.properties
 /bin
+/build
+/download
+*.iml
+/.settings
+Thumbs.db
+/eclipse
+/.gradle
