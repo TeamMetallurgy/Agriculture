@@ -1,0 +1,65 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "runClient",
+      "request": "launch",
+      "mainClass": "net.minecraftforge.userdev.LaunchTesting",
+      "projectName": "agriculture",
+      "cwd": "${workspaceFolder}/run",
+      "vmArgs": "-Dforge.logging.console.level\u003ddebug -Dforge.logging.markers\u003dSCAN,REGISTRIES,REGISTRYDUMP",
+      "args": "",
+      "env": {
+        "MOD_CLASSES": "examplemod%%${workspaceFolder}/bin/main:examplemod%%${workspaceFolder}/bin/main",
+        "MCP_MAPPINGS": "snapshot_20190719-1.14.3",
+        "MCP_VERSION": "20190829.143755",
+        "FORGE_VERSION": "28.1.61",
+        "assetIndex": "1.14",
+        "assetDirectory": "/home/stengel/.gradle/caches/forge_gradle/assets",
+        "nativesDirectory": "${workspaceFolder}/build/natives",
+        "FORGE_GROUP": "net.minecraftforge",
+        "target": "fmluserdevclient",
+        "MC_VERSION": "1.14.4"
+      }
+    },
+    {
+      "type": "java",
+      "name": "runData",
+      "request": "launch",
+      "mainClass": "net.minecraftforge.userdev.LaunchTesting",
+      "projectName": "agriculture",
+      "cwd": "${workspaceFolder}/run",
+      "vmArgs": "-Dforge.logging.console.level\u003ddebug -Dforge.logging.markers\u003dSCAN,REGISTRIES,REGISTRYDUMP",
+      "args": "--mod examplemod --all --output /home/stengel/src/agriculture/src/generated/resources",
+      "env": {
+        "MOD_CLASSES": "examplemod%%${workspaceFolder}/bin/main:examplemod%%${workspaceFolder}/bin/main",
+        "MCP_MAPPINGS": "snapshot_20190719-1.14.3",
+        "MCP_VERSION": "20190829.143755",
+        "FORGE_VERSION": "28.1.61",
+        "FORGE_GROUP": "net.minecraftforge",
+        "target": "fmluserdevdata",
+        "MC_VERSION": "1.14.4"
+      }
+    },
+    {
+      "type": "java",
+      "name": "runServer",
+      "request": "launch",
+      "mainClass": "net.minecraftforge.userdev.LaunchTesting",
+      "projectName": "agriculture",
+      "cwd": "${workspaceFolder}/run",
+      "vmArgs": "-Dforge.logging.console.level\u003ddebug -Dforge.logging.markers\u003dSCAN,REGISTRIES,REGISTRYDUMP",
+      "args": "",
+      "env": {
+        "MOD_CLASSES": "examplemod%%${workspaceFolder}/bin/main:examplemod%%${workspaceFolder}/bin/main",
+        "MCP_MAPPINGS": "snapshot_20190719-1.14.3",
+        "MCP_VERSION": "20190829.143755",
+        "FORGE_VERSION": "28.1.61",
+        "FORGE_GROUP": "net.minecraftforge",
+        "target": "fmluserdevserver",
+        "MC_VERSION": "1.14.4"
+      }
+    }
+  ]
+}
